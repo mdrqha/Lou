@@ -1,9 +1,11 @@
 import React from 'react';
 import './Menu.scss';
 import MenuButton from '../Components/Menu-button/Menu-button';
+import { useTranslation } from 'react-i18next';
 import { FiAlignLeft, FiChevronLeft, FiChevronsLeft, FiCoffee, FiEye, FiFolder, FiHelpCircle, FiLayers, FiSettings, FiTrash } from 'react-icons/fi';
 
 const Menu = () => {
+  const { t } = useTranslation();
   return (
     <nav className="lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-shadow-xl lou-text-dark lou-grid lou-grid-rows-[1fr_auto]" lou-component="menu">
       <section>
@@ -17,31 +19,31 @@ const Menu = () => {
         </div>
         <div className="lou-p-xs">
           <MenuButton
-            text="Visual design"
+            text={t('menu.items.visual-design')}
             icon={<FiEye />}
             isActive="True"
           />
           <MenuButton
-            text="Design system"
+            text={t('menu.items.design-system')}
             icon={<FiLayers />}
           />
           <MenuButton
-            text="Ent-to-end"
+            text={t('menu.items.end-to-end')}
             icon={<FiFolder />}
           />
           <MenuButton
-            text="Proofreading"
+            text={t('menu.items.proofreading')}
             icon={<FiAlignLeft />}
           />
         </div>
       </section>
       <section className="lou-border-t lou-border-dark-50 lou-p-xs">
         <MenuButton 
-          text="Settings"
+          text={t('menu.actions.settings')}
           icon={<FiSettings/>}
         />
         <MenuButton
-          text="Help"
+          text={t('menu.actions.help')}
           icon={<FiHelpCircle />}
         />
       </section>

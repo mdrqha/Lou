@@ -1,0 +1,17 @@
+{
+    "menu": {
+        "items": {
+            "visual-design" : "Visual design", 
+            "design-system" : "Design system",
+            "end-to-end" : "Ent-to-end",
+            "proofreading" : "Proofreading"
+        }, 
+        "actions": {
+            "settings" : "Settings",
+            "help" : "Help"
+        },
+        "tooltip": {
+            "collapse" : "Collapse"
+        }
+    }
+}

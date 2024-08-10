@@ -1,0 +1,17 @@
+{
+    "menu": {
+        "items": {
+            "visual-design" : "Intégration", 
+            "design-system" : "Design system",
+            "end-to-end" : "Fonctionnel",
+            "proofreading" : "Orthographe"
+        }, 
+        "actions": {
+            "settings" : "Parametres",
+            "help" : "Aide"
+        },
+        "tooltip": {
+            "collapse" : "Réduire"
+        }
+    }
+}

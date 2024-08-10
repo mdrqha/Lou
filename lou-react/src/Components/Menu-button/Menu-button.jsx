@@ -1,5 +1,6 @@
 import React from 'react';
-import "./Menu-button.scss"
+import "./Menu-button.scss";
+import { useTranslation } from 'react-i18next';
 
 // Composant de bouton de menu généralisé
 const MenuButton = ({ text, onClick, type = 'button', className = '', icon, isActive = false }) => {

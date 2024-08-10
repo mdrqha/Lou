@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Menu from './Menu/Menu';
+import './i18n';
 
 const FigmaFrameCounter = () => {
   const [url, setUrl] = useState('');
