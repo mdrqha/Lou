@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Menu from './Menu/Menu';
 import './i18n';
+import Header from './Header/Header';
+import InputText from './Components/Inputs/Input-text/Input-text';
+import Button from './Components/Buttons/Button/Button';
 
 const FigmaFrameCounter = () => {
   const [url, setUrl] = useState('');
@@ -118,14 +121,33 @@ const FigmaFrameCounter = () => {
     //   </div>
     //   {error && <p className="text-red-500">{error}</p>}
     //   {frameCount !== null && <p className="text-green-500">Number of frames found: {frameCount}</p>}
-    //   <div className="lou-bg-blue lou-p-md lou-rounded-md lou-mt-lg">
-    //   <h1 className="lou-text-yellow">Hello, Tailwind!</h1>
     // </div>
 
     // </div>
 
     <div className="lou-w-screen lou-h-screen lou-bg-dark-30 lou-gap-md lou-grid lou-grid-cols-layout-main lou-p-sm" lou-component="page">
       <Menu />
+      <div className='lou-grid lou-grid-rows-[auto_1fr] lou-gap-lg' lou-component='right-container'>
+        <Header />
+        <main className='lou-bg-white lou-rounded lou-shadow-lg lou-border lou-border-dark-50'>
+          <section className='lou-grid lou-grid-cols-[1fr_1fr_auto] lou-gap-sm lou-border-b lou-border-dark-50 lou-p-sm'>
+            <InputText
+              placeholder='URL Figma'
+            />
+            <InputText
+              placeholder='URL produit'
+            />
+            <Button
+              text='Comparer'
+              type='submit'
+            />
+          </section>
+          <section className='lou-p-sm'>
+            <h3 className='lou-text-2xl lou-font-bold'>Résultats <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>X Erreurs</span></h3>
+
+          </section>
+        </main>
+      </div>
     </div>
   );
 };
