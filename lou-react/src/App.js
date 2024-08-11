@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Menu from './Menu/Menu';
 import './i18n';
+import { useTranslation } from 'react-i18next';
 import Header from './Header/Header';
 import InputText from './Components/Inputs/Input-text/Input-text';
 import Button from './Components/Buttons/Button/Button';
@@ -98,7 +99,7 @@ const FigmaFrameCounter = () => {
   };
   
   
-
+  const { t } = useTranslation();
   return (
     // <div className="max-w-md mx-auto p-4">
     //   <h1 className="text-2xl font-bold mb-4">Figma Frame Counter</h1>
@@ -143,7 +144,7 @@ const FigmaFrameCounter = () => {
             />
           </section>
           <section className='lou-p-sm'>
-            <h3 className='lou-text-2xl lou-font-bold'>Résultats <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>X Erreurs</span></h3>
+            <h3 className='lou-text-2xl lou-font-bold'>{t('visual-design.results-tilte')} <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>X {t('visual-design.results-errors')}</span></h3>
 
           </section>
         </main>

@@ -13,5 +13,12 @@
         "tooltip": {
             "collapse" : "Réduire"
         }
+    },
+    "visual-design": {
+        "url-figma" : "URL Figma",
+        "url-product" : "URL de votre page produit",
+        "cta-compare" : "Compare",
+        "results-tilte" : "Résultats",
+        "results-errors" : "erreurs"
     }
 }
