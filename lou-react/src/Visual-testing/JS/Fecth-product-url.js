@@ -1,39 +1,8 @@
 import axios from 'axios';
 
 const authToken = '1_HappyJames';
-
-  const extractStylesheetUrls = (doc) => {
-    const links = doc.querySelectorAll('link[rel="stylesheet"]');
-    const urls = [];
-    links.forEach(link => {
-      let url = link.getAttribute('href');
-      // Convertir les URLs relatives en absolues
-      if (url && !url.startsWith('http')) {
-        const baseUrl = new URL(doc.baseURI);
-        url = new URL(url, baseUrl).href;
-      }
-      if (url) {
-        urls.push(url);
-      }
-    });
-    return urls;
-  };
   
-  const fetchAndInjectCss = async (iframe, url) => {
-    try {
-      const response = await axios.get(url);
-      const cssText = response.data;
-  
-      // Injecter le CSS dans l'iframe
-      const styleElement = document.createElement('style');
-      styleElement.textContent = cssText;
-      iframe.contentDocument.head.appendChild(styleElement);
-    } catch (error) {
-      console.error('Erreur lors de la récupération du CSS:', error);
-    }
-  };
-  
-  const domStringToJson = (htmlString, iframe) => {
+  const domStringToJson = (htmlString) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
   
@@ -53,23 +22,6 @@ const authToken = '1_HappyJames';
           obj.attributes[node.attributes[i].name] = node.attributes[i].value;
         }
   
-        // Injecter l'élément dans l'iframe pour s'assurer que les styles sont appliqués
-        const tempElement = iframe.contentDocument.createElement(node.nodeName);
-        for (const attr of node.attributes) {
-          tempElement.setAttribute(attr.name, attr.value);
-        }
-        iframe.contentDocument.body.appendChild(tempElement);
-  
-        // Calculer les styles CSS calculés
-        const computedStyle = iframe.contentWindow.getComputedStyle(tempElement);
-        obj.styles = {};
-        for (let i = 0; i < computedStyle.length; i++) {
-          const propertyName = computedStyle[i];
-          obj.styles[propertyName] = computedStyle.getPropertyValue(propertyName);
-        }
-  
-        // Retirer l'élément temporaire
-        iframe.contentDocument.body.removeChild(tempElement);
       }
   
       if (node.nodeType === 3) {
@@ -92,6 +44,25 @@ const authToken = '1_HappyJames';
     return domToJson(doc.documentElement);
   };
   
+  document.addEventListener('DOMContentLoaded', (productUrl, setLoading, setError, setDomJson) => {
+    if (areStylesLoaded()) {
+      fetchProductDom(productUrl, setLoading, setError, setDomJson);
+    } else {
+      console.error('Les styles ne sont pas complètement chargés.');
+    }
+  });
+  
+  const areStylesLoaded = () => {
+    const stylesheets = Array.from(document.styleSheets);
+    return stylesheets.every(sheet => {
+      try {
+        return sheet.cssRules; // Vérifier si les règles CSS sont chargées
+      } catch (e) {
+        return false; // Ignorer les exceptions pour les feuilles de style de domaines externes
+      }
+    });
+  };
+  
   const fetchProductDom = async (productUrl, setLoading, setError, setDomJson) => {
     setLoading(true);
     try {
@@ -104,33 +75,10 @@ const authToken = '1_HappyJames';
       });
   
       const domContent = response.data.dom;
-  
-      // Créer un iframe invisible pour calculer les styles
-      const iframe = document.createElement('iframe');
-      document.body.appendChild(iframe);
-      iframe.style.display = 'none';
-  
-      // Parser le HTML récupéré pour obtenir le document
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(domContent, 'text/html');
-  
-      // Extraire les URLs des feuilles de style CSS
-      const stylesheets = extractStylesheetUrls(doc);
-      console.log('CSS URLs:', stylesheets);
-  
-      // Injecter les CSS dynamiquement dans l'iframe
-      await Promise.all(stylesheets.map(url => fetchAndInjectCss(iframe, url)));
-  
-      // Convertir la chaîne DOM HTML en JSON avec styles calculés
-      const domJsonData = domStringToJson(domContent, iframe);
-  
-      // Supprimer l'iframe après utilisation
-      document.body.removeChild(iframe);
+      const domJsonData = domStringToJson(domContent);
   
       setDomJson(domJsonData);
       logLouComponents(domJsonData);
-  
-      console.log(domJsonData); // Afficher le JSON avec les styles calculés
   
     } catch (error) {
       console.error('Erreur lors de la récupération du DOM:', error);
@@ -147,66 +95,72 @@ const authToken = '1_HappyJames';
     let productComponent = [];
     if (!node) return;
   
-    const obj = {
-      type: node.nodeType,
-      name: node.nodeName,
+    const traverseChildren = (children) => {
+      children.forEach((child) => {
+        if (child.attributes && child.attributes['lou-component']) {
+          if (child.type === 1) {  // Vérifier si c'est un ELEMENT_NODE
+  
+            const tempElement = document.createElement('div');
+            if (child.attributes['class']) {
+              tempElement.className = child.attributes['class'];
+            }
+            if (child.attributes['style']) {
+              tempElement.setAttribute('style', child.attributes['style']);
+            }
+  
+            document.body.appendChild(tempElement);  
+            const computedStyle = window.getComputedStyle(tempElement);
+  
+            const styles = {};
+            for (let i = 0; i < computedStyle.length; i++) {
+              const propertyName = computedStyle[i];
+              styles[propertyName] = computedStyle.getPropertyValue(propertyName);
+            }
+
+            productComponent.push({
+                "name": child.attributes['lou-component'],
+                "class": child.attributes['class'],
+                "type": child.type,
+                "css": {
+                  "background-color": styles["background-color"] === "rgba(0, 0, 0, 0)" ? "none" : styles["background-color"]
+                // background-color
+                // border ou border-left, border-right,...
+                // border-radius
+                // background-gradient
+                // Box-shadow
+                // background-blur
+                // blur effect
+                // padding
+                // margin
+                // gap
+                // color
+                // fill si svg
+                // Font familly
+                // font-size
+                // Font-weight
+                // letter-spacing
+                // line-height
+                // Text-align vertical
+                // Texte align Horizontal
+                // Overflow hidden (clip content)
+                // flex ??
+                }
+            });
+            productComponent[productComponent.length - 1].styles = styles;
+  
+            document.body.removeChild(tempElement);
+          }
+        }
+        if (child.children && child.children.length > 0) {
+          traverseChildren(child.children);
+        }
+      });
     };
   
-    // Vérifier si l'élément est un BODY
-    if (node.name === 'BODY') {
-      const traverseChildren = (children) => {
-        children.forEach((child) => {
-          if (child.attributes && child.attributes['lou-component']) {
-            productComponent.push({
-              "name": child.attributes['lou-component'],
-              "class": child.attributes['class']
-            });
-  
-            if (child.nodeType === 1) {  // Assurez-vous que c'est un ELEMENT_NODE
-              // Créer un élément temporaire et l'ajouter au DOM
-              const tempElement = document.createElement('div');
-              console.log('Creating element:', tempElement);
-  
-              // Appliquer les classes et les styles en ligne si présents
-              if (child.attributes['class']) {
-                tempElement.className = child.attributes['class'];
-              }
-              if (child.attributes['style']) {
-                tempElement.setAttribute('style', child.attributes['style']);
-              }
-  
-              document.body.appendChild(tempElement);  // Ajouter l'élément au DOM
-              console.log('Appended to DOM:', tempElement);
-  
-              const computedStyle = window.getComputedStyle(tempElement);
-              console.log('Computed style:', computedStyle);
-  
-              obj.styles = {};
-              for (let i = 0; i < computedStyle.length; i++) {
-                const propertyName = computedStyle[i];
-                obj.styles[propertyName] = computedStyle.getPropertyValue(propertyName);
-              }
-  
-              // Retirer l'élément du DOM après avoir récupéré les styles
-              document.body.removeChild(tempElement);
-            }
-          }
-          if (child.children && child.children.length > 0) {
-            traverseChildren(child.children); // Parcourir les enfants des enfants
-          }
-        });
-      };
-  
-      if (node.children && node.children.length > 0) {
-        traverseChildren(node.children);
-      }
-      console.log(productComponent);
-    }
-  
     if (node.children && node.children.length > 0) {
-      node.children.forEach((child) => logLouComponents(child));
+      traverseChildren(node.children);
     }
+    console.log(productComponent);
   };
-
 
   export { fetchProductDom };

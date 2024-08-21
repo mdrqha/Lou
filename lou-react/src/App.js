@@ -19,6 +19,10 @@ const [frameCount, setFrameCount] = useState(null);
 const [figmaData, setFigmaData] = useState(null);
 const [domJson, setDomJson] = useState(null);
 
+const handleFetch = () => {
+  fetchProductDom('https://example.com', setLoading, setError, setDomJson);
+};
+
   const { t } = useTranslation();
 
   return (
