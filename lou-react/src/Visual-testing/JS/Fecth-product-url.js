@@ -120,8 +120,32 @@ const authToken = '1_HappyJames';
             productComponent.push({
                 "name": child.attributes['lou-component'],
                 "class": child.attributes['class'],
-                "type" : child.type
-            });  
+                "type": child.type,
+                "css": {
+                  "background-color": styles["background-color"] === "rgba(0, 0, 0, 0)" ? "none" : styles["background-color"]
+                // background-color
+                // border ou border-left, border-right,...
+                // border-radius
+                // background-gradient
+                // Box-shadow
+                // background-blur
+                // blur effect
+                // padding
+                // margin
+                // gap
+                // color
+                // fill si svg
+                // Font familly
+                // font-size
+                // Font-weight
+                // letter-spacing
+                // line-height
+                // Text-align vertical
+                // Texte align Horizontal
+                // Overflow hidden (clip content)
+                // flex ??
+                }
+            });
             productComponent[productComponent.length - 1].styles = styles;
   
             document.body.removeChild(tempElement);
