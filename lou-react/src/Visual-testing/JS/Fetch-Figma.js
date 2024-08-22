@@ -106,7 +106,6 @@ const validateUrl = (url) => {
 
         if (backgroundLength === 1) {
             if (node.background[0].visible === undefined) {
-                //test comment
                 switch (node.background[0].type) {
                   case "SOLID":
                     const { r, g, b, a } = node.background[0].color || {};
