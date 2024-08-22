@@ -105,7 +105,6 @@ const validateUrl = (url) => {
         let backgroundLength = node.background.length;
 
         if (backgroundLength === 1) {
-            console.log(node.background)
             if (node.background[0].visible === undefined) {
                 switch (node.background[0].type) {
                   case "SOLID":
