@@ -19,11 +19,7 @@ const [frameCount, setFrameCount] = useState(null);
 const [figmaData, setFigmaData] = useState(null);
 const [domJson, setDomJson] = useState(null);
 
-const handleFetch = () => {
-  fetchProductDom('https://example.com', setLoading, setError, setDomJson);
-};
-
-  const { t } = useTranslation();
+const { t } = useTranslation();
 
   return (
     <div className="lou-w-screen lou-h-screen lou-bg-dark-30 lou-gap-md lou-grid lou-grid-cols-layout-main lou-p-sm" lou-component="page">

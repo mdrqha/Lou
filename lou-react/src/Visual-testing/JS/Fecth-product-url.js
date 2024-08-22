@@ -44,13 +44,13 @@ const authToken = '1_HappyJames';
     return domToJson(doc.documentElement);
   };
   
-  document.addEventListener('DOMContentLoaded', (productUrl, setLoading, setError, setDomJson) => {
-    if (areStylesLoaded()) {
-      fetchProductDom(productUrl, setLoading, setError, setDomJson);
-    } else {
-      console.error('Les styles ne sont pas complètement chargés.');
-    }
-  });
+  // document.addEventListener('DOMContentLoaded', (productUrl, setLoading, setError, setDomJson) => {
+  //   if (areStylesLoaded()) {
+  //     fetchProductDom(productUrl, setLoading, setError, setDomJson);
+  //   } else {
+  //     console.error('Les styles ne sont pas complètement chargés.');
+  //   }
+  // });
   
   const areStylesLoaded = () => {
     const stylesheets = Array.from(document.styleSheets);
@@ -64,6 +64,7 @@ const authToken = '1_HappyJames';
   };
   
   const fetchProductDom = async (productUrl, setLoading, setError, setDomJson) => {
+    
     setLoading(true);
     try {
       const response = await axios.post('http://localhost:3002/fetch-dom', {
