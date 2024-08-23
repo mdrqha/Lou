@@ -74,9 +74,9 @@ const validateUrl = (url) => {
     if (node.name && node.name.includes('[component:')) {
       let componentName = extractComponentName(node.name);
       let figmaToCssShadow = [];
-      let figmaToCssBackgroundBlur = [];
+      let figmaToCssBackgroundBlur = "";
+      let figmaToCssBackgroundFilterBlur = "";
 
-      
       node.effects.forEach(effect => {
         //Get shadow value
         if ((effect.type === "DROP_SHADOW" && effect.visible === true) || (effect.type === "INNER_SHADOW" && effect.visible === true)) {
@@ -93,13 +93,19 @@ const validateUrl = (url) => {
         // Get background blur value
         if (effect.type === "BACKGROUND_BLUR" && effect.visible === true) {
           const backgroundBlur = `blur(${effect.radius}px)`;
-          figmaToCssBackgroundBlur.push(backgroundBlur);
+          figmaToCssBackgroundBlur = backgroundBlur;
         }
+
+        // Get Blur bg filter
+        if (effect.type === "LAYER_BLUR" && effect.visible === true) {
+            const backgroundFilterBlur = `blur(${effect.radius}px)`;
+            figmaToCssBackgroundFilterBlur = backgroundFilterBlur;
+          }
       });
 
       // Get background color
       const figmaToCssBackgroundColor = [];
-      let figmaToCssBackgroundGradient = "";   
+      let figmaToCssBackgroundGradient = [];   
 
       if(node.background){
         let backgroundLength = node.background.length;
@@ -108,35 +114,27 @@ const validateUrl = (url) => {
             if (node.background[0].visible === undefined) {
                 switch (node.background[0].type) {
                   case "SOLID":
-                    const { r, g, b, a } = node.background[0].color || {};
-                    const figmaColorOpacity = node.background[0].opacity ? (node.background[0].opacity * a).toFixed(2) : 1;
-                    figmaToCssBackgroundColor.push(`rgba(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}, ${figmaColorOpacity})`);
+                    let opacityBackground = node.background[0].opacity ? node.background[0].opacity : 1;
+                    figmaToCssBackgroundColor.push({
+                        "r" : Math.round(node.background[0].color.r * 255),
+                        "g" : Math.round(node.background[0].color.g * 255),
+                        "b" : Math.round(node.background[0].color.b * 255),
+                        "a" : parseFloat((opacityBackground * node.background[0].color.a).toFixed(2))
+                    });
                   break;
               
                   case "GRADIENT_LINEAR":
-                    const gradientColors = [];
-                    let gradientAllColors = "";
-                    const figmaGradientOpacity = node.background[0].opacity ? node.background[0].opacity : 1;
-
-                    node.background[0].gradientStops.forEach(colorGradientData =>{
-                        const {r, g, b, a} = colorGradientData.color;
-                        const alphaResult = (a * figmaGradientOpacity).toFixed(2);
-                        const gradientPostion = Math.round(colorGradientData.position * 100);
-
-                        gradientColors.push(`rgba(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}, ${alphaResult}) ${gradientPostion}%`);
-                    });
-
-                    gradientAllColors = gradientColors.join(", ");
-                    figmaToCssBackgroundGradient = `linear-gradient(${gradientAllColors})`;
-
-                  break;
-              
                   case "GRADIENT_RADIAL":
-                    console.log(node.background[0].type);
-                  break;
-              
-                  case "GRADIENT_DIAMOND":
-                    console.log(node.background[0].type);
+                    case "GRADIENT_DIAMOND":
+                    node.background[0].gradientStops.forEach(colorGradientData =>{
+                        figmaToCssBackgroundGradient.push({
+                            "r" : Math.round(colorGradientData.color.r * 255),
+                            "g" : Math.round(colorGradientData.color.g * 255),
+                            "b" : Math.round(colorGradientData.color.b * 255),
+                            "a" : colorGradientData.color.a.toFixed(2),
+                            "position" : Math.round(colorGradientData.position * 100)
+                        });
+                    });
                   break;
               
                   default:
@@ -145,17 +143,41 @@ const validateUrl = (url) => {
                 }
             }
         } else if (backgroundLength > 1) {
-            node.background.forEach((bg, index) => {
-                if (bg.type === "SOLID" && bg.visible === undefined) {          
-                    // Afficher le dernier élément du tableau
-                    if (index === backgroundLength - 1) {
-                        const {r, g, b, a} = bg.color;
-                        const figmaColorOpacity = bg.opacity ? (bg.opacity * a).toFixed(2) : 1;
+            console.log(node.name);
+            if (node.background[0].visible === undefined) {
+                let finalColor = { r: 0, g: 0, b: 0 };
+                let alphaFinal = 0;
 
-                        figmaToCssBackgroundColor.push(`rgba(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}, ${figmaColorOpacity})`);
-                    }
-                }
-            });
+                node.background.forEach( layer =>{
+                    switch (layer.type) {
+                        case "SOLID":
+                              
+                              const rCurrent = layer.color.r * 255;
+                              const gCurrent = layer.color.g * 255;
+                              const bCurrent = layer.color.b * 255;
+                              const alphaCurrent = layer.opacity !== undefined ? layer.opacity * layer.color.a : layer.color.a;
+  
+                              const alphaCombined = alphaFinal + alphaCurrent * (1 - alphaFinal);
+                      
+                              finalColor.r = (rCurrent * alphaCurrent + finalColor.r * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                              finalColor.g = (gCurrent * alphaCurrent + finalColor.g * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                              finalColor.b = (bCurrent * alphaCurrent + finalColor.b * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                      
+                              alphaFinal = alphaCombined;
+                          
+                          break;
+                      }
+                });
+                // Arrondir les résultats finaux
+                finalColor.r = Math.round(finalColor.r);
+                finalColor.g = Math.round(finalColor.g);
+                finalColor.b = Math.round(finalColor.b);
+            
+                figmaToCssBackgroundColor.push({r:finalColor.r,g:finalColor.g,b:finalColor.b,a:parseFloat(alphaFinal.toFixed(2))});
+            
+            console.log(figmaToCssBackgroundColor); // Affiche la couleur finale résultante
+                
+            };
         }
           
         
@@ -172,7 +194,8 @@ const validateUrl = (url) => {
                 // background-gradient
                 // width si le layout sizing est fixe
                 "box-shadow" : figmaToCssShadow ? figmaToCssShadow : null,
-                "backdrop-filter" : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null
+                "backdrop-filter" : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
+                "filter" : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null
                 // background-blur
                 // blur effect
                 // padding
