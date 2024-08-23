@@ -143,7 +143,6 @@ const validateUrl = (url) => {
                 }
             }
         } else if (backgroundLength > 1) {
-            console.log(node.name);
             if (node.background[0].visible === undefined) {
                 let finalColor = { r: 0, g: 0, b: 0 };
                 let alphaFinal = 0;
@@ -152,20 +151,20 @@ const validateUrl = (url) => {
                     switch (layer.type) {
                         case "SOLID":
                               
-                              const rCurrent = layer.color.r * 255;
-                              const gCurrent = layer.color.g * 255;
-                              const bCurrent = layer.color.b * 255;
-                              const alphaCurrent = layer.opacity !== undefined ? layer.opacity * layer.color.a : layer.color.a;
-  
-                              const alphaCombined = alphaFinal + alphaCurrent * (1 - alphaFinal);
-                      
-                              finalColor.r = (rCurrent * alphaCurrent + finalColor.r * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
-                              finalColor.g = (gCurrent * alphaCurrent + finalColor.g * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
-                              finalColor.b = (bCurrent * alphaCurrent + finalColor.b * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
-                      
-                              alphaFinal = alphaCombined;
-                          
-                          break;
+                          const rCurrent = layer.color.r * 255;
+                          const gCurrent = layer.color.g * 255;
+                          const bCurrent = layer.color.b * 255;
+                          const alphaCurrent = layer.opacity !== undefined ? layer.opacity * layer.color.a : layer.color.a;
+
+                          const alphaCombined = alphaFinal + alphaCurrent * (1 - alphaFinal);
+                  
+                          finalColor.r = (rCurrent * alphaCurrent + finalColor.r * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                          finalColor.g = (gCurrent * alphaCurrent + finalColor.g * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                          finalColor.b = (bCurrent * alphaCurrent + finalColor.b * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                  
+                          alphaFinal = alphaCombined;
+                        
+                        break;
                       }
                 });
                 // Arrondir les résultats finaux
@@ -175,7 +174,7 @@ const validateUrl = (url) => {
             
                 figmaToCssBackgroundColor.push({r:finalColor.r,g:finalColor.g,b:finalColor.b,a:parseFloat(alphaFinal.toFixed(2))});
             
-            console.log(figmaToCssBackgroundColor); // Affiche la couleur finale résultante
+            // console.log(figmaToCssBackgroundColor); // Affiche la couleur finale résultante
                 
             };
         }
