@@ -78,123 +78,261 @@ const validateUrl = (url) => {
       let figmaToCssBackgroundFilterBlur = "";
 
       node.effects.forEach(effect => {
+        //VERIFIER QUE QUAND IL Y A RIEN C'EST NULL ET QUE QUAND IL Y A DE LA VALEUR C'EST BIEN PRINT
         //Get shadow value
         if ((effect.type === "DROP_SHADOW" && effect.visible === true) || (effect.type === "INNER_SHADOW" && effect.visible === true)) {
-          const { x, y } = effect.offset;
-          const blur = effect.radius;
-          const { r, g, b, a } = effect.color;
-          const color = `rgba(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}, ${a.toFixed(2)})`;
-          const inset = effect.type === "INNER_SHADOW" ? "inset " : "";
-      
-          const boxShadow = `${inset}${x}px ${y}px ${blur}px ${color}`;
-          figmaToCssShadow.push(boxShadow);
+          figmaToCssShadow.push({
+            type: effect.type,
+            x: effect.offset.x,
+            y: effect.offset.y,
+            blur: effect.radius,
+            color: {
+              r: Math.round(effect.color.r * 255),
+              g: Math.round(effect.color.g * 255),
+              b: Math.round(effect.color.b * 255),
+              a: parseFloat(effect.color.a.toFixed(2))
+            }
+          })
         }
 
         // Get background blur value
         if (effect.type === "BACKGROUND_BLUR" && effect.visible === true) {
-          const backgroundBlur = `blur(${effect.radius}px)`;
-          figmaToCssBackgroundBlur = backgroundBlur;
+          figmaToCssBackgroundBlur = effect.radius;
         }
 
         // Get Blur bg filter
         if (effect.type === "LAYER_BLUR" && effect.visible === true) {
-            const backgroundFilterBlur = `blur(${effect.radius}px)`;
-            figmaToCssBackgroundFilterBlur = backgroundFilterBlur;
+            figmaToCssBackgroundFilterBlur = effect.radius;
           }
       });
+    
+      if(figmaToCssShadow.length === 0){
+        figmaToCssShadow = null;
+      }
 
       // Get background color
-      const figmaToCssBackgroundColor = [];
+      let figmaToCssBackgroundColor = [];
       let figmaToCssBackgroundGradient = [];   
 
       if(node.background){
-        let backgroundLength = node.background.length;
+        // let backgroundLength = node.background.length;
+        let finalColor = { r: 0, g: 0, b: 0 };
+        let alphaFinal = 0;
 
-        if (backgroundLength === 1) {
-            if (node.background[0].visible === undefined) {
-                switch (node.background[0].type) {
-                  case "SOLID":
-                    let opacityBackground = node.background[0].opacity ? node.background[0].opacity : 1;
-                    figmaToCssBackgroundColor.push({
-                        "r" : Math.round(node.background[0].color.r * 255),
-                        "g" : Math.round(node.background[0].color.g * 255),
-                        "b" : Math.round(node.background[0].color.b * 255),
-                        "a" : parseFloat((opacityBackground * node.background[0].color.a).toFixed(2))
+        node.background.forEach(backgrounds => {
+          if(backgrounds.visible === undefined){
+            switch (backgrounds.type) {
+              case 'SOLID':
+                const rCurrent = backgrounds.color.r * 255;
+                const gCurrent = backgrounds.color.g * 255;
+                const bCurrent = backgrounds.color.b * 255;
+                const alphaCurrent = backgrounds.opacity !== undefined ? backgrounds.opacity * backgrounds.color.a : backgrounds.color.a;
+
+                const alphaCombined = alphaFinal + alphaCurrent * (1 - alphaFinal);
+        
+                finalColor.r = (rCurrent * alphaCurrent + finalColor.r * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                finalColor.g = (gCurrent * alphaCurrent + finalColor.g * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                finalColor.b = (bCurrent * alphaCurrent + finalColor.b * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+        
+                alphaFinal = alphaCombined;
+              break;
+
+              case "GRADIENT_LINEAR":
+              case "GRADIENT_RADIAL":
+              case "GRADIENT_DIAMOND":
+                backgrounds.gradientStops.forEach(gradientData =>{
+                    figmaToCssBackgroundGradient.push({
+                        "r" : Math.round(gradientData.color.r * 255),
+                        "g" : Math.round(gradientData.color.g * 255),
+                        "b" : Math.round(gradientData.color.b * 255),
+                        "a" : parseFloat(gradientData.color.a.toFixed(2)),
+                        "position" : Math.round(gradientData.position * 100)
                     });
-                  break;
-              
-                  case "GRADIENT_LINEAR":
-                  case "GRADIENT_RADIAL":
-                    case "GRADIENT_DIAMOND":
-                    node.background[0].gradientStops.forEach(colorGradientData =>{
-                        figmaToCssBackgroundGradient.push({
-                            "r" : Math.round(colorGradientData.color.r * 255),
-                            "g" : Math.round(colorGradientData.color.g * 255),
-                            "b" : Math.round(colorGradientData.color.b * 255),
-                            "a" : colorGradientData.color.a.toFixed(2),
-                            "position" : Math.round(colorGradientData.position * 100)
-                        });
-                    });
-                  break;
-              
-                  default:
-                    console.log("Type non pris en charge");
-                  break;
-                }
-            }
-        } else if (backgroundLength > 1) {
-            if (node.background[0].visible === undefined) {
-                let finalColor = { r: 0, g: 0, b: 0 };
-                let alphaFinal = 0;
-
-                node.background.forEach( layer =>{
-                    switch (layer.type) {
-                        case "SOLID":
-                              
-                          const rCurrent = layer.color.r * 255;
-                          const gCurrent = layer.color.g * 255;
-                          const bCurrent = layer.color.b * 255;
-                          const alphaCurrent = layer.opacity !== undefined ? layer.opacity * layer.color.a : layer.color.a;
-
-                          const alphaCombined = alphaFinal + alphaCurrent * (1 - alphaFinal);
-                  
-                          finalColor.r = (rCurrent * alphaCurrent + finalColor.r * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
-                          finalColor.g = (gCurrent * alphaCurrent + finalColor.g * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
-                          finalColor.b = (bCurrent * alphaCurrent + finalColor.b * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
-                  
-                          alphaFinal = alphaCombined;
-                        
-                        break;
-                      }
                 });
-                // Arrondir les résultats finaux
-                finalColor.r = Math.round(finalColor.r);
-                finalColor.g = Math.round(finalColor.g);
-                finalColor.b = Math.round(finalColor.b);
-            
-                figmaToCssBackgroundColor.push({r:finalColor.r,g:finalColor.g,b:finalColor.b,a:parseFloat(alphaFinal.toFixed(2))});
-            
-            // console.log(figmaToCssBackgroundColor); // Affiche la couleur finale résultante
-                
-            };
+              break;
+
+              default:
+                console.log("Type non pris en charge");
+              break;
+            }
+          }
+        });
+
+        finalColor.r = Math.round(finalColor.r);
+        finalColor.g = Math.round(finalColor.g);
+        finalColor.b = Math.round(finalColor.b);
+
+        figmaToCssBackgroundColor.push({r:finalColor.r,g:finalColor.g,b:finalColor.b,a:parseFloat(alphaFinal.toFixed(2))});
+
+        if(figmaToCssBackgroundColor[0].r === 0 && figmaToCssBackgroundColor[0].g === 0 && figmaToCssBackgroundColor[0].b === 0 && figmaToCssBackgroundColor[0].a === 0){
+          figmaToCssBackgroundColor = null;
         }
-          
+
+        if(figmaToCssBackgroundGradient.length === 0){
+          figmaToCssBackgroundGradient = null;
+        }
+      }
+
+      // Get border
+      // Get border Colors
+      let figmaToCssStrokeColor = [];
+      let figmaToCssStrokeSize = null;
+      let figmaToCssStrokePosition = null;
+      let figmaToCssStrokeStyle = null; // JE PEUX RETIRER LE IF DU NULL GRACE A CE EGALE
+
+      if(node.strokes.length > 0){
+        let strokeFinalColor = { r: 0, g: 0, b: 0 };
+        let strokeAlphaFinal = 0;
+
+        node.strokes.forEach(stroke => {
+          if(stroke.visible === undefined){
+            switch (stroke.type) {
+              case 'SOLID':
+                const rCurrent = stroke.color.r * 255;
+                const gCurrent = stroke.color.g * 255;
+                const bCurrent = stroke.color.b * 255;
+                const alphaCurrent = stroke.opacity !== undefined ? stroke.opacity * stroke.color.a : stroke.color.a;
+
+                const alphaCombined = strokeAlphaFinal + alphaCurrent * (1 - strokeAlphaFinal);
+        
+                strokeFinalColor.r = (rCurrent * alphaCurrent + strokeFinalColor.r * strokeAlphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                strokeFinalColor.g = (gCurrent * alphaCurrent + strokeFinalColor.g * strokeAlphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                strokeFinalColor.b = (bCurrent * alphaCurrent + strokeFinalColor.b * strokeAlphaFinal * (1 - alphaCurrent)) / alphaCombined;
+        
+                strokeAlphaFinal = alphaCombined;
+              break;
+
+              case "GRADIENT_LINEAR":
+              case "GRADIENT_RADIAL":
+              case "GRADIENT_DIAMOND":
+                stroke.gradientStops.forEach(gradientData =>{
+                  figmaToCssStrokeColor.push({
+                        "r" : Math.round(gradientData.color.r * 255),
+                        "g" : Math.round(gradientData.color.g * 255),
+                        "b" : Math.round(gradientData.color.b * 255),
+                        "a" : parseFloat(gradientData.color.a.toFixed(2)),
+                        "position" : Math.round(gradientData.position * 100),
+                        "type" : "Gradient"
+                    });
+                });
+              break;
+
+              default:
+                console.log("Type non pris en charge");
+              break;
+            }
+          }
+        });
+
+        strokeFinalColor.r = Math.round(strokeFinalColor.r);
+        strokeFinalColor.g = Math.round(strokeFinalColor.g);
+        strokeFinalColor.b = Math.round(strokeFinalColor.b);
+
+        figmaToCssStrokeColor.push({
+          r:strokeFinalColor.r,
+          g:strokeFinalColor.g,
+          b:strokeFinalColor.b,
+          a:parseFloat(strokeAlphaFinal.toFixed(2)),
+          type:"Solid"
+        });
+
+        // Get border position
+        figmaToCssStrokePosition = node.strokeAlign ? node.strokeAlign : null;
+
+        // Get border size
+        if(node.individualStrokeWeights){
+          let strokeWeightCurrent = node.individualStrokeWeights;
+          figmaToCssStrokeSize = {strokeWeightCurrent};
+        } else {
+          figmaToCssStrokeSize = {
+            top: node.strokeWeight ? node.strokeWeight : null,
+            bottom : node.strokeWeight ? node.strokeWeight : null,
+            right : node.strokeWeight ? node.strokeWeight : null,
+            left : node.strokeWeight ? node.strokeWeight : null
+          };
+        }
+
+        // Get style
+          figmaToCssStrokeStyle = {
+            dashValue: node.strokeDashes ? node.strokeDashes : null,
+            type: node.strokeCap ? node.strokeCap : "SOLID",
+            angle: node.strokeJoin ? node.strokeJoin : "ANGLE"
+          }
+      } else {
+        figmaToCssStrokeColor = null;
+        figmaToCssStrokeSize = null;
+        figmaToCssStrokePosition = null;
+      }
+
+      // Get border radius
+      // console.log(node);
+      // console.log(node.rectangleCornerRadii)
+      // console.log(node.cornerRadius);
+      // console.log(node.cornerSmoothing);
+
+      // FAIRE LA CONDITION POUR SIBORDER RADIUS POUSSER BORDER RADIUS SI NON NULL MAIS SI BORDER RECTANGLE METTRE RECTANGLE
+      // let figmaToCssRadius = {
+      //   radius: node.cornerRadius ? node.cornerRadius : null, // ICI LA CONDITION
+      //   radiusSmoothing : node.cornerSmoothing
+      // };
+
+      let figmaToCssRadius = null;
+      
+
+      if(node.cornerRadius){
+        figmaToCssRadius = {
+          radius: {
+            topRight: node.cornerRadius ? node.cornerRadius : null,
+            topLeft: node.cornerRadius ? node.cornerRadius : null,
+            bottomLeft: node.cornerRadius ? node.cornerRadius : null,
+            bottomRight: node.cornerRadius ? node.cornerRadius : null
+          },
+          smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null,
+        }
+        console.log(node.cornerSmoothing)
+      } else if(node.rectangleCornerRadii) {
+        console.log(node)
+        figmaToCssRadius = {
+          radius: {
+            topRight: node.rectangleCornerRadii ? node.rectangleCornerRadii[0] : null,
+            topLeft: node.rectangleCornerRadii && node.rectangleCornerRadii.length > 1 ? node.rectangleCornerRadii[1] : null,
+            bottomRight: node.rectangleCornerRadii && node.rectangleCornerRadii.length > 2 ? node.rectangleCornerRadii[2] : null,
+            bottomLeft: node.rectangleCornerRadii && node.rectangleCornerRadii.length > 3 ? node.rectangleCornerRadii[3] : null
+          },
+          smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null, // VERIFIER POURQUOI CA FONCTIONNE, CA MET NULL QUNAD C'EST ZERO ALORS QUE CA EXISTE
+        };
         
       }
 
+      // if(node.cornerRadius){
+      //   console.log(`radius`,node.cornerRadius)
+      //   console.log(`smoothing`,node.cornerRadius)
+      // } else if (node.rectangleCornerRadii) {
+      //   console.log(`mixed`,node.rectangleCornerRadii)
+      // }
+
+
       figmaComponent.push({
-          "nodeTOREMOVE" : node,
-          "name" : componentName,
-          "css" : {
-                "background-color" : figmaToCssBackgroundColor,
-                 "background" : figmaToCssBackgroundGradient,
-                // border ou border-left, border-right,...
+          nodeTOREMOVE : node,
+          name : componentName,
+          css : {
+                backgroundColor : figmaToCssBackgroundColor,
+                background : figmaToCssBackgroundGradient,
+                border : {
+                  color : figmaToCssStrokeColor,
+                  size : figmaToCssStrokeSize,
+                  position : figmaToCssStrokePosition,
+                  style: figmaToCssStrokeStyle
+                 },
+                 borderRadius: figmaToCssRadius,
+                //  borderRadius: node.cornerRadius ? node.cornerRadius : null,
+                //  radiusSmoothing
                 // border-radius
                 // background-gradient
                 // width si le layout sizing est fixe
-                "box-shadow" : figmaToCssShadow ? figmaToCssShadow : null,
-                "backdrop-filter" : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
-                "filter" : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null
+                boxShadow : figmaToCssShadow ? figmaToCssShadow : null,
+                backgroundBlur : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
+                blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null
                 // background-blur
                 // blur effect
                 // padding
@@ -212,22 +350,8 @@ const validateUrl = (url) => {
                 // Overflow hidden (clip content)
                 // flex ??      
           }
-        // //   "effects" : node.effects ? node.effects : null, // récupérer les effets différents et écrire différent type d'effets comme le css
-        // //   "border-radius" : node.cornerRadius ? `${node.cornerRadius}px` : null,
-        // //   "border-width" : node.strokeWeight ? `${node.strokeWeight}px` : null,
-        // //   "border-color" : (node.strokes && node.strokes[0]) ? node.strokes[0].color : null, // convertir rgba en hex
-        // //   "border-style" : (node.strokes && node.strokes[0]) ? node.strokes[0].type : null,
-        // //   "border" : node.strokes ? node.strokes : null, // attention à individualStrokeWeight
-        // //   "gap" : node.itemSpacing ? node.itemSpacing : null,
-        // //   "padding-left" : node.paddingLeft ? `${node.paddingLeft}px` :null,
-        // //   "padding-right" : node.paddingRight ? `${node.paddingRight}px` :null,
-        // //   "padding-top" : node.paddingTop ? `${node.paddingTop}px` :null,
-        // //   "padding-bottom" : node.paddingBottom ? `${node.paddingBottom}px` :null,
-        // //   "padding" : `${node.paddingTop !== undefined ? node.paddingTop + 'px' : '0px'} ${node.paddingRight !== undefined ? node.paddingRight + 'px' : '0px'} ${node.paddingBottom !== undefined ? node.paddingBottom + 'px' : '0px'} ${node.paddingLeft !== undefined ? node.paddingLeft + 'px' : '0px'}`,
         });
     }
-  
-    // Si le nœud a des enfants, on appelle la fonction récursive sur chaque enfant
     if (node.children && node.children.length > 0) {
       node.children.forEach((child) => {
         figmaComponent = figmaComponent.concat(extractComponentToJson(child));
