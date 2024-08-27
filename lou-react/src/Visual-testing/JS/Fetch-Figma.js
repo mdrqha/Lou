@@ -178,7 +178,7 @@ const validateUrl = (url) => {
       let figmaToCssStrokeColor = [];
       let figmaToCssStrokeSize = null;
       let figmaToCssStrokePosition = null;
-      let figmaToCssStrokeStyle = null; // JE PEUX RETIRER LE IF DU NULL GRACE A CE EGALE
+      let figmaToCssStrokeStyle = null; 
 
       if(node.strokes.length > 0){
         let strokeFinalColor = { r: 0, g: 0, b: 0 };
@@ -253,11 +253,11 @@ const validateUrl = (url) => {
         }
 
         // Get style
-          figmaToCssStrokeStyle = {
-            dashValue: node.strokeDashes ? node.strokeDashes : null,
-            type: node.strokeCap ? node.strokeCap : "SOLID",
-            angle: node.strokeJoin ? node.strokeJoin : "ANGLE"
-          }
+        figmaToCssStrokeStyle = {
+          dashValue: node.strokeDashes ? node.strokeDashes : null,
+          type: node.strokeCap ? node.strokeCap : null,
+          angle: node.strokeJoin ? node.strokeJoin : "ANGLE"
+        }
       } else {
         figmaToCssStrokeColor = null;
       }
@@ -291,11 +291,6 @@ const validateUrl = (url) => {
       // Get node.style et node.fill pour le texte
       let figmaToCssFont = null;
       if(node.style){
-        // console.log(node.name);
-        // console.log(node);
-        // console.log(node.style);
-        console.log(node.name);
-        // console.log(node.style.opentypeFlags);
         figmaToCssFont = {
           familly: node.style.fontFamily ? node.style.fontFamily : null,
           famillyDetail: node.style.fontPostScriptName ? node.style.fontPostScriptName : null,
@@ -317,7 +312,7 @@ const validateUrl = (url) => {
           color: []
         }
         
-        // Get font color
+      // Get font color
       if(node.fills){
         let finalColor = { r: 0, g: 0, b: 0 };
         let alphaFinal = 0;
@@ -373,45 +368,105 @@ const validateUrl = (url) => {
       }
       }
 
+      //Get fills
+      let figmaToCssFills = [];
+
+      if(node.fills){
+        let finalColor = { r: 0, g: 0, b: 0 };
+        let alphaFinal = 0;
+
+        node.fills.forEach(fill => {
+          if(fill.visible === undefined){
+            switch (fill.type) {
+              case 'SOLID':
+                const rCurrent = fill.color.r * 255;
+                const gCurrent = fill.color.g * 255;
+                const bCurrent = fill.color.b * 255;
+                const alphaCurrent = fill.opacity !== undefined ? fill.opacity * fill.color.a : fill.color.a;
+
+                const alphaCombined = alphaFinal + alphaCurrent * (1 - alphaFinal);
+        
+                finalColor.r = (rCurrent * alphaCurrent + finalColor.r * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                finalColor.g = (gCurrent * alphaCurrent + finalColor.g * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                finalColor.b = (bCurrent * alphaCurrent + finalColor.b * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+        
+                alphaFinal = alphaCombined;
+              break;
+
+              case "GRADIENT_LINEAR":
+              case "GRADIENT_RADIAL":
+              case "GRADIENT_DIAMOND":
+                fill.gradientStops.forEach(gradientData =>{
+                    figmaToCssBackgroundGradient.push({
+                        "r" : Math.round(gradientData.color.r * 255),
+                        "g" : Math.round(gradientData.color.g * 255),
+                        "b" : Math.round(gradientData.color.b * 255),
+                        "a" : parseFloat(gradientData.color.a.toFixed(2)),
+                        "position" : Math.round(gradientData.position * 100)
+                    });
+                });
+              break;
+
+              default:
+                console.log("Type non pris en charge");
+              break;
+            }
+          }
+        });
+
+        finalColor.r = Math.round(finalColor.r);
+        finalColor.g = Math.round(finalColor.g);
+        finalColor.b = Math.round(finalColor.b);
+
+        figmaToCssFills.push({r:finalColor.r,g:finalColor.g,b:finalColor.b,a:parseFloat(alphaFinal.toFixed(2))});
+
+        if(figmaToCssFills[0].r === 0 && figmaToCssFills[0].g === 0 && figmaToCssFills[0].b === 0 && figmaToCssFills[0].a === 0){
+          figmaToCssFills = null;
+        }
+      }
 
       figmaComponent.push({
           nodeTOREMOVE : node,
           name : componentName,
-          css : {
-                backgroundColor : figmaToCssBackgroundColor,
-                background : figmaToCssBackgroundGradient,
-                border : {
-                  color : figmaToCssStrokeColor,
-                  size : figmaToCssStrokeSize,
-                  position : figmaToCssStrokePosition,
-                  style: figmaToCssStrokeStyle
-                 },
-                 borderRadius: figmaToCssRadius,
-                // width si le layout sizing est fixe
-                boxShadow : figmaToCssShadow ? figmaToCssShadow : null,
-                backgroundBlur : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
-                blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null,
-                gap: node.itemSpacing ? node.itemSpacing : null,
-                padding: {
-                  top: node.paddingTop ? node.paddingTop : null,
-                  left: node.paddingLeft ? node.paddingLeft : null,
-                  bottom: node.paddingBottom ? node.paddingBottom : null,
-                  right: node.paddingRight ? node.paddingRight : null
-                },
-                copywriting: node.characters ? node.characters : null,
-                font: figmaToCssFont,
-                // gap
-                // color
-                // fill si svg
-                // Font familly
-                // font-size
-                // Font-weight
-                // letter-spacing
-                // line-height
-                // Text-align vertical
-                // Texte align Horizontal
-                // Overflow hidden (clip content)
-                // flex ??      
+          style : {
+            backgroundColor : figmaToCssBackgroundColor,
+            background : figmaToCssBackgroundGradient,
+            border : {
+              color : figmaToCssStrokeColor,
+              size : figmaToCssStrokeSize,
+              position : figmaToCssStrokePosition,
+              style: figmaToCssStrokeStyle
+            },
+            borderRadius: figmaToCssRadius,
+            boxShadow : figmaToCssShadow ? figmaToCssShadow : null,
+            backgroundBlur : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
+            blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null,
+            gap: node.itemSpacing ? node.itemSpacing : null,
+            padding: {
+              top: node.paddingTop ? node.paddingTop : null,
+              left: node.paddingLeft ? node.paddingLeft : null,
+              bottom: node.paddingBottom ? node.paddingBottom : null,
+              right: node.paddingRight ? node.paddingRight : null
+            },
+            copywriting: node.characters ? node.characters : null,
+            font: figmaToCssFont,
+            fill: figmaToCssFills,
+            size: {
+              width: {
+                render: node.absoluteRenderBounds.width ? node.absoluteRenderBounds.width : null,
+                boundingBox : node.absoluteBoundingBox.width ? node.absoluteBoundingBox.width : null,
+                max: node.maxWidth ? node.maxWidth : null,
+                min: node.minWidth ? node.minWidth : null,
+                layoutSizing: node.layoutSizingHorizontal ? node.layoutSizingHorizontal : null
+              },
+              height: {
+                render: node.absoluteRenderBounds.height ? node.absoluteRenderBounds.height : null,
+                boundingBox : node.absoluteBoundingBox.height ? node.absoluteBoundingBox.height : null,
+                max: node.maxWidth ? node.maxHeight : null,
+                min: node.minWidth ? node.minHeight : null,
+                layoutSizing: node.layoutSizingVertical ? node.layoutSizingVertical : null
+              }
+              }    
           }
         });
     }
