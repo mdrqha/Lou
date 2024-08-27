@@ -118,12 +118,48 @@ const authToken = '1_HappyJames';
               styles[propertyName] = computedStyle.getPropertyValue(propertyName);
             }
 
+            console.log(child.attributes['lou-component'])
+            
+          function parseColor(colorString) {
+            // Enlève les espaces inutiles
+            colorString = colorString.replace(/\s+/g, '').toLowerCase();
+
+            const values = colorString.match(/(\d+(\.\d+)?)/g);
+            let colorObject = {};
+
+            if (values) {
+              if (colorString.startsWith('rgba(') && values.length === 4) {
+                colorObject = {
+                  r: parseInt(values[0], 10),
+                  g: parseInt(values[1], 10),
+                  b: parseInt(values[2], 10),
+                  a: parseFloat(values[3])
+                };
+              } else if (colorString.startsWith('rgb(') && values.length === 3) {
+                colorObject = {
+                  r: parseInt(values[0], 10),
+                  g: parseInt(values[1], 10),
+                  b: parseInt(values[2], 10),
+                  a: 1
+                };
+              }
+            }
+            return colorObject;
+          }
+
+          let productToCssbackgroundColor = parseColor(styles["background-color"]);
+          console.log(productToCssbackgroundColor)
+
+          if(productToCssbackgroundColor.r === 0 && productToCssbackgroundColor.g === 0 && productToCssbackgroundColor.b === 0 && productToCssbackgroundColor.a === 0) {
+            productToCssbackgroundColor = null
+          }
+
             productComponent.push({
                 "name": child.attributes['lou-component'],
-                "class": child.attributes['class'],
+                // "class": child.attributes['class'],
                 "type": child.type,
-                "css": {
-                  "background-color": styles["background-color"] === "rgba(0, 0, 0, 0)" ? "none" : styles["background-color"]
+                "style": {
+                  "background-color": productToCssbackgroundColor
                 // background-color
                 // border ou border-left, border-right,...
                 // border-radius
