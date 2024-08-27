@@ -8,27 +8,27 @@ const validateUrl = (url) => {
     return trimmedUrl;
   };
 
-  const extractComponentNameAndValues = (node) => {
-    const componentName = extractComponentName(node.name); // Extrait le nom après [component:]
+  // const extractComponentNameAndValues = (node) => {
+  //   const componentName = extractComponentName(node.name); // Extrait le nom après [component:]
     
-    if (componentName) {
-      // Crée un objet avec le nom du composant comme clé et les valeurs du nœud comme valeur
-      const componentData = {
-        name: componentName,
-        values: {
-          fills: node.fills || [],
-          strokes: node.strokes || [],
-          effects: node.effects || [],
-          children: node.children ? node.children.map(child => extractComponentNameAndValues(child)) : [],
-          // Ajoutez ici d'autres propriétés du nœud que vous souhaitez inclure
-        }
-      };
+  //   if (componentName) {
+  //     // Crée un objet avec le nom du composant comme clé et les valeurs du nœud comme valeur
+  //     const componentData = {
+  //       name: componentName,
+  //       values: {
+  //         fills: node.fills || [],
+  //         strokes: node.strokes || [],
+  //         effects: node.effects || [],
+  //         children: node.children ? node.children.map(child => extractComponentNameAndValues(child)) : [],
+  //         // Ajoutez ici d'autres propriétés du nœud que vous souhaitez inclure
+  //       }
+  //     };
   
-      return componentData;
-    }
+  //     return componentData;
+  //   }
     
-    return null; // Si le nom n'a pas de [component:], renvoie null
-  };
+  //   return null; // Si le nom n'a pas de [component:], renvoie null
+  // };
 
 
   const extractIdsFromUrl = (url, setError) => {
@@ -260,24 +260,10 @@ const validateUrl = (url) => {
           }
       } else {
         figmaToCssStrokeColor = null;
-        figmaToCssStrokeSize = null;
-        figmaToCssStrokePosition = null;
       }
 
       // Get border radius
-      // console.log(node);
-      // console.log(node.rectangleCornerRadii)
-      // console.log(node.cornerRadius);
-      // console.log(node.cornerSmoothing);
-
-      // FAIRE LA CONDITION POUR SIBORDER RADIUS POUSSER BORDER RADIUS SI NON NULL MAIS SI BORDER RECTANGLE METTRE RECTANGLE
-      // let figmaToCssRadius = {
-      //   radius: node.cornerRadius ? node.cornerRadius : null, // ICI LA CONDITION
-      //   radiusSmoothing : node.cornerSmoothing
-      // };
-
       let figmaToCssRadius = null;
-      
 
       if(node.cornerRadius){
         figmaToCssRadius = {
@@ -289,9 +275,7 @@ const validateUrl = (url) => {
           },
           smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null,
         }
-        console.log(node.cornerSmoothing)
       } else if(node.rectangleCornerRadii) {
-        console.log(node)
         figmaToCssRadius = {
           radius: {
             topRight: node.rectangleCornerRadii ? node.rectangleCornerRadii[0] : null,
@@ -299,17 +283,95 @@ const validateUrl = (url) => {
             bottomRight: node.rectangleCornerRadii && node.rectangleCornerRadii.length > 2 ? node.rectangleCornerRadii[2] : null,
             bottomLeft: node.rectangleCornerRadii && node.rectangleCornerRadii.length > 3 ? node.rectangleCornerRadii[3] : null
           },
-          smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null, // VERIFIER POURQUOI CA FONCTIONNE, CA MET NULL QUNAD C'EST ZERO ALORS QUE CA EXISTE
+          smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null, 
         };
         
       }
 
-      // if(node.cornerRadius){
-      //   console.log(`radius`,node.cornerRadius)
-      //   console.log(`smoothing`,node.cornerRadius)
-      // } else if (node.rectangleCornerRadii) {
-      //   console.log(`mixed`,node.rectangleCornerRadii)
-      // }
+      // Get node.style et node.fill pour le texte
+      let figmaToCssFont = null;
+      if(node.style){
+        // console.log(node.name);
+        // console.log(node);
+        // console.log(node.style);
+        console.log(node.name);
+        // console.log(node.style.opentypeFlags);
+        figmaToCssFont = {
+          familly: node.style.fontFamily ? node.style.fontFamily : null,
+          famillyDetail: node.style.fontPostScriptName ? node.style.fontPostScriptName : null,
+          size: node.style.fontSize ? node.style.fontSize : null,
+          weight: node.style.fontWeight ? node.style.fontWeight : null,
+          letterSpacing: node.style.letterSpacing ? node.style.letterSpacing : null,
+          lineHeightPercent: node.style.lineHeightPercent ? node.style.lineHeightPercent : null,
+          lineHeightPx: node.style.lineHeightPx ? node.style.lineHeightPx : null,
+          lineHeightUnit: node.style.lineHeightUnit ? node.style.lineHeightUnit : null,
+          textAlignHorizontal: node.style.textAlignHorizontal ? node.style.textAlignHorizontal : null,
+          textAlignVertical: node.style.textAlignVertical ? node.style.textAlignVertical : null,
+          textAutoResize: node.style.textAutoResize ? node.style.textAutoResize : null,
+          ellipsis: node.style.textTruncation ? node.style.textTruncation : null,
+          liste: node.lineTypes ? node.lineTypes : null,
+          listeIndentation: node.lineIndentations ? node.lineIndentations : null,
+          decoration: node.style.textDecoration ? node.style.textDecoration : null,
+          case: node.style.textCase  ? node.style.textCase : null,
+          fontCustomisation: node.style.opentypeFlags ? node.style.opentypeFlags : null,
+          color: []
+        }
+        
+        // Get font color
+      if(node.fills){
+        let finalColor = { r: 0, g: 0, b: 0 };
+        let alphaFinal = 0;
+
+        node.fills.forEach(fill => {
+          if(fill.visible === undefined){
+            switch (fill.type) {
+              case 'SOLID':
+                const rCurrent = fill.color.r * 255;
+                const gCurrent = fill.color.g * 255;
+                const bCurrent = fill.color.b * 255;
+                const alphaCurrent = fill.opacity !== undefined ? fill.opacity * fill.color.a : fill.color.a;
+
+                const alphaCombined = alphaFinal + alphaCurrent * (1 - alphaFinal);
+        
+                finalColor.r = (rCurrent * alphaCurrent + finalColor.r * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                finalColor.g = (gCurrent * alphaCurrent + finalColor.g * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+                finalColor.b = (bCurrent * alphaCurrent + finalColor.b * alphaFinal * (1 - alphaCurrent)) / alphaCombined;
+        
+                alphaFinal = alphaCombined;
+              break;
+
+              case "GRADIENT_LINEAR":
+              case "GRADIENT_RADIAL":
+              case "GRADIENT_DIAMOND":
+                fill.gradientStops.forEach(gradientData =>{
+                    figmaToCssBackgroundGradient.push({
+                        "r" : Math.round(gradientData.color.r * 255),
+                        "g" : Math.round(gradientData.color.g * 255),
+                        "b" : Math.round(gradientData.color.b * 255),
+                        "a" : parseFloat(gradientData.color.a.toFixed(2)),
+                        "position" : Math.round(gradientData.position * 100)
+                    });
+                });
+              break;
+
+              default:
+                console.log("Type non pris en charge");
+              break;
+            }
+          }
+        });
+
+        finalColor.r = Math.round(finalColor.r);
+        finalColor.g = Math.round(finalColor.g);
+        finalColor.b = Math.round(finalColor.b);
+
+        figmaToCssFont.color.push({r:finalColor.r,g:finalColor.g,b:finalColor.b,a:parseFloat(alphaFinal.toFixed(2))});
+
+        if(figmaToCssFont.color[0].r === 0 && figmaToCssFont.color[0].g === 0 && figmaToCssFont.color[0].b === 0 && figmaToCssFont.color[0].a === 0){
+          figmaToCssFont.color = null;
+        }
+      }
+      }
 
 
       figmaComponent.push({
@@ -325,18 +387,19 @@ const validateUrl = (url) => {
                   style: figmaToCssStrokeStyle
                  },
                  borderRadius: figmaToCssRadius,
-                //  borderRadius: node.cornerRadius ? node.cornerRadius : null,
-                //  radiusSmoothing
-                // border-radius
-                // background-gradient
                 // width si le layout sizing est fixe
                 boxShadow : figmaToCssShadow ? figmaToCssShadow : null,
                 backgroundBlur : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
-                blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null
-                // background-blur
-                // blur effect
-                // padding
-                // margin
+                blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null,
+                gap: node.itemSpacing ? node.itemSpacing : null,
+                padding: {
+                  top: node.paddingTop ? node.paddingTop : null,
+                  left: node.paddingLeft ? node.paddingLeft : null,
+                  bottom: node.paddingBottom ? node.paddingBottom : null,
+                  right: node.paddingRight ? node.paddingRight : null
+                },
+                copywriting: node.characters ? node.characters : null,
+                font: figmaToCssFont,
                 // gap
                 // color
                 // fill si svg

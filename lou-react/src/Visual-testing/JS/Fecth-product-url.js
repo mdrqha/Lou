@@ -52,16 +52,16 @@ const authToken = '1_HappyJames';
   //   }
   // });
   
-  const areStylesLoaded = () => {
-    const stylesheets = Array.from(document.styleSheets);
-    return stylesheets.every(sheet => {
-      try {
-        return sheet.cssRules; // Vérifier si les règles CSS sont chargées
-      } catch (e) {
-        return false; // Ignorer les exceptions pour les feuilles de style de domaines externes
-      }
-    });
-  };
+  // const areStylesLoaded = () => {
+  //   const stylesheets = Array.from(document.styleSheets);
+  //   return stylesheets.every(sheet => {
+  //     try {
+  //       return sheet.cssRules; // Vérifier si les règles CSS sont chargées
+  //     } catch (e) {
+  //       return false; // Ignorer les exceptions pour les feuilles de style de domaines externes
+  //     }
+  //   });
+  // };
   
   const fetchProductDom = async (productUrl, setLoading, setError, setDomJson) => {
     
