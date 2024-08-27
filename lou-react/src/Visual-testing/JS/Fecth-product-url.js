@@ -44,26 +44,27 @@ const authToken = '1_HappyJames';
     return domToJson(doc.documentElement);
   };
   
-  document.addEventListener('DOMContentLoaded', (productUrl, setLoading, setError, setDomJson) => {
-    if (areStylesLoaded()) {
-      fetchProductDom(productUrl, setLoading, setError, setDomJson);
-    } else {
-      console.error('Les styles ne sont pas complètement chargés.');
-    }
-  });
+  // document.addEventListener('DOMContentLoaded', (productUrl, setLoading, setError, setDomJson) => {
+  //   if (areStylesLoaded()) {
+  //     fetchProductDom(productUrl, setLoading, setError, setDomJson);
+  //   } else {
+  //     console.error('Les styles ne sont pas complètement chargés.');
+  //   }
+  // });
   
-  const areStylesLoaded = () => {
-    const stylesheets = Array.from(document.styleSheets);
-    return stylesheets.every(sheet => {
-      try {
-        return sheet.cssRules; // Vérifier si les règles CSS sont chargées
-      } catch (e) {
-        return false; // Ignorer les exceptions pour les feuilles de style de domaines externes
-      }
-    });
-  };
+  // const areStylesLoaded = () => {
+  //   const stylesheets = Array.from(document.styleSheets);
+  //   return stylesheets.every(sheet => {
+  //     try {
+  //       return sheet.cssRules; // Vérifier si les règles CSS sont chargées
+  //     } catch (e) {
+  //       return false; // Ignorer les exceptions pour les feuilles de style de domaines externes
+  //     }
+  //   });
+  // };
   
   const fetchProductDom = async (productUrl, setLoading, setError, setDomJson) => {
+    
     setLoading(true);
     try {
       const response = await axios.post('http://localhost:3002/fetch-dom', {
