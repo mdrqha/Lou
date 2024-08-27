@@ -426,7 +426,7 @@ const validateUrl = (url) => {
       }
 
       figmaComponent.push({
-          nodeTOREMOVE : node,
+          // nodeTOREMOVE : node,
           name : componentName,
           style : {
             backgroundColor : figmaToCssBackgroundColor,
