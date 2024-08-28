@@ -466,7 +466,7 @@ const validateUrl = (url) => {
                 min: node.minWidth ? node.minHeight : null,
                 layoutSizing: node.layoutSizingVertical ? node.layoutSizingVertical : null
               }
-              }    
+            }    // Ajouter l'opacité
           }
         });
     }

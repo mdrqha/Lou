@@ -117,8 +117,6 @@ const authToken = '1_HappyJames';
               const propertyName = computedStyle[i];
               styles[propertyName] = computedStyle.getPropertyValue(propertyName);
             }
-
-            console.log(child.attributes['lou-component'])
             
           function parseColor(colorString) {
             // Enlève les espaces inutiles
@@ -148,39 +146,180 @@ const authToken = '1_HappyJames';
           }
 
           let productToCssbackgroundColor = parseColor(styles["background-color"]);
-          console.log(productToCssbackgroundColor)
 
           if(productToCssbackgroundColor.r === 0 && productToCssbackgroundColor.g === 0 && productToCssbackgroundColor.b === 0 && productToCssbackgroundColor.a === 0) {
             productToCssbackgroundColor = null
           }
 
+          // Get border radius
+          let productToCssRadius = null;
+          
+          const borderRadiusTopLeft = parseInt(styles['border-top-left-radius']);
+          const borderRadiusTopRight = parseInt(styles['border-top-right-radius']);
+          const borderRadiusBottomLeft = parseInt(styles['border-bottom-left-radius']);
+          const borderRadiusBottomRight = parseInt(styles['border-bottom-right-radius']);
+
+          if(borderRadiusTopLeft > 0 || borderRadiusTopRight > 0 || borderRadiusBottomLeft > 0 || borderRadiusBottomRight > 0) {
+              productToCssRadius = {
+                radius: {
+                  bottomLeft: borderRadiusBottomLeft,
+                  bottomRight: borderRadiusBottomRight,
+                  topLeft: borderRadiusTopLeft,
+                  topRight: borderRadiusTopRight
+
+                }
+              }
+          }
+
+          console.log(child.attributes['lou-component'])
+
+          // Get border
+          // border color
+
+          // border size
+          let borderSize = null;
+
+          let borderWidthRight = parseInt(styles['border-right-width']);
+          let borderWidthLeft = parseInt(styles['border-left-width']);
+          let borderWidthBottom = parseInt(styles['border-bottom-width']);
+          let borderWidthTop = parseInt(styles['border-top-width']);
+
+          if(borderWidthRight > 0 || borderWidthLeft > 0  || borderWidthBottom > 0 || borderWidthTop > 0){
+            borderSize = {
+              top: borderWidthTop,
+              right: borderWidthRight,
+              bottom: borderWidthBottom,
+              left: borderWidthLeft
+            }
+          }
+
+          //border style
+          const borderStylesBrut = [
+            styles['border-top-style'],
+            styles['border-right-style'],
+            styles['border-bottom-style'],
+            styles['border-left-style']
+          ];
+          
+          const uniqueStyles = new Set(borderStylesBrut);
+          const borderStyle =
+            uniqueStyles.size === 1
+              ? borderStylesBrut[0]
+              : borderStylesBrut.reduce((a, b, i, arr) =>
+                  arr.filter(v => v === a).length >= arr.filter(v => v === b).length ? a : b
+                );      
+                
+
+          // boder color
+          const borderColors = [
+            styles['border-top-color'],
+            styles['border-right-color'],
+            styles['border-bottom-color'],
+            styles['border-left-color']
+          ];
+          
+          // Utilisation d'un Set pour vérifier les couleurs uniques
+          const uniqueColors = new Set(borderColors);
+          
+          // Détermination de la couleur finale
+          const borderColor =
+            uniqueColors.size === 1
+              ? borderColors[0]
+              : borderColors.reduce((a, b, i, arr) =>
+                  arr.filter(v => v === a).length >= arr.filter(v => v === b).length ? a : b
+                );
+
+          const productToCssBorderColor = parseColor(borderColor);
+
+          // console.log(styles['box-shadow'])
+
+          // Get box shadow
+          const inputString = styles['box-shadow'] ? styles['box-shadow'] : null;
+          let boxShadowBrut = [];
+
+          if(inputString != 'none'){
+            const shadowRegex = /rgba\((\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*[\d.]+)\)\s*-?\d+px\s*-?\d+px\s*-?\d+px\s*-?\d+px/g;
+            const shadows = inputString.match(shadowRegex);
+
+            shadows.forEach((shadow, index) => {
+              boxShadowBrut.push(shadow)
+            });
+          }
+
+          let productToCssBoxShadow = [];
+
+          // Analyse de chaque shadow pour extraire les valeurs
+          boxShadowBrut.forEach((shadowCurrent) => {
+            const match = shadowCurrent.match(/rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*([\d.]+)\)\s*(-?\d+)px\s*(-?\d+)px\s*(-?\d+)px\s*(-?\d+)px/);
+
+            if (match) {
+              const shadowObject = {
+                color: {
+                  r: parseInt(match[1], 10),
+                  g: parseInt(match[2], 10),
+                  b: parseInt(match[3], 10),
+                  a: parseFloat(match[4])
+                },
+                x: parseInt(match[5]),
+                y: parseInt(match[6]),
+                blur: parseInt(match[7]),
+                spread: parseInt(match[8])
+              };
+
+              if(shadowObject.color.a > 0){
+                productToCssBoxShadow.push(shadowObject);
+              }
+            }
+          });
+
+          if(productToCssBoxShadow.length === 0){
+            productToCssBoxShadow = null;
+          }
+
             productComponent.push({
-                "name": child.attributes['lou-component'],
+                name: child.attributes['lou-component'],
                 // "class": child.attributes['class'],
-                "type": child.type,
-                "style": {
-                  "background-color": productToCssbackgroundColor
-                // background-color
-                // border ou border-left, border-right,...
-                // border-radius
-                // background-gradient
-                // Box-shadow
-                // background-blur
-                // blur effect
-                // padding
-                // margin
-                // gap
-                // color
-                // fill si svg
-                // Font familly
-                // font-size
-                // Font-weight
-                // letter-spacing
-                // line-height
-                // Text-align vertical
-                // Texte align Horizontal
-                // Overflow hidden (clip content)
-                // flex ??
+                type: child.type,
+                style: {
+                  background: productToCssbackgroundColor,
+                  border: {
+                    color: productToCssBorderColor,
+                    size: borderSize,
+                    style: borderStyle
+                  },
+                  borderRadius: productToCssRadius,
+                  boxShadow: productToCssBoxShadow,
+
+                  // boxShadow : figmaToCssShadow ? figmaToCssShadow : null,
+                  // backgroundBlur : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
+                  // blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null,
+                  // gap: node.itemSpacing ? node.itemSpacing : null,
+                  // padding: {
+                  //   top: node.paddingTop ? node.paddingTop : null,
+                  //   left: node.paddingLeft ? node.paddingLeft : null,
+                  //   bottom: node.paddingBottom ? node.paddingBottom : null,
+                  //   right: node.paddingRight ? node.paddingRight : null
+                  // },
+                  // copywriting: node.characters ? node.characters : null,
+                  // font: figmaToCssFont,
+                  // fill: figmaToCssFills,
+                  // size: {
+                  //   width: {
+                  //     render: node.absoluteRenderBounds.width ? node.absoluteRenderBounds.width : null,
+                  //     boundingBox : node.absoluteBoundingBox.width ? node.absoluteBoundingBox.width : null,
+                  //     max: node.maxWidth ? node.maxWidth : null,
+                  //     min: node.minWidth ? node.minWidth : null,
+                  //     layoutSizing: node.layoutSizingHorizontal ? node.layoutSizingHorizontal : null
+                  //   },
+                  //   height: {
+                  //     render: node.absoluteRenderBounds.height ? node.absoluteRenderBounds.height : null,
+                  //     boundingBox : node.absoluteBoundingBox.height ? node.absoluteBoundingBox.height : null,
+                  //     max: node.maxWidth ? node.maxHeight : null,
+                  //     min: node.minWidth ? node.minHeight : null,
+                  //     layoutSizing: node.layoutSizingVertical ? node.layoutSizingVertical : null
+                  //   }
+                  // }
+                  opacity: styles['opacity'] ? styles['opacity'] : 1,
                 }
             });
             productComponent[productComponent.length - 1].styles = styles;
