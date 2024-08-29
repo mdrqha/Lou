@@ -117,34 +117,237 @@ const authToken = '1_HappyJames';
               const propertyName = computedStyle[i];
               styles[propertyName] = computedStyle.getPropertyValue(propertyName);
             }
+            
+          function parseColor(colorString) {
+            // Enlève les espaces inutiles
+            colorString = colorString.replace(/\s+/g, '').toLowerCase();
+
+            const values = colorString.match(/(\d+(\.\d+)?)/g);
+            let colorObject = {};
+
+            if (values) {
+              if (colorString.startsWith('rgba(') && values.length === 4) {
+                colorObject = {
+                  r: parseInt(values[0], 10),
+                  g: parseInt(values[1], 10),
+                  b: parseInt(values[2], 10),
+                  a: parseFloat(values[3])
+                };
+              } else if (colorString.startsWith('rgb(') && values.length === 3) {
+                colorObject = {
+                  r: parseInt(values[0], 10),
+                  g: parseInt(values[1], 10),
+                  b: parseInt(values[2], 10),
+                  a: 1
+                };
+              }
+            }
+            return colorObject;
+          }
+
+          let productToCssbackgroundColor = parseColor(styles["background-color"]);
+
+          if(productToCssbackgroundColor.r === 0 && productToCssbackgroundColor.g === 0 && productToCssbackgroundColor.b === 0 && productToCssbackgroundColor.a === 0) {
+            productToCssbackgroundColor = null
+          }
+
+          // Get border radius
+          let productToCssRadius = null;
+          
+          const borderRadiusTopLeft = parseInt(styles['border-top-left-radius']);
+          const borderRadiusTopRight = parseInt(styles['border-top-right-radius']);
+          const borderRadiusBottomLeft = parseInt(styles['border-bottom-left-radius']);
+          const borderRadiusBottomRight = parseInt(styles['border-bottom-right-radius']);
+
+          if(borderRadiusTopLeft > 0 || borderRadiusTopRight > 0 || borderRadiusBottomLeft > 0 || borderRadiusBottomRight > 0) {
+              productToCssRadius = {
+                radius: {
+                  bottomLeft: borderRadiusBottomLeft,
+                  bottomRight: borderRadiusBottomRight,
+                  topLeft: borderRadiusTopLeft,
+                  topRight: borderRadiusTopRight
+
+                }
+              }
+          }
+
+          console.log(child.attributes['lou-component'])
+
+          // Get border
+          // border color
+
+          // border size
+          let borderSize = null;
+
+          let borderWidthRight = parseInt(styles['border-right-width']);
+          let borderWidthLeft = parseInt(styles['border-left-width']);
+          let borderWidthBottom = parseInt(styles['border-bottom-width']);
+          let borderWidthTop = parseInt(styles['border-top-width']);
+
+          if(borderWidthRight > 0 || borderWidthLeft > 0  || borderWidthBottom > 0 || borderWidthTop > 0){
+            borderSize = {
+              top: borderWidthTop,
+              right: borderWidthRight,
+              bottom: borderWidthBottom,
+              left: borderWidthLeft
+            }
+          }
+
+          //border style
+          const borderStylesBrut = [
+            styles['border-top-style'],
+            styles['border-right-style'],
+            styles['border-bottom-style'],
+            styles['border-left-style']
+          ];
+          
+          const uniqueStyles = new Set(borderStylesBrut);
+          const borderStyle =
+            uniqueStyles.size === 1
+              ? borderStylesBrut[0]
+              : borderStylesBrut.reduce((a, b, i, arr) =>
+                  arr.filter(v => v === a).length >= arr.filter(v => v === b).length ? a : b
+                );      
+                
+
+          // boder color
+          const borderColors = [
+            styles['border-top-color'],
+            styles['border-right-color'],
+            styles['border-bottom-color'],
+            styles['border-left-color']
+          ];
+          
+          // Utilisation d'un Set pour vérifier les couleurs uniques
+          const uniqueColors = new Set(borderColors);
+          
+          // Détermination de la couleur finale
+          const borderColor =
+            uniqueColors.size === 1
+              ? borderColors[0]
+              : borderColors.reduce((a, b, i, arr) =>
+                  arr.filter(v => v === a).length >= arr.filter(v => v === b).length ? a : b
+                );
+
+          const productToCssBorderColor = parseColor(borderColor);
+
+          // console.log(styles['box-shadow'])
+
+          // Get box shadow
+          const inputString = styles['box-shadow'] ? styles['box-shadow'] : null;
+          let boxShadowBrut = [];
+
+          if(inputString != 'none'){
+            const shadowRegex = /rgba\((\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*[\d.]+)\)\s*-?\d+px\s*-?\d+px\s*-?\d+px\s*-?\d+px/g;
+            const shadows = inputString.match(shadowRegex);
+
+            shadows.forEach((shadow, index) => {
+              boxShadowBrut.push(shadow)
+            });
+          }
+
+          let productToCssBoxShadow = [];
+
+          boxShadowBrut.forEach((shadowCurrent) => {
+            const match = shadowCurrent.match(/rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*([\d.]+)\)\s*(-?\d+)px\s*(-?\d+)px\s*(-?\d+)px\s*(-?\d+)px/);
+
+            if (match) {
+              const shadowObject = {
+                color: {
+                  r: parseInt(match[1], 10),
+                  g: parseInt(match[2], 10),
+                  b: parseInt(match[3], 10),
+                  a: parseFloat(match[4])
+                },
+                x: parseInt(match[5]),
+                y: parseInt(match[6]),
+                blur: parseInt(match[7]),
+                spread: parseInt(match[8])
+              };
+
+              if(shadowObject.color.a > 0) productToCssBoxShadow.push(shadowObject);
+            }
+          });
+
+          if(productToCssBoxShadow.length === 0) productToCssBoxShadow = null;
+
+          // Get gap
+          let productToCssGap = null;
+
+          if(styles['column-gap'] != "normal") productToCssGap = parseInt(styles['column-gap']);
+
+          let productToCssTextDecoration = null;
+
+          switch(styles['text-decoration-line']){
+            case 'underline':
+              productToCssTextDecoration = "UNDERLINE";
+            break;
+
+            case 'line-through': 
+              productToCssTextDecoration = "STRIKETHROUGH";
+            break;
+          }
+
 
             productComponent.push({
-                "name": child.attributes['lou-component'],
-                "class": child.attributes['class'],
-                "type": child.type,
-                "css": {
-                  "background-color": styles["background-color"] === "rgba(0, 0, 0, 0)" ? "none" : styles["background-color"]
-                // background-color
-                // border ou border-left, border-right,...
-                // border-radius
-                // background-gradient
-                // Box-shadow
-                // background-blur
-                // blur effect
-                // padding
-                // margin
-                // gap
-                // color
-                // fill si svg
-                // Font familly
-                // font-size
-                // Font-weight
-                // letter-spacing
-                // line-height
-                // Text-align vertical
-                // Texte align Horizontal
-                // Overflow hidden (clip content)
-                // flex ??
+                name: child.attributes['lou-component'],
+                // "class": child.attributes['class'],
+                type: child.type,
+                style: {
+                  background: productToCssbackgroundColor,
+                  border: {
+                    color: productToCssBorderColor,
+                    size: borderSize,
+                    style: borderStyle
+                  },
+                  backgroundBlur: styles['backdrop-filter'] !== "none" ? parseInt(styles['backdrop-filter']) : null,
+                  blur: styles['filter'] !== "none" ? parseInt(styles['filter']) : null,
+                  borderRadius: productToCssRadius,
+                  boxShadow: productToCssBoxShadow,
+                  gap: productToCssGap,
+                  padding: {
+                    top: parseInt(styles['padding-top']) !== 0 ? parseInt(styles['padding-top']) : null,
+                    left: parseInt(styles['padding-left']) !== 0 ? parseInt(styles['padding-left']) : null,
+                    bottom: parseInt(styles['padding-bottom']) !== 0 ? parseInt(styles['padding-bottom']) : null,
+                    right: parseInt(styles['padding-right']) !== 0 ? parseInt(styles['padding-right']) : null
+                  },
+                  font: {
+                    case: styles['font-variant-caps'] ? styles['font-variant-caps'] : null, // a vérifier
+                    color: parseColor(styles['color']),
+                    decoration: productToCssTextDecoration,
+                    ellipsis: styles["text-overflow"] === "ellipsis" ? "ENDING" : null,
+                    familly: styles['font-family'] ? styles['font-family'] : null,
+                    // famillyDetail: ,
+                    // fontCustomisation: ,
+                    letterSpacing: styles['letter-spacing'],
+                    lineHeightPercent: (parseInt(styles['line-height']) / parseInt(styles['font-size'])) * 100,
+                    lineHeightPx: parseInt(styles['line-height']) ? parseInt(styles['line-height']) : null,
+                    // lineHeightUnit: ,
+                    // liste: ,
+                    // listeIndentation: ,
+                    size: styles['font-size'] ? parseInt(styles['font-size']) : null,
+                    textAlignHorizontal: styles['text-align'] ? styles['text-align'] : null,
+                    // textAlignVertical: ,
+                    // textAutoResize: ,
+                    weight: styles['font-weight'] ? parseInt(styles['font-weight']) : null
+                  },
+                  fill: parseColor(styles['fill']), // verifier la couleur avec fill-opacity
+                  size: {
+                    width: {
+                      render: parseInt(styles['width']),
+                      boundingBox: parseInt(styles['width']),
+                      max: styles['max-width'] !== "none" ? parseInt(styles['max-width']) : null,
+                      min: styles['min-width'] !== "none" ? parseInt(styles['min-width']) : null,
+                    },
+                    height: {
+                      render: parseInt(styles['height']),
+                      boundingBox: parseInt(styles['height']),
+                      max: styles['max-height'] !== "none" ? parseInt(styles['max-height']) : null,
+                      min: styles['min-height'] !== "none" ? parseInt(styles['min-height']) : null,
+                    }
+                  },
+                  
+                  opacity: styles['opacity'] ? styles['opacity'] : 1,
                 }
             });
             productComponent[productComponent.length - 1].styles = styles;

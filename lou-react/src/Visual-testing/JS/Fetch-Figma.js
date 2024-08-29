@@ -293,22 +293,22 @@ const validateUrl = (url) => {
       if(node.style){
         figmaToCssFont = {
           familly: node.style.fontFamily ? node.style.fontFamily : null,
-          famillyDetail: node.style.fontPostScriptName ? node.style.fontPostScriptName : null,
+          // famillyDetail: node.style.fontPostScriptName ? node.style.fontPostScriptName : null,
           size: node.style.fontSize ? node.style.fontSize : null,
           weight: node.style.fontWeight ? node.style.fontWeight : null,
           letterSpacing: node.style.letterSpacing ? node.style.letterSpacing : null,
           lineHeightPercent: node.style.lineHeightPercent ? node.style.lineHeightPercent : null,
           lineHeightPx: node.style.lineHeightPx ? node.style.lineHeightPx : null,
-          lineHeightUnit: node.style.lineHeightUnit ? node.style.lineHeightUnit : null,
+          // lineHeightUnit: node.style.lineHeightUnit ? node.style.lineHeightUnit : null,
           textAlignHorizontal: node.style.textAlignHorizontal ? node.style.textAlignHorizontal : null,
           textAlignVertical: node.style.textAlignVertical ? node.style.textAlignVertical : null,
           textAutoResize: node.style.textAutoResize ? node.style.textAutoResize : null,
           ellipsis: node.style.textTruncation ? node.style.textTruncation : null,
-          liste: node.lineTypes ? node.lineTypes : null,
-          listeIndentation: node.lineIndentations ? node.lineIndentations : null,
+          // liste: node.lineTypes ? node.lineTypes : null,
+          // listeIndentation: node.lineIndentations ? node.lineIndentations : null,
           decoration: node.style.textDecoration ? node.style.textDecoration : null,
           case: node.style.textCase  ? node.style.textCase : null,
-          fontCustomisation: node.style.opentypeFlags ? node.style.opentypeFlags : null,
+          // fontCustomisation: node.style.opentypeFlags ? node.style.opentypeFlags : null,
           color: []
         }
         
@@ -448,7 +448,7 @@ const validateUrl = (url) => {
               bottom: node.paddingBottom ? node.paddingBottom : null,
               right: node.paddingRight ? node.paddingRight : null
             },
-            copywriting: node.characters ? node.characters : null,
+            // copywriting: node.characters ? node.characters : null,
             font: figmaToCssFont,
             fill: figmaToCssFills,
             size: {
@@ -466,7 +466,7 @@ const validateUrl = (url) => {
                 min: node.minWidth ? node.minHeight : null,
                 layoutSizing: node.layoutSizingVertical ? node.layoutSizingVertical : null
               }
-              }    
+            }    // Ajouter l'opacité
           }
         });
     }
