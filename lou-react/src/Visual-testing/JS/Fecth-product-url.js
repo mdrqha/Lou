@@ -171,7 +171,7 @@ const authToken = '1_HappyJames';
               }
           }
 
-          console.log(child.attributes['lou-component'])
+          // console.log(child.attributes['lou-component'])
 
           // Get border
           // border color
