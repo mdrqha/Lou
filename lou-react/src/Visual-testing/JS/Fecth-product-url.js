@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const authToken = '1_HappyJames';
+let productComponent = [];
   
   const domStringToJson = (htmlString) => {
     const parser = new DOMParser();
@@ -93,7 +94,7 @@ const authToken = '1_HappyJames';
 
   // Fonction pour parcourir le JSON et loguer les éléments avec "lou-component"
   const logLouComponents = (node) => {
-    let productComponent = [];
+    productComponent = [];
     if (!node) return;
   
     const traverseChildren = (children) => {
@@ -288,7 +289,6 @@ const authToken = '1_HappyJames';
             break;
           }
 
-
             productComponent.push({
                 name: child.attributes['lou-component'],
                 // "class": child.attributes['class'],
@@ -364,7 +364,8 @@ const authToken = '1_HappyJames';
     if (node.children && node.children.length > 0) {
       traverseChildren(node.children);
     }
-    console.log(productComponent);
   };
 
-  export { fetchProductDom };
+  
+
+  export { fetchProductDom, productComponent };

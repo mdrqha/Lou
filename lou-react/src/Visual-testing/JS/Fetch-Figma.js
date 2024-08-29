@@ -1,12 +1,21 @@
 import axios from 'axios';
 
+let figmaComponent = [];
+
 const validateUrl = (url) => {
-    const trimmedUrl = url.trim();
-    if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
-      throw new Error('URL must start with "http://" or "https://"');
-    }
-    return trimmedUrl;
-  };
+  if (typeof url !== 'string' || !url) {
+    throw new Error('URL must be a non-empty string');
+  }
+  
+  const trimmedUrl = url.trim();
+  
+  if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+    throw new Error('URL must start with "http://" or "https://"');
+  }
+
+  return trimmedUrl;
+};
+
 
   // const extractComponentNameAndValues = (node) => {
   //   const componentName = extractComponentName(node.name); // Extrait le nom après [component:]
@@ -69,7 +78,7 @@ const validateUrl = (url) => {
   };
   
   const extractComponentToJson = (node) => {
-    let figmaComponent = [];
+    figmaComponent = [];
   
     if (node.name && node.name.includes('[component:')) {
       let componentName = extractComponentName(node.name);
@@ -481,7 +490,12 @@ const validateUrl = (url) => {
   
 
   const figmaFetchFrames = async (url, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData) => {
-    const ids = extractIdsFromUrl(url);
+    if (!url) {
+      setError('URL is required');
+      return;
+    }
+  
+    const ids = extractIdsFromUrl(url, setError);
     if (!ids) return;
   
     const { fileId, nodeId } = ids;
@@ -493,7 +507,6 @@ const validateUrl = (url) => {
       });
   
       const figmaDataNodes = response.data.nodes;
-
       setFigmaData(figmaDataNodes);
   
       let allFigmaComponent = [];
@@ -501,7 +514,7 @@ const validateUrl = (url) => {
         const figmaDataItem = figmaDataNodes[nodeKey].document;
         const figmaComponent = extractComponentToJson(figmaDataItem);
         allFigmaComponent = allFigmaComponent.concat(figmaComponent);
-        console.log(allFigmaComponent) //Toutes les donnée dont j'ai besoin pour figma
+        // console.log(allFigmaComponent) //Toutes les données dont j'ai besoin pour figma
       });
       setAllFigmaComponent(allFigmaComponent);
   
@@ -531,5 +544,6 @@ const validateUrl = (url) => {
       setLoading(false);  // Désactiver le spinner
     }
   };
+  
 
-  export { figmaFetchFrames };
+  export { figmaFetchFrames, figmaComponent };
