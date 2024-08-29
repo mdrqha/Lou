@@ -248,7 +248,6 @@ const authToken = '1_HappyJames';
 
           let productToCssBoxShadow = [];
 
-          // Analyse de chaque shadow pour extraire les valeurs
           boxShadowBrut.forEach((shadowCurrent) => {
             const match = shadowCurrent.match(/rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*([\d.]+)\)\s*(-?\d+)px\s*(-?\d+)px\s*(-?\d+)px\s*(-?\d+)px/);
 
@@ -266,15 +265,29 @@ const authToken = '1_HappyJames';
                 spread: parseInt(match[8])
               };
 
-              if(shadowObject.color.a > 0){
-                productToCssBoxShadow.push(shadowObject);
-              }
+              if(shadowObject.color.a > 0) productToCssBoxShadow.push(shadowObject);
             }
           });
 
-          if(productToCssBoxShadow.length === 0){
-            productToCssBoxShadow = null;
+          if(productToCssBoxShadow.length === 0) productToCssBoxShadow = null;
+
+          // Get gap
+          let productToCssGap = null;
+
+          if(styles['column-gap'] != "normal") productToCssGap = parseInt(styles['column-gap']);
+
+          let productToCssTextDecoration = null;
+
+          switch(styles['text-decoration-line']){
+            case 'underline':
+              productToCssTextDecoration = "UNDERLINE";
+            break;
+
+            case 'line-through': 
+              productToCssTextDecoration = "STRIKETHROUGH";
+            break;
           }
+
 
             productComponent.push({
                 name: child.attributes['lou-component'],
@@ -287,38 +300,53 @@ const authToken = '1_HappyJames';
                     size: borderSize,
                     style: borderStyle
                   },
+                  backgroundBlur: styles['backdrop-filter'] !== "none" ? parseInt(styles['backdrop-filter']) : null,
+                  blur: styles['filter'] !== "none" ? parseInt(styles['filter']) : null,
                   borderRadius: productToCssRadius,
                   boxShadow: productToCssBoxShadow,
-
-                  // boxShadow : figmaToCssShadow ? figmaToCssShadow : null,
-                  // backgroundBlur : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
-                  // blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null,
-                  // gap: node.itemSpacing ? node.itemSpacing : null,
-                  // padding: {
-                  //   top: node.paddingTop ? node.paddingTop : null,
-                  //   left: node.paddingLeft ? node.paddingLeft : null,
-                  //   bottom: node.paddingBottom ? node.paddingBottom : null,
-                  //   right: node.paddingRight ? node.paddingRight : null
-                  // },
-                  // copywriting: node.characters ? node.characters : null,
-                  // font: figmaToCssFont,
-                  // fill: figmaToCssFills,
-                  // size: {
-                  //   width: {
-                  //     render: node.absoluteRenderBounds.width ? node.absoluteRenderBounds.width : null,
-                  //     boundingBox : node.absoluteBoundingBox.width ? node.absoluteBoundingBox.width : null,
-                  //     max: node.maxWidth ? node.maxWidth : null,
-                  //     min: node.minWidth ? node.minWidth : null,
-                  //     layoutSizing: node.layoutSizingHorizontal ? node.layoutSizingHorizontal : null
-                  //   },
-                  //   height: {
-                  //     render: node.absoluteRenderBounds.height ? node.absoluteRenderBounds.height : null,
-                  //     boundingBox : node.absoluteBoundingBox.height ? node.absoluteBoundingBox.height : null,
-                  //     max: node.maxWidth ? node.maxHeight : null,
-                  //     min: node.minWidth ? node.minHeight : null,
-                  //     layoutSizing: node.layoutSizingVertical ? node.layoutSizingVertical : null
-                  //   }
-                  // }
+                  gap: productToCssGap,
+                  padding: {
+                    top: parseInt(styles['padding-top']) !== 0 ? parseInt(styles['padding-top']) : null,
+                    left: parseInt(styles['padding-left']) !== 0 ? parseInt(styles['padding-left']) : null,
+                    bottom: parseInt(styles['padding-bottom']) !== 0 ? parseInt(styles['padding-bottom']) : null,
+                    right: parseInt(styles['padding-right']) !== 0 ? parseInt(styles['padding-right']) : null
+                  },
+                  font: {
+                    case: styles['font-variant-caps'] ? styles['font-variant-caps'] : null, // a vérifier
+                    color: parseColor(styles['color']),
+                    decoration: productToCssTextDecoration,
+                    ellipsis: styles["text-overflow"] === "ellipsis" ? "ENDING" : null,
+                    familly: styles['font-family'] ? styles['font-family'] : null,
+                    // famillyDetail: ,
+                    // fontCustomisation: ,
+                    letterSpacing: styles['letter-spacing'],
+                    lineHeightPercent: (parseInt(styles['line-height']) / parseInt(styles['font-size'])) * 100,
+                    lineHeightPx: parseInt(styles['line-height']) ? parseInt(styles['line-height']) : null,
+                    // lineHeightUnit: ,
+                    // liste: ,
+                    // listeIndentation: ,
+                    size: styles['font-size'] ? parseInt(styles['font-size']) : null,
+                    textAlignHorizontal: styles['text-align'] ? styles['text-align'] : null,
+                    // textAlignVertical: ,
+                    // textAutoResize: ,
+                    weight: styles['font-weight'] ? parseInt(styles['font-weight']) : null
+                  },
+                  fill: parseColor(styles['fill']), // verifier la couleur avec fill-opacity
+                  size: {
+                    width: {
+                      render: parseInt(styles['width']),
+                      boundingBox: parseInt(styles['width']),
+                      max: styles['max-width'] !== "none" ? parseInt(styles['max-width']) : null,
+                      min: styles['min-width'] !== "none" ? parseInt(styles['min-width']) : null,
+                    },
+                    height: {
+                      render: parseInt(styles['height']),
+                      boundingBox: parseInt(styles['height']),
+                      max: styles['max-height'] !== "none" ? parseInt(styles['max-height']) : null,
+                      min: styles['min-height'] !== "none" ? parseInt(styles['min-height']) : null,
+                    }
+                  },
+                  
                   opacity: styles['opacity'] ? styles['opacity'] : 1,
                 }
             });
