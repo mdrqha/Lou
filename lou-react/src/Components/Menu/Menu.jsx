@@ -1,6 +1,6 @@
 import React from 'react';
 import './Menu.scss';
-import MenuButton from '../Components/Buttons/Menu-button/Menu-button';
+import MenuButton from '../Buttons/Menu-button/Menu-button';
 import { useTranslation } from 'react-i18next';
 import { FiAlignLeft, FiChevronLeft, FiChevronsLeft, FiCoffee, FiEye, FiFolder, FiHelpCircle, FiLayers, FiSettings, FiTrash } from 'react-icons/fi';
 
