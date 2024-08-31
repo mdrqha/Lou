@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "mdrqha",
+    "password": "1HappyJames",
+    "database": "database_user_lou",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "mdrqha",
+    "password": "1HappyJames",
+    "database": "louUser",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "mdrqha",
+    "password": "1HappyJames",
+    "database": "louUser",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

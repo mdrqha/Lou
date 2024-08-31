@@ -5,6 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Menu from './Components/Menu/Menu';
 import  VisualTestingPage  from './Pages/Visual-testing/Visual-testing';
 import  ProfilePage  from './Pages/Profile/Profile';
+import Login from "./Pages/Login/Login";
+import Register from "./Pages/Register/Register";
+import Profile from "./Pages/Profile/Profile";
 
 const LouApp = () => {
 const [url, setUrl] = useState('');
@@ -21,6 +24,9 @@ const { t } = useTranslation();
         <Routes>
           <Route path="/visual-testing" element={<VisualTestingPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>
