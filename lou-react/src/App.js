@@ -8,6 +8,7 @@ import InputText from './Components/Inputs/Input-text/Input-text';
 import Button from './Components/Buttons/Button/Button';
 import { figmaFetchFrames } from './Visual-testing/JS/Fetch-Figma';
 import { fetchProductDom } from './Visual-testing/JS/Fecth-product-url';
+import { compareData } from './Visual-testing/JS/Compare-jsons';
 
 const FigmaFrameCounter = () => {
 const [url, setUrl] = useState('');
@@ -18,6 +19,10 @@ const [allFigmaComponent, setAllFigmaComponent] = useState([]);
 const [frameCount, setFrameCount] = useState(null);
 const [figmaData, setFigmaData] = useState(null);
 const [domJson, setDomJson] = useState(null);
+
+const handleCompareClick = async () => {
+  await compareData(url, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson);
+};
 
 const { t } = useTranslation();
 
@@ -41,15 +46,8 @@ const { t } = useTranslation();
               onChange={(e) => setProductUrl(e.target.value)}
             />
             <Button
-              text='Fetch Figma'
-              // FIGMA FETCH
-              onClick={() => {figmaFetchFrames(url, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData);}}
-            />
-            <Button
-              text='Fetch URL produit'
-              // FIGMA FETCH
-              // onClick={() => {figmaFetchFrames();}}
-              onClick={() => {fetchProductDom(productUrl, setLoading, setError, setDomJson);}}
+              text='Compare'
+              onClick={() => {handleCompareClick();}}
             />
           </section>
           <section className='lou-p-sm lou-overflow-auto'>

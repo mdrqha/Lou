@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const authToken = '1_HappyJames';
+let productComponent = [];
   
   const domStringToJson = (htmlString) => {
     const parser = new DOMParser();
@@ -93,7 +94,7 @@ const authToken = '1_HappyJames';
 
   // Fonction pour parcourir le JSON et loguer les éléments avec "lou-component"
   const logLouComponents = (node) => {
-    let productComponent = [];
+    productComponent = [];
     if (!node) return;
   
     const traverseChildren = (children) => {
@@ -161,17 +162,16 @@ const authToken = '1_HappyJames';
 
           if(borderRadiusTopLeft > 0 || borderRadiusTopRight > 0 || borderRadiusBottomLeft > 0 || borderRadiusBottomRight > 0) {
               productToCssRadius = {
-                radius: {
+                // radius: {
+                  topRight: borderRadiusTopRight,
+                  topLeft: borderRadiusTopLeft,
                   bottomLeft: borderRadiusBottomLeft,
                   bottomRight: borderRadiusBottomRight,
-                  topLeft: borderRadiusTopLeft,
-                  topRight: borderRadiusTopRight
-
-                }
+                // }
               }
           }
 
-          console.log(child.attributes['lou-component'])
+          // console.log(child.attributes['lou-component'])
 
           // Get border
           // border color
@@ -187,8 +187,8 @@ const authToken = '1_HappyJames';
           if(borderWidthRight > 0 || borderWidthLeft > 0  || borderWidthBottom > 0 || borderWidthTop > 0){
             borderSize = {
               top: borderWidthTop,
-              right: borderWidthRight,
               bottom: borderWidthBottom,
+              right: borderWidthRight,
               left: borderWidthLeft
             }
           }
@@ -288,7 +288,6 @@ const authToken = '1_HappyJames';
             break;
           }
 
-
             productComponent.push({
                 name: child.attributes['lou-component'],
                 // "class": child.attributes['class'],
@@ -310,6 +309,12 @@ const authToken = '1_HappyJames';
                     left: parseInt(styles['padding-left']) !== 0 ? parseInt(styles['padding-left']) : null,
                     bottom: parseInt(styles['padding-bottom']) !== 0 ? parseInt(styles['padding-bottom']) : null,
                     right: parseInt(styles['padding-right']) !== 0 ? parseInt(styles['padding-right']) : null
+                  },
+                  margin: {
+                    top: parseInt(styles['margin-top']) !== 0 ? parseInt(styles['margin-top']) : null,
+                    left: parseInt(styles['margin-left']) !== 0 ? parseInt(styles['margin-left']) : null,
+                    bottom: parseInt(styles['margin-bottom']) !== 0 ? parseInt(styles['margin-bottom']) : null,
+                    right: parseInt(styles['margin-right']) !== 0 ? parseInt(styles['margin-right']) : null
                   },
                   font: {
                     case: styles['font-variant-caps'] ? styles['font-variant-caps'] : null, // a vérifier
@@ -364,7 +369,8 @@ const authToken = '1_HappyJames';
     if (node.children && node.children.length > 0) {
       traverseChildren(node.children);
     }
-    console.log(productComponent);
   };
 
-  export { fetchProductDom };
+  
+
+  export { fetchProductDom, productComponent };

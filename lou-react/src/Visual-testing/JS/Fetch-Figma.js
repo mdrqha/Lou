@@ -1,12 +1,21 @@
 import axios from 'axios';
 
+let figmaComponent = [];
+
 const validateUrl = (url) => {
-    const trimmedUrl = url.trim();
-    if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
-      throw new Error('URL must start with "http://" or "https://"');
-    }
-    return trimmedUrl;
-  };
+  if (typeof url !== 'string' || !url) {
+    throw new Error('URL must be a non-empty string');
+  }
+  
+  const trimmedUrl = url.trim();
+  
+  if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+    throw new Error('URL must start with "http://" or "https://"');
+  }
+
+  return trimmedUrl;
+};
+
 
   // const extractComponentNameAndValues = (node) => {
   //   const componentName = extractComponentName(node.name); // Extrait le nom après [component:]
@@ -69,7 +78,7 @@ const validateUrl = (url) => {
   };
   
   const extractComponentToJson = (node) => {
-    let figmaComponent = [];
+    figmaComponent = [];
   
     if (node.name && node.name.includes('[component:')) {
       let componentName = extractComponentName(node.name);
@@ -233,7 +242,7 @@ const validateUrl = (url) => {
           g:strokeFinalColor.g,
           b:strokeFinalColor.b,
           a:parseFloat(strokeAlphaFinal.toFixed(2)),
-          type:"Solid"
+          // type:"Solid"
         });
 
         // Get border position
@@ -254,8 +263,9 @@ const validateUrl = (url) => {
 
         // Get style
         figmaToCssStrokeStyle = {
+          style: node.strokeDashes ? "DASHED" : "SOLID",
           dashValue: node.strokeDashes ? node.strokeDashes : null,
-          type: node.strokeCap ? node.strokeCap : null,
+          CapType: node.strokeCap ? node.strokeCap : null,
           angle: node.strokeJoin ? node.strokeJoin : "ANGLE"
         }
       } else {
@@ -267,13 +277,13 @@ const validateUrl = (url) => {
 
       if(node.cornerRadius){
         figmaToCssRadius = {
-          radius: {
+          // radius: {
             topRight: node.cornerRadius ? node.cornerRadius : null,
             topLeft: node.cornerRadius ? node.cornerRadius : null,
             bottomLeft: node.cornerRadius ? node.cornerRadius : null,
             bottomRight: node.cornerRadius ? node.cornerRadius : null
-          },
-          smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null,
+          // },
+          // smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null,
         }
       } else if(node.rectangleCornerRadii) {
         figmaToCssRadius = {
@@ -455,18 +465,19 @@ const validateUrl = (url) => {
               width: {
                 render: node.absoluteRenderBounds.width ? node.absoluteRenderBounds.width : null,
                 boundingBox : node.absoluteBoundingBox.width ? node.absoluteBoundingBox.width : null,
-                max: node.maxWidth ? node.maxWidth : null,
-                min: node.minWidth ? node.minWidth : null,
+                max: node.maxWidth !== undefined ? node.maxWidth : null,
+                min: node.minWidth !== undefined ? node.minWidth : null,
                 layoutSizing: node.layoutSizingHorizontal ? node.layoutSizingHorizontal : null
               },
               height: {
                 render: node.absoluteRenderBounds.height ? node.absoluteRenderBounds.height : null,
                 boundingBox : node.absoluteBoundingBox.height ? node.absoluteBoundingBox.height : null,
-                max: node.maxWidth ? node.maxHeight : null,
-                min: node.minWidth ? node.minHeight : null,
+                max: node.maxHeight !== undefined ? node.maxHeight : null,
+                min: node.maxHeight !== undefined ? node.minHeight : null,
                 layoutSizing: node.layoutSizingVertical ? node.layoutSizingVertical : null
               }
-            }    // Ajouter l'opacité
+            },
+            opacity: node.opacity ? parseFloat(node.opacity.toFixed(2)) : null
           }
         });
     }
@@ -481,7 +492,12 @@ const validateUrl = (url) => {
   
 
   const figmaFetchFrames = async (url, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData) => {
-    const ids = extractIdsFromUrl(url);
+    if (!url) {
+      setError('URL is required');
+      return;
+    }
+  
+    const ids = extractIdsFromUrl(url, setError);
     if (!ids) return;
   
     const { fileId, nodeId } = ids;
@@ -493,7 +509,6 @@ const validateUrl = (url) => {
       });
   
       const figmaDataNodes = response.data.nodes;
-
       setFigmaData(figmaDataNodes);
   
       let allFigmaComponent = [];
@@ -501,7 +516,7 @@ const validateUrl = (url) => {
         const figmaDataItem = figmaDataNodes[nodeKey].document;
         const figmaComponent = extractComponentToJson(figmaDataItem);
         allFigmaComponent = allFigmaComponent.concat(figmaComponent);
-        console.log(allFigmaComponent) //Toutes les donnée dont j'ai besoin pour figma
+        // console.log(allFigmaComponent) //Toutes les données dont j'ai besoin pour figma
       });
       setAllFigmaComponent(allFigmaComponent);
   
@@ -531,5 +546,6 @@ const validateUrl = (url) => {
       setLoading(false);  // Désactiver le spinner
     }
   };
+  
 
-  export { figmaFetchFrames };
+  export { figmaFetchFrames, figmaComponent };
