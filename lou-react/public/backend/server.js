@@ -1,9 +1,13 @@
 // backend/server.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const authRoutes = require('./routes/auth'); // Assurez-vous que le chemin est correct
+const cors = require('cors');  // Importer le module cors
+const authRoutes = require('./routes/auth');
 
 const app = express();
+
+// Utiliser le middleware CORS
+app.use(cors());
 
 // Middleware pour parser les JSON
 app.use(bodyParser.json());
