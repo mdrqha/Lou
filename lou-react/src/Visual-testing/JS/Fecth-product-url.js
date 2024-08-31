@@ -162,13 +162,12 @@ let productComponent = [];
 
           if(borderRadiusTopLeft > 0 || borderRadiusTopRight > 0 || borderRadiusBottomLeft > 0 || borderRadiusBottomRight > 0) {
               productToCssRadius = {
-                radius: {
+                // radius: {
+                  topRight: borderRadiusTopRight,
+                  topLeft: borderRadiusTopLeft,
                   bottomLeft: borderRadiusBottomLeft,
                   bottomRight: borderRadiusBottomRight,
-                  topLeft: borderRadiusTopLeft,
-                  topRight: borderRadiusTopRight
-
-                }
+                // }
               }
           }
 
@@ -188,8 +187,8 @@ let productComponent = [];
           if(borderWidthRight > 0 || borderWidthLeft > 0  || borderWidthBottom > 0 || borderWidthTop > 0){
             borderSize = {
               top: borderWidthTop,
-              right: borderWidthRight,
               bottom: borderWidthBottom,
+              right: borderWidthRight,
               left: borderWidthLeft
             }
           }
@@ -310,6 +309,12 @@ let productComponent = [];
                     left: parseInt(styles['padding-left']) !== 0 ? parseInt(styles['padding-left']) : null,
                     bottom: parseInt(styles['padding-bottom']) !== 0 ? parseInt(styles['padding-bottom']) : null,
                     right: parseInt(styles['padding-right']) !== 0 ? parseInt(styles['padding-right']) : null
+                  },
+                  margin: {
+                    top: parseInt(styles['margin-top']) !== 0 ? parseInt(styles['margin-top']) : null,
+                    left: parseInt(styles['margin-left']) !== 0 ? parseInt(styles['margin-left']) : null,
+                    bottom: parseInt(styles['margin-bottom']) !== 0 ? parseInt(styles['margin-bottom']) : null,
+                    right: parseInt(styles['margin-right']) !== 0 ? parseInt(styles['margin-right']) : null
                   },
                   font: {
                     case: styles['font-variant-caps'] ? styles['font-variant-caps'] : null, // a vérifier

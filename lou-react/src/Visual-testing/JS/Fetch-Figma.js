@@ -242,7 +242,7 @@ const validateUrl = (url) => {
           g:strokeFinalColor.g,
           b:strokeFinalColor.b,
           a:parseFloat(strokeAlphaFinal.toFixed(2)),
-          type:"Solid"
+          // type:"Solid"
         });
 
         // Get border position
@@ -263,8 +263,9 @@ const validateUrl = (url) => {
 
         // Get style
         figmaToCssStrokeStyle = {
+          style: node.strokeDashes ? "DASHED" : "SOLID",
           dashValue: node.strokeDashes ? node.strokeDashes : null,
-          type: node.strokeCap ? node.strokeCap : null,
+          CapType: node.strokeCap ? node.strokeCap : null,
           angle: node.strokeJoin ? node.strokeJoin : "ANGLE"
         }
       } else {
@@ -276,13 +277,13 @@ const validateUrl = (url) => {
 
       if(node.cornerRadius){
         figmaToCssRadius = {
-          radius: {
+          // radius: {
             topRight: node.cornerRadius ? node.cornerRadius : null,
             topLeft: node.cornerRadius ? node.cornerRadius : null,
             bottomLeft: node.cornerRadius ? node.cornerRadius : null,
             bottomRight: node.cornerRadius ? node.cornerRadius : null
-          },
-          smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null,
+          // },
+          // smoothingRadius: node.cornerSmoothing ? node.cornerSmoothing : null,
         }
       } else if(node.rectangleCornerRadii) {
         figmaToCssRadius = {
@@ -464,18 +465,19 @@ const validateUrl = (url) => {
               width: {
                 render: node.absoluteRenderBounds.width ? node.absoluteRenderBounds.width : null,
                 boundingBox : node.absoluteBoundingBox.width ? node.absoluteBoundingBox.width : null,
-                max: node.maxWidth ? node.maxWidth : null,
-                min: node.minWidth ? node.minWidth : null,
+                max: node.maxWidth !== undefined ? node.maxWidth : null,
+                min: node.minWidth !== undefined ? node.minWidth : null,
                 layoutSizing: node.layoutSizingHorizontal ? node.layoutSizingHorizontal : null
               },
               height: {
                 render: node.absoluteRenderBounds.height ? node.absoluteRenderBounds.height : null,
                 boundingBox : node.absoluteBoundingBox.height ? node.absoluteBoundingBox.height : null,
-                max: node.maxWidth ? node.maxHeight : null,
-                min: node.minWidth ? node.minHeight : null,
+                max: node.maxHeight !== undefined ? node.maxHeight : null,
+                min: node.maxHeight !== undefined ? node.minHeight : null,
                 layoutSizing: node.layoutSizingVertical ? node.layoutSizingVertical : null
               }
-            }    // Ajouter l'opacité
+            },
+            opacity: node.opacity ? parseFloat(node.opacity.toFixed(2)) : null
           }
         });
     }
