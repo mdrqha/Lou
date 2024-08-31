@@ -10,10 +10,8 @@ function stringifyToLowoerCase(varToStringify) {
 
 function compareJSON(figmaObj, productObj) {
     compareDataStockage = [];
-    // const diffs = []; // Utiliser un tableau pour stocker les différences par objet
-
-    console.log(figmaObj)
-    console.log(productObj)
+    // console.log(figmaObj)
+    // console.log(productObj)
     
     if(figmaObj.length > productObj.length) {
         figmaObj.forEach(figmaObjCurrent => {
@@ -22,8 +20,6 @@ function compareJSON(figmaObj, productObj) {
                     finalCompareDataJson = {};
 
                     // ATTENTION A LA RECEPTION D'INFO POUR LA COMPARAISON, CERTAINES COMPARAISON NE POURRONS JAMAIS ETRE VRAI
-                    console.log(figmaObjCurrent.name)
-
                     finalCompareDataJson.name = figmaObjCurrent.name;
 
                     // Comparaison BackgroundColor
@@ -603,7 +599,6 @@ function compareJSON(figmaObj, productObj) {
                 }
             });
         });
-        // console.log('c obj product le plus long')
     }
     const figmaAllName = figmaObj.map(item => item.name);
     const productAllName = productObj.map(item => item.name);

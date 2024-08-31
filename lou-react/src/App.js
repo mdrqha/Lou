@@ -21,7 +21,6 @@ const [figmaData, setFigmaData] = useState(null);
 const [domJson, setDomJson] = useState(null);
 
 const handleCompareClick = async () => {
-  // Assurez-vous de passer toutes les fonctions d'état nécessaires
   await compareData(url, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson);
 };
 
@@ -47,20 +46,7 @@ const { t } = useTranslation();
               onChange={(e) => setProductUrl(e.target.value)}
             />
             <Button
-              text='Fetch Figma'
-              // FIGMA FETCH
-              onClick={() => {figmaFetchFrames(url, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData);}}
-            />
-            <Button
-              text='Fetch URL produit'
-              // FIGMA FETCH
-              // onClick={() => {figmaFetchFrames();}}
-              onClick={() => {fetchProductDom(productUrl, setLoading, setError, setDomJson);}}
-            />
-            <Button
               text='Compare'
-              // FIGMA FETCH
-              // onClick={() => {figmaFetchFrames();}}
               onClick={() => {handleCompareClick();}}
             />
           </section>
