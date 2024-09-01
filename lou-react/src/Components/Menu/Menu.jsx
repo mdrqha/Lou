@@ -9,7 +9,7 @@ const Menu = () => {
   const navigate = useNavigate();
 
   const goToVisualDesign = () => {
-    navigate('/visual-design');
+    navigate('/visual-testing');
   };
 
   const goToDesignSystem = () => {
