@@ -39,4 +39,30 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Middleware d'authentification
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
+// Route pour récupérer les informations de l'utilisateur
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'username', 'email']  // Sélectionnez les champs nécessaires
+    });
+    console.log(user)
+    if (!user) return res.sendStatus(404);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
 module.exports = router;
