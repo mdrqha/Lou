@@ -1,17 +1,18 @@
 // src/components/RedirectIfAuthenticated.js
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 
 const RedirectIfAuthenticated = ({ children }) => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
-  if (isAuthenticated) {
-    // Si l'utilisateur est authentifié, rediriger vers la page visual-testing
+  if (isAuthenticated && (location.pathname === "/login" || location.pathname === "/register")) {
+    // Rediriger vers /visual-testing si l'utilisateur est authentifié et essaie d'accéder à /login ou /register
     return <Navigate to="/visual-testing" />;
   }
 
-  // Sinon, rendre les enfants (page de connexion)
+  // Sinon, afficher le composant enfant
   return children;
 };
 

@@ -3,16 +3,15 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 
-// Composant de route protégée
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    // Si l'utilisateur n'est pas authentifié, redirigez vers /login
+    // Rediriger vers la page de connexion si l'utilisateur n'est pas authentifié
     return <Navigate to="/login" />;
   }
 
-  // Sinon, rend le composant enfant (la page protégée)
+  // Si l'utilisateur est authentifié, afficher le composant enfant
   return children;
 };
 

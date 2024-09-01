@@ -1,11 +1,31 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import './Menu.scss';
 import MenuButton from '../Buttons/Menu-button/Menu-button';
 import { useTranslation } from 'react-i18next';
 import { FiAlignLeft, FiChevronLeft, FiChevronsLeft, FiCoffee, FiEye, FiFolder, FiHelpCircle, FiLayers, FiSettings, FiTrash } from 'react-icons/fi';
 
 const Menu = () => {
+  const navigate = useNavigate();
+
+  const goToVisualDesign = () => {
+    navigate('/visual-design');
+  };
+
+  const goToDesignSystem = () => {
+    navigate('/design-system');
+  };
+
+  const goToEndToEnd = () => {
+    navigate('/end-to-end');
+  };
+
+  const goToProofreading = () => {
+    navigate('/proofreading');
+  };
+
   const { t } = useTranslation();
+
   return (
     <nav className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-shadow-xl lou-text-dark lou-grid lou-grid-rows-[1fr_auto]' lou-component='menu'>
       <section>
@@ -20,19 +40,23 @@ const Menu = () => {
         <div className='lou-p-xs'>
           <MenuButton
             text={t('menu.items.visual-design')}
+            onClick={goToVisualDesign}
             icon={<FiEye />}
             isActive='True'
           />
           <MenuButton
             text={t('menu.items.design-system')}
+            onClick={goToDesignSystem}
             icon={<FiLayers />}
           />
           <MenuButton
             text={t('menu.items.end-to-end')}
+            onClick={goToEndToEnd}
             icon={<FiFolder />}
           />
           <MenuButton
             text={t('menu.items.proofreading')}
+            onClick={goToProofreading}
             icon={<FiAlignLeft />}
           />
         </div>

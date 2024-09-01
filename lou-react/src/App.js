@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './i18n';
 import { useTranslation } from 'react-i18next';
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Menu from './Components/Menu/Menu';
 import VisualTestingPage from './Pages/Visual-testing/Visual-testing';
+import DesignSystemPage from './Pages/Design-system/Design-system';
+import EndToEndPage from './Pages/End-to-end/End-to-end';
+import ProofreadingPage from './Pages/Proofreading/Proofreading';
 import ProfilePage from './Pages/Profile/Profile';
 import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
@@ -13,17 +16,17 @@ import RedirectIfAuthenticated from './Components/RedirectIfAuthenticated';
 import Button from './Components/Buttons/Button/Button';
 
 const LouAppContent = () => {
-  const [url, setUrl] = useState('');
-  const [productUrl, setProductUrl] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();  // Appelle la fonction logout pour déconnecter l'utilisateur
+    logout();
   };
 
-  const location = useLocation();
+  const goToProfile = () => {
+    navigate('/profile');
+  };
 
   // Définir les chemins où le menu ne doit pas être affiché
   const hideMenuPaths = ['/login', '/register', '/profile'];
@@ -35,16 +38,29 @@ const LouAppContent = () => {
   return (
     <div className={`lou-text-dark lou-w-screen lou-h-screen lou-bg-dark-30 lou-gap-md lou-grid ${withMenuClass} lou-p-sm`} lou-component="page">
       {!hideMenu && <Menu />}
-      {/* <Button
-        text='LOGOUT'
-        onClick={handleLogout}
-      /> */}
+      {/* Afficher le bouton de déconnexion uniquement si l'utilisateur est authentifié */}
+      {/* <div>
+        {isAuthenticated && (
+          <Button
+            text='LOGOUT'
+            onClick={handleLogout}
+          />
+        )}
+        <Button
+              text='Profile'
+              onClick={goToProfile}  // Bouton pour aller à la page profil
+            />
+      </div> */}
       <Routes>
+        {/* Utiliser RedirectIfAuthenticated pour rediriger les utilisateurs authentifiés depuis /login et /register */}
         <Route path="/login" element={<RedirectIfAuthenticated><Login /></RedirectIfAuthenticated>} />
         <Route path="/register" element={<RedirectIfAuthenticated><Register /></RedirectIfAuthenticated>} />
 
         {/* Routes Protégées */}
         <Route path="/visual-testing" element={<ProtectedRoute><VisualTestingPage /></ProtectedRoute>} />
+        <Route path="/design-system" element={<ProtectedRoute><DesignSystemPage /></ProtectedRoute>} />
+        <Route path="/end-to-end" element={<ProtectedRoute><EndToEndPage /></ProtectedRoute>} />
+        <Route path="/proofreading" element={<ProtectedRoute><ProofreadingPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       </Routes>
     </div>
