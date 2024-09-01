@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import loginPageImage from '../../img/login-page.jpeg';
+import InputText from "../../Components/Inputs/Input-text/Input-text";
+import Button from "../../Components/Buttons/Button/Button";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -20,41 +23,62 @@ const Register = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleRegister} className="bg-white p-8 rounded shadow-md w-80">
-        <h1 className="text-2xl font-bold mb-4">Inscription</h1>
-        <div className="mb-4">
-          <label className="block text-gray-700">Nom d'utilisateur</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded mt-1"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded mt-1"
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700">Mot de passe</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded mt-1"
-            required
-          />
-        </div>
-        <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">S'inscrire</button>
-      </form>
+    <div className="lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md">
+        <section className="lou-w-full
+         lou-max-w-[30rem] lou-d-grid lou-p-xl lou-m-auto">
+          <div className="lou-grid lou-gap-lg">
+            <div>
+              <h1 className="lou-text-4xl lou-font-bold">Get started</h1>
+              <p className="lou-text-lg lou-text-dark-700">Create your account now !</p>
+            </div>
+            <form onSubmit={handleRegister} className="lou-grid lou-gap-md">
+              <div className="lou-grid lou-gap-2xs">
+                <label className="lou-font-medium">Full name</label>
+                <InputText 
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  placeholder="Lou Stick"
+                
+                />
+              </div>
+              <div className="lou-grid lou-gap-2xs">
+                <label className="lou-font-medium">Email</label>
+                <InputText 
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="mail@domain.com"
+                
+                />
+              </div>
+              <div className="lou-grid lou-gap-2xs">
+                <label className="lou-font-medium">Password</label>
+                <InputText 
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="*****"
+                
+                />
+              </div>
+              <Button
+                text='Register'
+                type="submit"
+                className="lou-w-full"
+              />
+            </form>
+            <div>
+                  <p className="lou-text-dark-700 lou-text-center">Already have an account ? <span className="lou-underline lou-text-dark lou-font-medium">Login</span></p>
+            </div>
+          </div>
+        </section>
+        <section className="lou-rounded-lg lou-overflow-hidden">
+          <img src={loginPageImage} alt="Login image" className="image-register lou-object-cover lou-w-full lou-h-full" />
+        </section>
     </div>
   );
 };
