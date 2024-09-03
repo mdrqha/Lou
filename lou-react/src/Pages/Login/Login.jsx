@@ -20,7 +20,7 @@ const Login = () => {
       const response = await axios.post("http://localhost:50005/api/auth/login", { email, password });
       if (response.data.token) {
         login(response.data.token);  // Mettre à jour l'état d'authentification et stocker le jeton
-        console.log(response)
+        // console.log(response)
         navigate("/visual-testing");  // Rediriger après connexion réussie
       } else {
         setError("Authentication failed. Please check your credentials.");

@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Mot de passe incorrect' });
     }
 
-    const token = jwt.sign({ id: user.id }, 'votre_secret_jwt', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -57,7 +57,7 @@ router.get('/me', authenticateToken, async (req, res) => {
     const user = await User.findByPk(req.user.id, {
       attributes: ['id', 'username', 'email']  // Sélectionnez les champs nécessaires
     });
-    console.log(user)
+    // console.log(user)
     if (!user) return res.sendStatus(404);
     res.json(user);
   } catch (error) {
