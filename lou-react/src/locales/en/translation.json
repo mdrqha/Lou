@@ -20,5 +20,39 @@
         "cta-compare" : "Compare",
         "results-tilte" : "Results",
         "results-errors" : "errors"
+    },
+    "login" : {
+        "title": "Welcome back!",
+        "description": "Ready to test your app?",
+        "email": {
+            "label": "E-mail",
+            "'input": "hello@lou.io"
+        },
+        "password": {
+            "label": "Password",
+            "input": "*****"
+        },
+        "noAccount": "You don't have any account? ",
+        "button": "Connection",
+        "register": "Register"
+    },
+    "register": {
+        "title": "Get started",
+        "description": "Create your account now !",
+        "username": {
+            "label": "Full name",
+            "input": "Lou"
+        },
+        "email": {
+            "label": "Email",
+            "input": "hello@lou.io"
+        },
+        "password": {
+            "label": "Password",
+            "input": "*****"
+        },
+        "button": "Register",
+        "haveAccount": "Already have an account? ",
+        "login": "Login"
     }
 }

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import loginPageImage from '../../img/login-page.jpeg';
 import InputText from "../../Components/Inputs/Input-text/Input-text";
 import Button from "../../Components/Buttons/Button/Button";
+import '../../i18n';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -22,57 +24,61 @@ const Register = () => {
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md">
         <section className="lou-w-full
          lou-max-w-[30rem] lou-d-grid lou-p-xl lou-m-auto">
           <div className="lou-grid lou-gap-lg">
             <div>
-              <h1 className="lou-text-4xl lou-font-bold">Get started</h1>
-              <p className="lou-text-lg lou-text-dark-700">Create your account now !</p>
+              <h1 className="lou-text-4xl lou-font-bold">{t('register.title')}</h1>
+              <p className="lou-text-lg lou-text-dark-700">{t('register.description')}</p>
             </div>
             <form onSubmit={handleRegister} className="lou-grid lou-gap-md">
               <div className="lou-grid lou-gap-2xs">
-                <label className="lou-font-medium">Full name</label>
+                <label className="lou-font-medium">{t('register.username.label')}</label>
                 <InputText 
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  placeholder="Lou Stick"
+                  placeholder={t('register.username.input')}
                 
                 />
               </div>
               <div className="lou-grid lou-gap-2xs">
-                <label className="lou-font-medium">Email</label>
+                <label className="lou-font-medium">{t('register.email.label')}</label>
                 <InputText 
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="mail@domain.com"
+                  placeholder={t('register.email.input')}
                 
                 />
               </div>
               <div className="lou-grid lou-gap-2xs">
-                <label className="lou-font-medium">Password</label>
+                <label className="lou-font-medium">{t('register.password.label')}</label>
                 <InputText 
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="*****"
+                  placeholder={t('register.password.input')}
                 
                 />
               </div>
               <Button
-                text='Register'
+                text={t('register.button')}
                 type="submit"
                 className="lou-w-full"
               />
             </form>
             <div>
-                  <p className="lou-text-dark-700 lou-text-center">Already have an account ? <span className="lou-underline lou-text-dark lou-font-medium">Login</span></p>
+              <p className="lou-text-dark-700 lou-text-center">{t('register.haveAccount')}
+                  <a onClick={() => navigate('/login')} className="lou-text-dark lou-font-medium lou-cursor-pointer hover:lou-underline lou-transition lou-ease-in-out lou-duration-300">{t('register.login')}</a>
+              </p>
             </div>
           </div>
         </section>
