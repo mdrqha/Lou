@@ -74,7 +74,7 @@ const Login = () => {
               </div>
               {error && <p className="lou-text-red-500">{error}</p>}  {/* Afficher le message d'erreur */}
               <Button
-                text={t('login.cta')}
+                text={t('login.button')}
                 type="submit"
                 className="lou-w-full"
               />
