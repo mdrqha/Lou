@@ -46,10 +46,6 @@ const LouAppContent = () => {
             onClick={handleLogout}
           />
         )}
-        <Button
-              text='Profile'
-              onClick={goToProfile}  // Bouton pour aller à la page profil
-            />
       </div> */}
       <Routes>
         {/* Utiliser RedirectIfAuthenticated pour rediriger les utilisateurs authentifiés depuis /login et /register */}
