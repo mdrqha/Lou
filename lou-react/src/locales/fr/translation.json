@@ -51,6 +51,13 @@
             "label": "Mot de passe",
             "input": "*****"
         },
+        "language":{
+            "label": "Langue",
+            "select":{
+                "fr": "Français",
+                "en": "English"
+            }
+        },
         "button": "Créer mon compte",
         "haveAccount": "Vous avez déja un compte ? ",
         "login": "Se connecter"

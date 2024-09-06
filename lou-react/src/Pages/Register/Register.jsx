@@ -7,17 +7,19 @@ import InputText from "../../Components/Inputs/Input-text/Input-text";
 import Button from "../../Components/Buttons/Button/Button";
 import '../../i18n';
 import { useTranslation } from 'react-i18next';
+import Dropdown from "../../Components/Dropdown/Dropdown";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [lang, setLang] = useState("en");
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:50005/api/auth/register", { username, email, password });
+      await axios.post("http://localhost:50005/api/auth/register", { username, email, password, lang });
       navigate("/login");
     } catch (error) {
       console.error("Erreur d'inscription", error);
@@ -44,7 +46,6 @@ const Register = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   required
                   placeholder={t('register.username.input')}
-                
                 />
               </div>
               <div className="lou-grid lou-gap-2xs">
@@ -55,7 +56,6 @@ const Register = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder={t('register.email.input')}
-                
                 />
               </div>
               <div className="lou-grid lou-gap-2xs">
@@ -66,8 +66,17 @@ const Register = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder={t('register.password.input')}
-                
                 />
+              </div>
+              <div className="lou-grid lou-gap-2xs">
+                <label className="lou-font-medium">{t('register.language.label')}</label>
+                <select 
+                  value={lang}
+                  onChange={(e) => setLang(e.target.value)}
+                  className="lou-p-xs lou-bg-dark-50 lou-rounded-sm hover:lou-bg-dark-100 lou-transition-all lou-duration-300">
+                  <option value="en">{t('register.language.select.en')}</option>
+                  <option value="fr">{t('register.language.select.fr')}</option>
+                </select>
               </div>
               <Button
                 text={t('register.button')}

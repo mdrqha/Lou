@@ -51,6 +51,13 @@
             "label": "Password",
             "input": "*****"
         },
+        "language":{
+            "label": "Language",
+            "select":{
+                "fr": "Français",
+                "en": "English"
+            }
+        },
         "button": "Register",
         "haveAccount": "Already have an account? ",
         "login": "Login"

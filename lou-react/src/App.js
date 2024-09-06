@@ -31,12 +31,12 @@ const LouAppContent = () => {
   // Définir les chemins où le menu ne doit pas être affiché
   const hideMenuPaths = ['/login', '/register', '/profile'];
   const hideMenu = hideMenuPaths.includes(location.pathname);
-  const withMenuClass = hideMenu ? '' : 'lou-grid-cols-layout-main';
+  const withMenuClass = hideMenu ? '' : 'lou-grid-cols-layout-main lou-bg-dark-30';
 
   const { t } = useTranslation();
 
   return (
-    <div className={`lou-text-dark lou-w-screen lou-h-screen lou-bg-dark-30 lou-gap-md lou-grid ${withMenuClass} lou-p-sm`} lou-component="page">
+    <div className={`lou-text-dark lou-w-screen lou-h-screen lou-gap-md lou-grid ${withMenuClass} lou-p-sm`} lou-component="page">
       {!hideMenu && <Menu />}
       {/* Afficher le bouton de déconnexion uniquement si l'utilisateur est authentifié */}
       {/* <div>
