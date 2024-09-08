@@ -20,5 +20,46 @@
         "cta-compare" : "Compare",
         "results-tilte" : "Résultats",
         "results-errors" : "erreurs"
+    },
+    "login" : {
+        "title": "Bon retour parmis nous !",
+        "description": "Prêt à tester votre app ?",
+        "email": {
+            "label": "E-mail",
+            "input": "hello@lou.io"
+        },
+        "password":{
+            "label": "Mot de passe",
+            "input": "******"
+        },
+        "noAccount": "Vous n'avez pas encore de compte ? ",
+        "button": "Connexion",
+        "register": "Créer un compte"
+    },
+    "register": {
+        "tile": "C'est parti !",
+        "description": "Créez votre compte dès maintenant !",
+        "username": {
+            "label": "Nom complet",
+            "input": "Lou"
+        },
+        "email": {
+            "label": "Email",
+            "input": "hello@lou.io"
+        },
+        "password": {
+            "label": "Mot de passe",
+            "input": "*****"
+        },
+        "language":{
+            "label": "Langue",
+            "select":{
+                "fr": "Français",
+                "en": "English"
+            }
+        },
+        "button": "Créer mon compte",
+        "haveAccount": "Vous avez déja un compte ? ",
+        "login": "Se connecter"
     }
 }
