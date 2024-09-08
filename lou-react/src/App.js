@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './i18n';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
@@ -13,12 +13,16 @@ import Register from "./Pages/Register/Register";
 import { AuthProvider, useAuth } from './Context/AuthContext';
 import ProtectedRoute from './Components/ProtectedRoute';
 import RedirectIfAuthenticated from './Components/RedirectIfAuthenticated';
+import axios from 'axios';
 import Button from './Components/Buttons/Button/Button';
 
 const LouAppContent = () => {
   const { isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
+  const [loading, setLoading] = useState(true); // Gérer le chargement de la langue
+  const [userLang, setUserLang] = useState(null);
 
   const handleLogout = () => {
     logout();
@@ -28,12 +32,39 @@ const LouAppContent = () => {
     navigate('/profile');
   };
 
+  useEffect(() => {
+    const fetchUserLanguage = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:50005/api/auth/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        const userLanguage = response.data.lang;  // Récupère la langue depuis l'API
+        setUserLang(userLanguage); // Met à jour la langue dans le state local
+        i18n.changeLanguage(userLanguage);  // Change la langue de l'application
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la langue de l\'utilisateur:', error);
+      } finally {
+        setLoading(false); // Fin du chargement une fois la langue définie
+      }
+    };
+
+    fetchUserLanguage();
+  }, [i18n]);
+
+  
+
   // Définir les chemins où le menu ne doit pas être affiché
   const hideMenuPaths = ['/login', '/register', '/profile'];
   const hideMenu = hideMenuPaths.includes(location.pathname);
   const withMenuClass = hideMenu ? '' : 'lou-grid-cols-layout-main lou-bg-dark-30';
 
   const { t } = useTranslation();
+
+  if (loading) {
+    return <p>Loading language...</p>; // Afficher un écran de chargement pendant que la langue est récupérée
+  }
 
   return (
     <div className={`lou-text-dark lou-w-screen lou-h-screen lou-gap-md lou-grid ${withMenuClass} lou-p-sm`} lou-component="page">

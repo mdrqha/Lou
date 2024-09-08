@@ -65,4 +65,21 @@ router.get('/me', authenticateToken, async (req, res) => {
   }
 });
 
+// Route pour mettre à jour la langue de l'utilisateur
+router.put('/me/language', authenticateToken, async (req, res) => {
+  const { language } = req.body;
+  try {
+    const user = await User.findByPk(req.user.id);  // Récupérer l'utilisateur à partir de l'ID du token
+    if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
+
+    user.lang = language;  // Mettre à jour la langue
+    await user.save();  // Enregistrer dans la base de données
+
+    res.status(200).json({ message: 'Langue mise à jour avec succès' });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
+  }
+});
+
+
 module.exports = router;
