@@ -2,7 +2,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { User } = require('../models'); // Assurez-vous que le chemin est correct
+const { User, VisualTest } = require('../models'); // Assurez-vous que le chemin est correct
 
 const router = express.Router();
 
@@ -80,6 +80,84 @@ router.put('/me/language', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 });
+
+// Créer un visual-test pour l'utilisateur authentifié
+router.post('/visual-tests', authenticateToken, async (req, res) => {
+  const { title, description, figmaUrl, productUrl, stringArray1, stringArray2, jsonArray } = req.body;
+
+  try {
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
+
+    const visualTest = await VisualTest.create({
+      title,
+      description,
+      figmaUrl,
+      productUrl,
+      stringArray1,
+      stringArray2,
+      jsonArray,
+      userId: user.id,
+    });
+
+    res.status(201).json(visualTest);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la création du visual-test' });
+  }
+});
+
+
+router.get('/visual-tests', authenticateToken, async (req, res) => {
+  try {
+    const visualTests = await VisualTest.findAll({
+      where: { userId: req.user.id }
+    });
+
+    if (!visualTests) {
+      return res.status(404).json({ message: 'Aucun test visuel trouvé' });
+    }
+
+    res.status(200).json(visualTests);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur serveur lors de la récupération des visual-tests' });
+  }
+});
+
+router.put('/visual-tests/:id', authenticateToken, async (req, res) => {
+  try {
+      const { id } = req.params;
+      const { figmaUrl, productUrl, stringArray1, stringArray2, jsonArray } = req.body;
+
+      // Recherche du visual test par son ID et l'utilisateur connecté
+      const visualTest = await VisualTest.findOne({
+          where: { id, userId: req.user.id }
+      });
+
+      if (!visualTest) {
+          return res.status(404).json({ message: 'Visual test non trouvé' });
+      }
+
+      // Mise à jour des données
+      visualTest.figmaUrl = figmaUrl;
+      visualTest.productUrl = productUrl;
+      visualTest.stringArray1 = stringArray1;
+      visualTest.stringArray2 = stringArray2;
+      visualTest.jsonArray = jsonArray;
+
+      await visualTest.save(); // Sauvegarder les modifications dans la base de données
+
+      res.status(200).json({ message: 'Visual test mis à jour avec succès', visualTest });
+  } catch (error) {
+      console.error('Erreur lors de la mise à jour du visual test:', error);
+      res.status(500).json({ error: 'Erreur lors de la mise à jour du visual test' });
+  }
+});
+
+
 
 
 module.exports = router;

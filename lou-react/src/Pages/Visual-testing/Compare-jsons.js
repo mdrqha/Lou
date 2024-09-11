@@ -3,6 +3,9 @@ import { fetchProductDom, productComponent } from './Fecth-product-url';
 
 let compareDataStockage = [];
 let finalCompareDataJson = {};
+let figmaNameNoMatch = null;
+let productNameNoMatch = null;
+
 
 function stringifyToLowoerCase(varToStringify) {
     return JSON.stringify(varToStringify).toLowerCase();
@@ -320,7 +323,7 @@ function compareJSON(figmaObj, productObj) {
                     finalCompareDataJson = {};
 
                     // ATTENTION A LA RECEPTION D'INFO POUR LA COMPARAISON, CERTAINES COMPARAISON NE POURRONS JAMAIS ETRE VRAI
-                    console.log(figmaObjCurrent.name)
+                    // console.log(figmaObjCurrent.name)
 
                     finalCompareDataJson.name = figmaObjCurrent.name;
 
@@ -595,7 +598,7 @@ function compareJSON(figmaObj, productObj) {
                             product: productOpacity
                         };
                     }
-                    compareDataStockage.push(finalCompareDataJson)
+                    compareDataStockage.push(finalCompareDataJson);
                 }
             });
         });
@@ -603,24 +606,42 @@ function compareJSON(figmaObj, productObj) {
     const figmaAllName = figmaObj.map(item => item.name);
     const productAllName = productObj.map(item => item.name);
 
-    const figmaNameNoMatch = figmaAllName.filter(name => !productAllName.includes(name));
-    const productNameNoMatch = productAllName.filter(name => !figmaAllName.includes(name));
-    console.log(figmaNameNoMatch);
-    console.log(productNameNoMatch);
+    figmaNameNoMatch = figmaAllName.filter(name => !productAllName.includes(name));
+    productNameNoMatch = productAllName.filter(name => !figmaAllName.includes(name));
+    // console.log(figmaNameNoMatch);
+    // console.log(productNameNoMatch);
 
-    console.log(`Resultat de la comparaison`,compareDataStockage)
+    // console.log(`Resultat de la comparaison`,compareDataStockage)
+    sessionStorage.setItem('CompareResult', JSON.stringify(compareDataStockage));
+    const storedCompareResult = JSON.parse(sessionStorage.getItem('CompareResult'));
+    // console.log(`sessionStorageCompare`, storedCompareResult);
 
+    // console.log(`figmaNoMatch`, figmaNameNoMatch)
+    sessionStorage.setItem('figmaNoMatch', JSON.stringify(figmaNameNoMatch));
+    const storedFigmaNoMatch = JSON.parse(sessionStorage.getItem('figmaNoMatch'));
+    // console.log(`sessionStorageCompare`, storedFigmaNoMatch);
+
+    // console.log(`productNoMatch`, productNameNoMatch)
+    sessionStorage.setItem('productNoMatch', JSON.stringify(productNameNoMatch));
+    const storedProductaNoMatch = JSON.parse(sessionStorage.getItem('productNoMatch'));
+    // console.log(`storedProductaNoMatch`, storedProductaNoMatch);
   }
 
-const compareData = async (url, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson, domData) => {
+const compareData = async (url, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson, setFigmaNameNoMatch, setProductNameNoMatch, setCompareDataStockage ) => {
     try {
       const figmaData = await figmaFetchFrames(url, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData);
       const productData = await fetchProductDom(productUrl, setLoading, setError, setDomJson);
       const productJsonData = productComponent;
       const figmaJsonData = figmaComponent;
+      const figmaNameNoMatchData = figmaNameNoMatch;
+      const productNameNoMatchData = productNameNoMatch;
     
-    compareDataStockage = compareJSON(figmaJsonData,productJsonData);      
-      
+    compareDataStockage = compareJSON(figmaJsonData,productJsonData); 
+
+    setFigmaNameNoMatch(figmaNameNoMatch);
+    setProductNameNoMatch(productNameNoMatch);
+    setCompareDataStockage(compareDataStockage);
+
     } catch (error) {
       console.error('Erreur lors de la comparaison des données :', error);
     }

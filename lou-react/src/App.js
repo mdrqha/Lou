@@ -15,7 +15,6 @@ import ProtectedRoute from './Components/ProtectedRoute';
 import RedirectIfAuthenticated from './Components/RedirectIfAuthenticated';
 import axios from 'axios';
 import VisualTestingDetailPage from './Pages/Visual-testing/Details/Visual-testing-details';
-import Button from './Components/Buttons/Button/Button';
 
 const LouAppContent = () => {
   const { isAuthenticated, logout } = useAuth();

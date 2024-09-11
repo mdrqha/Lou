@@ -1,11 +1,9 @@
-// backend/server.js
 require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { Pool } = require('pg');
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth');         // Routes d'authentification
 
 const app = express();
 
