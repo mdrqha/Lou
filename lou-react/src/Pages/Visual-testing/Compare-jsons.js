@@ -627,20 +627,14 @@ function compareJSON(figmaObj, productObj) {
     // console.log(`storedProductaNoMatch`, storedProductaNoMatch);
   }
 
-const compareData = async (url, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson, setFigmaNameNoMatch, setProductNameNoMatch, setCompareDataStockage ) => {
+const compareData = async (url, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson) => {
     try {
       const figmaData = await figmaFetchFrames(url, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData);
       const productData = await fetchProductDom(productUrl, setLoading, setError, setDomJson);
       const productJsonData = productComponent;
       const figmaJsonData = figmaComponent;
-      const figmaNameNoMatchData = figmaNameNoMatch;
-      const productNameNoMatchData = productNameNoMatch;
     
     compareDataStockage = compareJSON(figmaJsonData,productJsonData); 
-
-    setFigmaNameNoMatch(figmaNameNoMatch);
-    setProductNameNoMatch(productNameNoMatch);
-    setCompareDataStockage(compareDataStockage);
 
     } catch (error) {
       console.error('Erreur lors de la comparaison des données :', error);

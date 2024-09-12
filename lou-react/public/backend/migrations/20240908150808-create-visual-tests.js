@@ -25,11 +25,11 @@ module.exports = {
         allowNull: true,
       },
       stringArray1: {
-        type: Sequelize.ARRAY(Sequelize.STRING), // Tableau de chaînes de caractères
+        type: Sequelize.ARRAY(Sequelize.TEXT), // Tableau de chaînes de caractères
         allowNull: true,
       },
       stringArray2: {
-        type: Sequelize.ARRAY(Sequelize.STRING), // Deuxième tableau de chaînes
+        type: Sequelize.ARRAY(Sequelize.TEXT), // Deuxième tableau de chaînes
         allowNull: true,
       },
       jsonArray: {

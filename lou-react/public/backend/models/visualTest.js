@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true, // URL du produit
     },
     stringArray1: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // Premier tableau de chaînes de caractères
+      type: DataTypes.ARRAY(DataTypes.TEXT), // Premier tableau de chaînes de caractères
       allowNull: true,
     },
     stringArray2: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // Deuxième tableau de chaînes de caractères
+      type: DataTypes.ARRAY(DataTypes.TEXT), // Deuxième tableau de chaînes de caractères
       allowNull: true,
     },
     jsonArray: {

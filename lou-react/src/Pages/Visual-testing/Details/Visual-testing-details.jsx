@@ -27,7 +27,12 @@ const VisualTestingDetailPage = () => {
     const [figmaNameNoMatch, setFigmaNameNoMatch] = useState([]);
     const [productNameNoMatch, setProductNameNoMatch] = useState([]);
     const [compareDataStockage, setCompareDataStockage] = useState([]);
-    const [comparefullstorage, setCompareFullStorage] = useState([]);
+    const [getCompareSessionStorage, setCompareSessionStorage] = useState([]);
+    const [getFigmaNoMatchSessionStorage, setFigmaNoMatchSessionStorage] = useState([]);
+    const [getProductNoMatchSessionStorage, setProductNoMatchSessionStorage] = useState([]);
+    const [figmaUrlDb, setFigmaUrlDb] = useState([]);
+    const [count, setCount] = useState(0);
+    const [test, setTest] = useState([]);
 
     const navigate = useNavigate();
 
@@ -48,8 +53,19 @@ const VisualTestingDetailPage = () => {
                 };
 
                 const response = await axios.get('http://localhost:50005/api/auth/visual-tests', config);
+                // console.log(response.data)
 
                 setVisualTestsData(response.data);
+
+                // const testStored = visualTestsData.find(p => p.id === parseInt(projectId));
+
+                // setTest(testStored)
+                // console.log(count)
+
+                // if (testStored !== undefined && count === 0) {
+                //     setCount(prev => prev + 1);
+                //     console.log(count);
+                //   }
             } catch (error) {
                 console.error('Erreur lors de la récupération des visual tests:', error);
             }
@@ -58,17 +74,40 @@ const VisualTestingDetailPage = () => {
         fetchVisualTests();
     }, []);
 
-    const test = visualTestsData.find(p => p.id === parseInt(projectId));
-    
+    useEffect(() => {
+        if (visualTestsData.length > 0) {
+            const foundTest = visualTestsData.find(p => p.id === parseInt(projectId));
+            if (foundTest) {
+                setTest(foundTest);
+                if(foundTest.figmaUrl) {
+                    setFigmaUrl(foundTest.figmaUrl)
+                }
+                if(foundTest.productUrl) {
+                    setProductUrl(foundTest.productUrl)
+                }
+                if(foundTest.jsonArray) {
+                    setCompareSessionStorage(foundTest.jsonArray[0])
+                }
+                // console.log(`Test trouvé`, getCompareSessionStorage);
+            }
+        }
+    }, [visualTestsData, projectId]);
+
     const handleCompareClick = async () => {
         try {
             setLoading(true);
             setError(null);
     
-            await compareData(figmaUrl, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson, setFigmaNameNoMatch, setProductNameNoMatch, setCompareDataStockage);
-            const comparefullstorageData = JSON.parse(sessionStorage.getItem('CompareResult'));
-            setCompareFullStorage(comparefullstorageData);
-            // console.log(`storedProductaNoMatch`, comparefullstorage);
+            await compareData(figmaUrl, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson);
+            
+            const getCompareSessionStorage = JSON.parse(sessionStorage.getItem('CompareResult'));
+            setCompareSessionStorage(getCompareSessionStorage);
+
+            const getFigmaNoMatchSessionStorage = JSON.parse(sessionStorage.getItem('CompareResult'));
+            setFigmaNoMatchSessionStorage(getFigmaNoMatchSessionStorage);
+
+            const getProductNoMatchSessionStorage = JSON.parse(sessionStorage.getItem('CompareResult'));
+            setProductNoMatchSessionStorage(getProductNoMatchSessionStorage);
 
             const token = localStorage.getItem('token');
     
@@ -82,24 +121,17 @@ const VisualTestingDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             };
-
-            
-
-            // QUand je compare la première fois, apres le premier chargement de la page tout est vide, il faut que je le fasse 2 fois pour que les tables se remplissent
-
-            // console.log(figmaNameNoMatch);
-            // console.log(productNameNoMatch);
-
-            // console.log(`Resultat de la comparaison`,compareDataStockage)
     
             const updateData = {
                 figmaUrl: figmaUrl,
                 productUrl: productUrl,
-                stringArray1: figmaNameNoMatch,
-                stringArray2: productNameNoMatch,
-                jsonArray: [{test:'test'}]
+                stringArray1: getFigmaNoMatchSessionStorage,
+                stringArray2: getProductNoMatchSessionStorage,
+                jsonArray: [getCompareSessionStorage]
                 
             };
+
+            setCompareSessionStorage(getCompareSessionStorage)
 
             await axios.put(`http://localhost:50005/api/auth/visual-tests/${projectId}`, updateData, config);
     
@@ -156,57 +188,93 @@ const VisualTestingDetailPage = () => {
             </section>
             <section className='lou-p-sm lou-overflow-auto'>
             <h3 className='lou-text-2xl lou-font-bold'>
-                {t('visual-design.results-tilte')} <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>X {t('visual-design.results-errors')}</span>
+                {t('visual-design.results-tilte')} 
+                {/* {console.log(getCompareSessionStorage)} */}
+                {Array.isArray(getCompareSessionStorage) && (
+                    <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>{getCompareSessionStorage.length} {t('visual-design.results-errors')}</span>
+                )}
             </h3>
 
             {loading ? (
                 <div className="spinner">Loading...</div>
             ) : (
                 <>
-                {error && <p className="text-red-500">{error}</p>}
+                {/* {error && <p className="text-red-500">{error}</p>} */}
+                <div className='lou-grid lou-gap-md'>
+                {Array.isArray(getCompareSessionStorage) && getCompareSessionStorage.length > 0 ? (
+                        getCompareSessionStorage.map((item, index) => (
+                        <div key={index} className="lou-border lou-border-dark-50 lou-rounded lou-overflow-hidden">
+                            <h3 className='lou-bg-dark-50 lou-p-xs' >Calque: {item.name}</h3>
+                            <div className="lou-p-sm lou-grid lou-gap-md">
+                            {Object.keys(item).map((key, subIndex) => (
+                                <div key={subIndex}>
+                                    <div className='lou-text-center lou-grid lou-gap-xs'>
+                                        {key !== 'name' && (
+                                            <strong>{key}</strong>
+                                        )}
+                                        {/* If key is background */}
+                                        {key === 'background' &&(
+                                            <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
+                                            <div className='lou-flex lou-gap-sm lou-justify-end'>
+                                            <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p>
+                                            <div 
+                                                className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs' 
+                                                style={{backgroundColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}}
+                                            ></div>
+                                                
+                                            </div>
+                                            <div className='lou-flex lou-gap-sm'>
+                                                <div 
+                                                    className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs'
+                                                    style={{backgroundColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}}
+                                                ></div>
+                                                <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p>
+                                            </div>
+                                        </div>
+                                        )}
+                                        {/* If key is background */}
+                                        {key === 'borderColor' &&(
+                                            <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
+                                            <div className='lou-flex lou-gap-sm lou-justify-end'>
+                                                {item[key].figma !== null ? (
+                                                    <div className='lou-flex lou-gap-sm'>
+                                                        <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p>
+                                                        <div 
+                                                            className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2' 
+                                                            style={{borderColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}}
+                                                        ></div>
+                                                    </div>
+                                                    ) : (
+                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                                )} 
+                                            </div>
+                                            <div className='lou-flex lou-gap-sm'>
+                                                {item[key].figma !== null ? (
+                                                    <div className='lou-flex lou-gap-sm'>
+                                                        <div 
+                                                            className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2' 
+                                                            style={{borderColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}}
+                                                        ></div>
+                                                        <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p>
+                                                    </div>
+                                                    ) : (
+                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                                )} 
+                                            </div>
+                                        </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            </div>
+                        </div>
+                        ))
+                    ) : (
+                        <p>Aucun résultat trouvé</p>
+                    )}
+                </div>
                 </>
             )}
-
-            
-            <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-sm'>
-                <div className='lou-grid lou-gap-md'>
-                    {comparefullstorage.length > 0 ? (
-                        comparefullstorage.map((item, index) => (
-                        <div key={index} className="lou-border lou-border-dark-50 lou-rounded lou-overflow-hidden">
-                            <h3 className='lou-bg-dark-50 lou-p-xs' >Calque: {item.name}</h3>
-                            <div className="lou-p-sm">
-                            {Object.keys(item).map((key, subIndex) => (
-                                <div key={subIndex} className="property">
-                                <strong>{key}:</strong> {JSON.stringify(item[key].figma)}
-                                </div>
-                            ))}
-                            </div>
-                        </div>
-                        ))
-                    ) : (
-                        <p>Aucun résultat trouvé</p>
-                    )}
-                </div>
-                <div className='lou-grid lou-gap-md'>
-                    {comparefullstorage.length > 0 ? (
-                        comparefullstorage.map((item, index) => (
-                        <div key={index} className="lou-border lou-border-dark-50 lou-rounded lou-overflow-hidden">
-                            <h3 className='lou-bg-dark-50 lou-p-xs' >Calque: {item.name}</h3>
-                            <div className="lou-p-sm">
-                            {Object.keys(item).map((key, subIndex) => (
-                                <div key={subIndex} className="property">
-                                <strong>{key}:</strong> {JSON.stringify(item[key].product)}
-                                </div>
-                            ))}
-                            </div>
-                        </div>
-                        ))
-                    ) : (
-                        <p>Aucun résultat trouvé</p>
-                    )}
-                </div>
-            </div>
-            
             </section>
         </main>
     </div>
