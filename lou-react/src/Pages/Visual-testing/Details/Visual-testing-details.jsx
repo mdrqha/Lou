@@ -9,6 +9,8 @@ import UserDropdown from '../../../Components/User-dropdown/User-dropdown';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { useDebouncedCallback } from 'use-debounce';
+
 
 
 const VisualTestingDetailPage = () => {
@@ -33,6 +35,7 @@ const VisualTestingDetailPage = () => {
     const [figmaUrlDb, setFigmaUrlDb] = useState([]);
     const [count, setCount] = useState(0);
     const [test, setTest] = useState([]);
+    const [title, setTitle] = useState('');
 
     const navigate = useNavigate();
 
@@ -76,6 +79,9 @@ const VisualTestingDetailPage = () => {
                 }
                 if(foundTest.jsonArray) {
                     setCompareSessionStorage(foundTest.jsonArray[0])
+                }
+                if(foundTest.title) {
+                    setTitle(foundTest.title)
                 }
             }
         }
@@ -125,14 +131,43 @@ const VisualTestingDetailPage = () => {
     
             console.log("Mise à jour réussie !");
             setLoading(false);
-    
         } catch (error) {
             console.error("Erreur lors de la mise à jour des données:", error);
             setError("Erreur lors de la mise à jour des données");
             setLoading(false);
         }
     };
+
+    const debouncedUpdateTitle = useDebouncedCallback((newTitle) => {
+        updateTitleInDatabase(newTitle);
+    }, 1000);
+
+    const handleTitleChange = (e) => {
+        const newTitle = e.target.value;
+        setTitle(newTitle);
+        debouncedUpdateTitle(newTitle);
+        console.log(newTitle)
+    };
     
+    const updateTitleInDatabase = async (newTitle) => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            console.log(newTitle)
+    
+            const response = await axios.put(`http://localhost:50005/api/auth/visual-tests/${test.id}`, 
+                { title: newTitle },
+                config
+            );
+            console.log('Mise à jour réussie', response.data);
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour du titre', error);
+        }
+    };
 
     const { t } = useTranslation();
 
@@ -143,14 +178,22 @@ const VisualTestingDetailPage = () => {
   return (
     <div className='lou-grid lou-grid-rows-[auto_1fr] lou-gap-md lou-overflow-auto' lou-component='right-container'>
         <section className='lou-grid lou-grid-cols-[1fr_auto] lou-align-center lou-items-center'>
-            <div className='lou-flex lou-gap-xs'>
+            <div className='lou-flex lou-gap-xs lou-align-center'>
                 <button 
                     onClick={() => navigate('/visual-testing')}
                     className='lou-text-dark-500 lou-flex lou-justify-center lou-items-center lou-rounded-sm lou-w-8 lou-h-8 lou-transition lou-duration-300 hover:lou-text-dark hover:lou-bg-dark-100'
                     >
                     <FiArrowLeft />
                 </button>
-                <h1 className='lou-text-2xl lou-font-bold'>{test.title}</h1>
+                <input
+                    type='text'
+                    value={title}
+                    placeholder='Titre de votre projet'
+                    onChange={handleTitleChange}
+                    onBlur={() => updateTitleInDatabase(title)} 
+                    className='lou-text-2xl lou-font-bold lou-rounded-sm lou-px-sm lou-py-2xs'
+                />
+                {/* <h1 className='lou-text-2xl lou-font-bold'>{test.title}</h1> */}
             </div>
             <UserDropdown />
         </section>

@@ -130,7 +130,7 @@ router.get('/visual-tests', authenticateToken, async (req, res) => {
 router.put('/visual-tests/:id', authenticateToken, async (req, res) => {
   try {
       const { id } = req.params;
-      const { figmaUrl, productUrl, stringArray1, stringArray2, jsonArray } = req.body;
+      const { title, figmaUrl, productUrl, stringArray1, stringArray2, jsonArray } = req.body;
 
       // Recherche du visual test par son ID et l'utilisateur connecté
       const visualTest = await VisualTest.findOne({
@@ -141,23 +141,20 @@ router.put('/visual-tests/:id', authenticateToken, async (req, res) => {
           return res.status(404).json({ message: 'Visual test non trouvé' });
       }
 
-      // Mise à jour des données
-      visualTest.figmaUrl = figmaUrl;
-      visualTest.productUrl = productUrl;
-      visualTest.stringArray1 = stringArray1;
-      visualTest.stringArray2 = stringArray2;
-      visualTest.jsonArray = jsonArray;
+      if (title !== undefined) visualTest.title = title;
+      if (figmaUrl !== undefined) visualTest.figmaUrl = figmaUrl;
+      if (productUrl !== undefined) visualTest.productUrl = productUrl;
+      if (stringArray1 !== undefined) visualTest.stringArray1 = stringArray1;
+      if (stringArray2 !== undefined) visualTest.stringArray2 = stringArray2;
+      if (jsonArray !== undefined) visualTest.jsonArray = jsonArray;
 
-      await visualTest.save(); // Sauvegarder les modifications dans la base de données
-
+      await visualTest.save(); 
+      
       res.status(200).json({ message: 'Visual test mis à jour avec succès', visualTest });
   } catch (error) {
       console.error('Erreur lors de la mise à jour du visual test:', error);
       res.status(500).json({ error: 'Erreur lors de la mise à jour du visual test' });
   }
 });
-
-
-
 
 module.exports = router;
