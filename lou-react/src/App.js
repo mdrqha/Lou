@@ -23,6 +23,9 @@ const LouAppContent = () => {
   const { i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [userLang, setUserLang] = useState(null);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
 
 
   useEffect(() => {
@@ -45,6 +48,26 @@ const LouAppContent = () => {
 
     fetchUserLanguage();
   }, [i18n]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:50005/api/auth/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+        setError(error);
+        logout();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const hideMenuPaths = ['/login', '/register', '/profile'];
   const hideMenu = hideMenuPaths.includes(location.pathname);

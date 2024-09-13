@@ -53,19 +53,8 @@ const VisualTestingDetailPage = () => {
                 };
 
                 const response = await axios.get('http://localhost:50005/api/auth/visual-tests', config);
-                // console.log(response.data)
 
                 setVisualTestsData(response.data);
-
-                // const testStored = visualTestsData.find(p => p.id === parseInt(projectId));
-
-                // setTest(testStored)
-                // console.log(count)
-
-                // if (testStored !== undefined && count === 0) {
-                //     setCount(prev => prev + 1);
-                //     console.log(count);
-                //   }
             } catch (error) {
                 console.error('Erreur lors de la récupération des visual tests:', error);
             }
@@ -88,7 +77,6 @@ const VisualTestingDetailPage = () => {
                 if(foundTest.jsonArray) {
                     setCompareSessionStorage(foundTest.jsonArray[0])
                 }
-                // console.log(`Test trouvé`, getCompareSessionStorage);
             }
         }
     }, [visualTestsData, projectId]);
@@ -189,7 +177,6 @@ const VisualTestingDetailPage = () => {
             <section className='lou-p-sm lou-overflow-auto'>
             <h3 className='lou-text-2xl lou-font-bold'>
                 {t('visual-design.results-tilte')} 
-                {/* {console.log(getCompareSessionStorage)} */}
                 {Array.isArray(getCompareSessionStorage) && (
                     <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>{getCompareSessionStorage.length} {t('visual-design.results-errors')}</span>
                 )}
