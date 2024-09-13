@@ -13,12 +13,12 @@ const UserDropdown = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false); // État pour gérer l'ouverture/fermeture
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen); // Fonction pour basculer l'état du dropdown
+    setIsOpen(!isOpen);
   };
 
   useEffect(() => {

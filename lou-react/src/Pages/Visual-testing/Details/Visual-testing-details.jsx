@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
 import InputText from '../../../Components/Inputs/Input-text/Input-text'; 
@@ -7,7 +7,7 @@ import { compareData } from '../Compare-jsons';
 import { useParams } from 'react-router-dom';
 import UserDropdown from '../../../Components/User-dropdown/User-dropdown';
 import { FiArrowLeft } from 'react-icons/fi';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -36,8 +36,17 @@ const VisualTestingDetailPage = () => {
     const [count, setCount] = useState(0);
     const [test, setTest] = useState([]);
     const [title, setTitle] = useState('');
+    const inputRef = useRef(null);
+    const location = useLocation();
 
     const navigate = useNavigate();
+
+    // Utilisation de l'effet pour focus l'input après le rendu
+    useEffect(() => {
+        if (location.state && location.state.focusInput && inputRef.current) {
+            inputRef.current.focus(); // Fait le focus sur l'input si on vient de la création d'un test
+        }
+    }, [location]);
 
     useEffect(() => {
         const fetchVisualTests = async () => {
@@ -177,8 +186,8 @@ const VisualTestingDetailPage = () => {
 
   return (
     <div className='lou-grid lou-grid-rows-[auto_1fr] lou-gap-md lou-overflow-auto' lou-component='right-container'>
-        <section className='lou-grid lou-grid-cols-[1fr_auto] lou-align-center lou-items-center'>
-            <div className='lou-flex lou-gap-xs lou-align-center'>
+        <section className='lou-grid lou-gap-xl lou-grid-cols-[1fr_auto] lou-align-center lou-items-center'>
+            <div className='lou-flex lou-items-center'>
                 <button 
                     onClick={() => navigate('/visual-testing')}
                     className='lou-text-dark-500 lou-flex lou-justify-center lou-items-center lou-rounded-sm lou-w-8 lou-h-8 lou-transition lou-duration-300 hover:lou-text-dark hover:lou-bg-dark-100'
@@ -186,12 +195,13 @@ const VisualTestingDetailPage = () => {
                     <FiArrowLeft />
                 </button>
                 <input
+                    ref={inputRef}
                     type='text'
                     value={title}
                     placeholder='Titre de votre projet'
                     onChange={handleTitleChange}
                     onBlur={() => updateTitleInDatabase(title)} 
-                    className='lou-text-2xl lou-font-bold lou-rounded-sm lou-px-sm lou-py-2xs'
+                    className='lou-text-2xl lou-w-full lou-font-bold lou-rounded-sm lou-px-sm lou-py-2xs lou-bg-transparent lou-border-2 lou-border-dark-30 lou-transition lou-duration-300 hover:lou-bg-white focus:lou-bg-white focus:lou-border-primary focus:lou-outline-none'
                 />
                 {/* <h1 className='lou-text-2xl lou-font-bold'>{test.title}</h1> */}
             </div>
@@ -262,7 +272,7 @@ const VisualTestingDetailPage = () => {
                                             </div>
                                         </div>
                                         )}
-                                        {/* If key is background */}
+                                        {/* If key is border color */}
                                         {key === 'borderColor' &&(
                                             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
                                             <div className='lou-flex lou-gap-sm lou-justify-end'>
@@ -286,6 +296,36 @@ const VisualTestingDetailPage = () => {
                                                             style={{borderColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}}
                                                         ></div>
                                                         <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p>
+                                                    </div>
+                                                    ) : (
+                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                                )} 
+                                            </div>
+                                        </div>
+                                        )}
+                                        {/* If key is borderStyle */}
+                                        {key === 'borderStyle' &&(
+                                            <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
+                                            <div className='lou-flex lou-gap-sm lou-justify-end'>
+                                                {item[key].figma !== null ? (
+                                                    <div className='lou-flex lou-gap-sm'>
+                                                       <p className='lou-capitalize'>{item[key].figma}</p> 
+
+                                                        <div 
+                                                            className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].figma === 'SOLID' ? 'lou-border-solid`': 'lou-border-dashed'}`} 
+                                                        ></div>
+                                                    </div>
+                                                    ) : (
+                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                                )} 
+                                            </div>
+                                            <div className='lou-flex lou-gap-sm'>
+                                                {item[key].figma !== null ? (
+                                                    <div className='lou-flex lou-gap-sm'>
+                                                        <div 
+                                                            className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].product === 'solid' ? 'lou-border-solid`': 'lou-border-dashed'}`} 
+                                                        ></div>
+                                                        <p className='lou-capitalize'>{item[key].product}</p> 
                                                     </div>
                                                     ) : (
                                                     <p className='lou-text-dark-300 lou-italic'>Undefined</p>

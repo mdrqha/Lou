@@ -55,7 +55,7 @@ const VisualTestingPage = () => {
             }, config);
 
             const createdTestId = response.data.id    
-            navigate(`/visual-testing/${createdTestId}`);
+            navigate(`/visual-testing/${createdTestId}`, { state: { focusInput: true } });
         } catch (error) {
             console.error("Erreur d'inscription", error);
         }
