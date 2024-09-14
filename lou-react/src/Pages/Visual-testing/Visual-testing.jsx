@@ -9,6 +9,9 @@ import UserDropdown from '../../Components/User-dropdown/User-dropdown';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useAuth } from '../../Context/AuthContext';
+import { format, formatDistanceToNowStrict, differenceInMinutes, differenceInHours, differenceInDays, parseISO } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import "../../App.scss";
 
 
 const VisualTestingPage = () => {
@@ -87,6 +90,28 @@ const VisualTestingPage = () => {
 
         fetchVisualTests();
     }, []);
+
+
+    const formatRelativeDate = (dateString) => {
+        const date = parseISO(dateString);
+        const now = new Date();
+    
+        const diffInMinutes = differenceInMinutes(now, date);
+        const diffInHours = differenceInHours(now, date);
+        const diffInDays = differenceInDays(now, date);
+    
+        if (diffInMinutes < 5) {
+            return `Now`;
+        } else if (diffInMinutes < 60) {
+            return `${diffInMinutes} minutes`;
+        } else if (diffInHours < 24) {
+            return `${diffInHours} heures`;
+        } else if (diffInDays < 7) {
+            return `${diffInDays} jours`;
+        } else {
+            return format(date, "d MMMM yyyy", { locale: fr });
+        }
+    };
     
     const { t } = useTranslation();
 
@@ -105,15 +130,22 @@ const VisualTestingPage = () => {
         </section>
         
         <section className='lou-overflow-auto'>
-            <div className='lou-grid lou-grid-cols-[1fr_1fr_1fr_1fr] lou-gap-sm'>
-                {visualTestsData.map((visualTest) => (
+            <div className='lou-grid lou-card-grid lou-gap-sm'>
+                {visualTestsData
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                .map((visualTest) => (
                     <div 
                         key={visualTest.id} 
-                        className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-p-md lou-select-none hover:lou-shadow-lg hover:lou-cursor-pointer lou-transition-all lou-duration-300'
+                        className='lou-grid lou-grid-cols-[1fr_auto] lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-p-md lou-select-none hover:lou-shadow-lg hover:lou-cursor-pointer lou-transition-all lou-duration-300'
                         onClick={() => navigate(`/visual-testing/${visualTest.id}`)}
                         >
-                        <h4 className='lou-text-lg lou-font-bold lou-line-clamp-2'>{visualTest.title}</h4>
-                        <p className='lou-text-dark-600 lou-line-clamp-3'>{visualTest.description}</p>
+                        <div>
+                            <h4 className='lou-text-lg lou-font-bold lou-line-clamp-1'>{visualTest.title}</h4>
+                            <p className='lou-text-dark-600 lou-line-clamp-3'>{formatRelativeDate(visualTest.updatedAt)}</p>
+                        </div>
+                        <div>
+                            <p className='lou-bg-success-100 lou-rounded-sm lou-px-xs lou-py-2xs lou-text-success'>Parfait !</p>
+                        </div>
                     </div>
                 ))}
             </div>

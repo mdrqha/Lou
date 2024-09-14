@@ -13,8 +13,8 @@ function stringifyToLowoerCase(varToStringify) {
 
 function compareJSON(figmaObj, productObj) {
     compareDataStockage = [];
-    // console.log(figmaObj)
-    // console.log(productObj)
+    console.log(figmaObj)
+    console.log(productObj)
     
     if(figmaObj.length > productObj.length) {
         figmaObj.forEach(figmaObjCurrent => {
@@ -46,6 +46,15 @@ function compareJSON(figmaObj, productObj) {
 
                     // Comparaison border
                     // Border color
+                    // console.log(figmaObjCurrent.style.border.size)
+                    //     console.log(productObjCurrent.style.border.size)
+
+                    if(productObjCurrent.style.border.size !== null) {
+                        console.log(figmaObjCurrent.style.border.size)
+                        console.log(productObjCurrent.style.border.size)
+                    }
+
+                    // SI BORDER SIZE EST DIFFERENT ET QUE PRODUCT BORDER SIZE EST DIFF2RENT DE NULL ON METS LA COULEURS DE BORDERCOLOR AU PRODUCT SINON BORDER COLOR EST NULL, PAREIL POUR LE STYLE
                     const figmaBorderColor = figmaObjCurrent.style.border.color !== null ? figmaObjCurrent.style.border.color[0] : null;
                     const productBorderColor = productObjCurrent.style.border.color !== null ? productObjCurrent.style.border.color : null;
 
@@ -65,6 +74,7 @@ function compareJSON(figmaObj, productObj) {
                             figma: figmaBorderSize,
                             product: productBorderSize
                         };
+                        
                     }
 
                     const figmaBorderStyle = figmaObjCurrent.style.border.style ? figmaObjCurrent.style.border.style.style : "SOLID";
@@ -611,7 +621,7 @@ function compareJSON(figmaObj, productObj) {
     // console.log(figmaNameNoMatch);
     // console.log(productNameNoMatch);
 
-    // console.log(`Resultat de la comparaison`,compareDataStockage)
+    console.log(`Resultat de la comparaison`,compareDataStockage)
     sessionStorage.setItem('CompareResult', JSON.stringify(compareDataStockage));
     const storedCompareResult = JSON.parse(sessionStorage.getItem('CompareResult'));
     // console.log(`sessionStorageCompare`, storedCompareResult);
