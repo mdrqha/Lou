@@ -146,8 +146,7 @@ const VisualTestingPage = () => {
                         </div>
                         <div>
                             <p className={`lou-rounded-sm lou-px-xs lou-py-2xs ${visualTest.percent === 100 ? 'lou-text-success lou-bg-success-100' : ''} ${visualTest.percent < 100 && visualTest.percent > 50 ? 'lou-text-warning lou-bg-warning-100' : ''} ${visualTest.percent < 51 && visualTest.percent !== null ? 'lou-text-danger lou-bg-danger-100' : ''} ${visualTest.percent === null ? 'lou-text-dark-500 lou-bg-dark-30' : ''}`}>
-                                {visualTest.percent === 100 ? 'Perfect!' : visualTest.percent}
-                                {visualTest.percent === null ? 'Vide' : ''}
+                            {visualTest.percent === null ? 'Vide' : (visualTest.percent === 100 ? 'Perfect!' : visualTest.percent + '%')}
                             </p>
                         </div>
                     </div>

@@ -88,7 +88,9 @@ const VisualTestingDetailPage = () => {
     useEffect(() => {
         if (visualTestsData.length > 0) {
             const foundTest = visualTestsData.find(p => p.id === parseInt(projectId));
+
             if (foundTest) {
+                
                 setTest(foundTest);
                 if(foundTest.figmaUrl) {
                     setFigmaUrl(foundTest.figmaUrl)
@@ -102,9 +104,10 @@ const VisualTestingDetailPage = () => {
                 if(foundTest.title) {
                     setTitle(foundTest.title)
                 }
-                if(foundTest.percent) {
-                    setComparePercentSessionStorage(foundTest.percent)
+                if (foundTest.percent !== null && foundTest.percent !== undefined) {
+                    setComparePercentSessionStorage(foundTest.percent);
                 }
+                
             }
         }
     }, [visualTestsData, projectId]);
@@ -146,8 +149,8 @@ const VisualTestingDetailPage = () => {
                 productUrl: productUrl,
                 stringArray1: getFigmaNoMatchSessionStorage,
                 stringArray2: getProductNoMatchSessionStorage,
-                jsonArray: [getCompareSessionStorage]
-                
+                jsonArray: [getCompareSessionStorage],
+                percent: getComparePercent
             };
 
             setCompareSessionStorage(getCompareSessionStorage)
@@ -181,7 +184,6 @@ const VisualTestingDetailPage = () => {
                     Authorization: `Bearer ${token}`,
                 },
             };
-            console.log(newTitle)
     
             const response = await axios.put(`http://localhost:50005/api/auth/visual-tests/${test.id}`, 
                 { title: newTitle },
@@ -265,7 +267,10 @@ const VisualTestingDetailPage = () => {
                         </div>
                     </div>
                     <div className='lou-pt-xs'>
-                        <p className={`lou-px-xs lou-py-2xs lou-rounded-sm lou-text-sm lou-border-2 lou-border-white ${test.percent === 100 ? 'lou-text-success lou-bg-success-100' : ''} ${test.percent < 100 && test.percent > 50 ? 'lou-text-warning lou-bg-warning-100' : ''} ${test.percent < 51 && test.percent !== null ? 'lou-text-danger lou-bg-danger-100' : ''} ${!test.percent ? 'lou-text-dark-500 lou-bg-dark-50' : ''}`}>{test.percent ? test.percent + '%' : 'vide'}</p>
+                        <p className={`lou-px-xs lou-py-2xs lou-rounded-sm lou-text-sm lou-border-2 lou-border-white ${getComparePercentSessionStorage === 100 ? 'lou-text-success lou-bg-success-100' : ''} ${getComparePercentSessionStorage < 100 && getComparePercentSessionStorage > 50 ? 'lou-text-warning lou-bg-warning-100' : ''} ${getComparePercentSessionStorage < 51 && getComparePercentSessionStorage !== null ? 'lou-text-danger lou-bg-danger-100' : ''} ${getComparePercentSessionStorage === null ? 'lou-text-dark-500 lou-bg-dark-50' : ''}`}>
+                        {/* {test.percent ? test.percent + '%' : 'vide'} */}
+                        {getComparePercentSessionStorage ? getComparePercentSessionStorage + '%' : 'Vide'}
+                        </p>
                     </div>
                 </div>
             </div>
