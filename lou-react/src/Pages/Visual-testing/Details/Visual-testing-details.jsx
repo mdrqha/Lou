@@ -6,7 +6,7 @@ import Button from '../../../Components/Buttons/Button/Button';
 import { compareData } from '../Compare-jsons';
 import { useParams } from 'react-router-dom';
 import UserDropdown from '../../../Components/User-dropdown/User-dropdown';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiFigma, FiFilter, FiLink, FiMonitor, FiMoreVertical, FiSearch, FiTrash } from 'react-icons/fi';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { useDebouncedCallback } from 'use-debounce';
@@ -268,7 +268,6 @@ const VisualTestingDetailPage = () => {
                     </div>
                     <div className='lou-pt-xs'>
                         <p className={`lou-px-xs lou-py-2xs lou-rounded-sm lou-text-sm lou-border-2 lou-border-white ${getComparePercentSessionStorage === 100 ? 'lou-text-success lou-bg-success-100' : ''} ${getComparePercentSessionStorage < 100 && getComparePercentSessionStorage > 50 ? 'lou-text-warning lou-bg-warning-100' : ''} ${getComparePercentSessionStorage < 51 && getComparePercentSessionStorage !== null ? 'lou-text-danger lou-bg-danger-100' : ''} ${getComparePercentSessionStorage === null ? 'lou-text-dark-500 lou-bg-dark-50' : ''}`}>
-                        {/* {test.percent ? test.percent + '%' : 'vide'} */}
                         {getComparePercentSessionStorage ? getComparePercentSessionStorage + '%' : 'Vide'}
                         </p>
                     </div>
@@ -278,23 +277,42 @@ const VisualTestingDetailPage = () => {
         </section>
 
         <main className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-grid lou-grid-rows-[auto_1fr] lou-overflow-auto'>
-            <section className='lou-grid lou-grid-cols-[1fr_1fr_auto] lou-gap-sm lou-border-b lou-border-dark-50 lou-p-sm'>
+            <section className='lou-grid lou-grid-cols-[auto_1fr_1fr_auto] lou-gap-sm lou-border-b lou-border-dark-50 lou-p-sm'>
+                <Button
+                    text='Compare'
+                    onClick={() => {handleCompareClick();}}
+                />
                 <InputText
                     placeholder='URL Figma'
                     type="text"
                     value={figmaUrl}
+                    icon={<FiFigma/>}
                     onChange={(e) => {setFigmaUrl(e.target.value);}}
                 />
                 <InputText
                     placeholder='URL produit'
                     type="text"
                     value={productUrl ? productUrl : ''}
+                    icon={<FiMonitor/>}
                     onChange={(e) => setProductUrl(e.target.value)}
                 />
-                <Button
-                    text='Compare'
-                    onClick={() => {handleCompareClick();}}
-                />
+                <div className='lou-flex'>
+                    <Button 
+                        iconOnly={true}
+                        icon={<FiSearch />}
+                        variant='white'
+                    />
+                    <Button 
+                        iconOnly={true}
+                        icon={<FiFilter />}
+                        variant='white'
+                    />
+                    <Button 
+                        iconOnly={true}
+                        icon={<FiMoreVertical />}
+                        variant='white'
+                    />
+                </div>
             </section>
             <section className='lou-p-sm lou-overflow-auto'>
             <h3 className='lou-text-2xl lou-font-bold'>
