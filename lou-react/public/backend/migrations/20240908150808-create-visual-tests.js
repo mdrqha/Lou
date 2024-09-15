@@ -36,6 +36,10 @@ module.exports = {
         type: Sequelize.ARRAY(Sequelize.JSON), // Tableau contenant des objets JSON
         allowNull: true,
       },
+      percent: {
+        type: Sequelize.INTEGER, // Tableau contenant des objets JSON
+        allowNull: true,
+      },
       userId: {
         type: Sequelize.INTEGER,
         references: {

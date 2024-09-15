@@ -13,14 +13,16 @@ function stringifyToLowoerCase(varToStringify) {
 
 function compareJSON(figmaObj, productObj) {
     compareDataStockage = [];
+    let compareCounter = 0;
     console.log(figmaObj)
     console.log(productObj)
     
     if(figmaObj.length > productObj.length) {
         figmaObj.forEach(figmaObjCurrent => {
-            productObj.forEach( productObjCurrent=> {
+            productObj.forEach( productObjCurrent => {
                 if(figmaObjCurrent.name === productObjCurrent.name) {
                     finalCompareDataJson = {};
+                    compareCounter = compareCounter + 1;
 
                     // ATTENTION A LA RECEPTION D'INFO POUR LA COMPARAISON, CERTAINES COMPARAISON NE POURRONS JAMAIS ETRE VRAI
                     finalCompareDataJson.name = figmaObjCurrent.name;
@@ -331,6 +333,7 @@ function compareJSON(figmaObj, productObj) {
             figmaObj.forEach( figmaObjCurrent=> {
                 if(productObjCurrent.name === figmaObjCurrent.name) {
                     finalCompareDataJson = {};
+                    compareCounter = compareCounter + 1;
 
                     // ATTENTION A LA RECEPTION D'INFO POUR LA COMPARAISON, CERTAINES COMPARAISON NE POURRONS JAMAIS ETRE VRAI
                     // console.log(figmaObjCurrent.name)
@@ -618,8 +621,15 @@ function compareJSON(figmaObj, productObj) {
 
     figmaNameNoMatch = figmaAllName.filter(name => !productAllName.includes(name));
     productNameNoMatch = productAllName.filter(name => !figmaAllName.includes(name));
+
+    const comparePercent = parseFloat( 100 - ((compareCounter/compareDataStockage.length) * 100).toFixed(2));
+    sessionStorage.setItem(`comparePercent`, comparePercent)
+    const storedComparePercentage = JSON.parse((sessionStorage.getItem('comparePercent')));
     // console.log(figmaNameNoMatch);
     // console.log(productNameNoMatch);
+    // console.log(compareCounter);
+    // console.log(compareDataStockage.length)
+    // console.log(parseFloat( 100 - ((compareCounter/compareDataStockage.length) * 100).toFixed(2)))
 
     console.log(`Resultat de la comparaison`,compareDataStockage)
     sessionStorage.setItem('CompareResult', JSON.stringify(compareDataStockage));

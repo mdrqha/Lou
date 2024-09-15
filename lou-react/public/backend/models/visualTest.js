@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ARRAY(DataTypes.JSON), // Tableau où chaque ligne contient un JSON
       allowNull: true,
     },
+    percent: {
+      type: DataTypes.INTEGER, // Tableau où chaque ligne contient un JSON
+      allowNull: true,
+    },
     userId: {
       type: DataTypes.INTEGER,
       references: {

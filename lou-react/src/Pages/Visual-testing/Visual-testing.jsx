@@ -54,7 +54,7 @@ const VisualTestingPage = () => {
                 productUrl,
                 stringArray1,
                 stringArray2,
-                jsonArray
+                jsonArray,
             }, config);
 
             const createdTestId = response.data.id    
@@ -122,11 +122,12 @@ const VisualTestingPage = () => {
             <h1 className='lou-text-2xl lou-font-bold'>Visual testing</h1>
             <UserDropdown />
         </section>
-        <section className='lou-grid lou-justify-end lou-bg-white lou-rounded lou-p-2xs'>
+        <section className='lou-flex lou-justify-between lou-bg-white lou-rounded lou-p-2xs'>
             <Button
                 text="Créer un test"
                 onClick={handleCreateTest}
             />
+            <p>Boutons</p>
         </section>
         
         <section className='lou-overflow-auto'>
@@ -136,15 +137,18 @@ const VisualTestingPage = () => {
                 .map((visualTest) => (
                     <div 
                         key={visualTest.id} 
-                        className='lou-grid lou-grid-cols-[1fr_auto] lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-p-md lou-select-none hover:lou-shadow-lg hover:lou-cursor-pointer lou-transition-all lou-duration-300'
+                        className={`lou-grid lou-grid-cols-[1fr_auto] lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-p-md lou-select-none hover:lou-shadow-lg hover:lou-cursor-pointer lou-transition-all lou-duration-300 ${visualTest.percent < 51 ? 'lou-border-2 lou-border-danger' : ''}`}
                         onClick={() => navigate(`/visual-testing/${visualTest.id}`)}
                         >
                         <div>
-                            <h4 className='lou-text-lg lou-font-bold lou-line-clamp-1'>{visualTest.title}</h4>
-                            <p className='lou-text-dark-600 lou-line-clamp-3'>{formatRelativeDate(visualTest.updatedAt)}</p>
+                            <h4 className={`lou-text-lg lou-font-bold lou-line-clamp-1 lou-leading-5 ${visualTest.percent < 51 ? 'lou-text-danger' : ''}`}>{visualTest.title}</h4>
+                            <p className='lou-text-dark-400 lou-text-sm lou-leading-5'>{formatRelativeDate(visualTest.updatedAt)}</p>
                         </div>
                         <div>
-                            <p className='lou-bg-success-100 lou-rounded-sm lou-px-xs lou-py-2xs lou-text-success'>Parfait !</p>
+                            <p className={`lou-rounded-sm lou-px-xs lou-py-2xs ${visualTest.percent === 100 ? 'lou-text-success lou-bg-success-100' : ''} ${visualTest.percent < 100 && visualTest.percent > 50 ? 'lou-text-warning lou-bg-warning-100' : ''} ${visualTest.percent < 51 && visualTest.percent !== null ? 'lou-text-danger lou-bg-danger-100' : ''} ${visualTest.percent === null ? 'lou-text-dark-500 lou-bg-dark-30' : ''}`}>
+                                {visualTest.percent === 100 ? 'Perfect!' : visualTest.percent}
+                                {visualTest.percent === null ? 'Vide' : ''}
+                            </p>
                         </div>
                     </div>
                 ))}

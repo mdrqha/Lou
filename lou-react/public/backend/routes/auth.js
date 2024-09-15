@@ -130,7 +130,7 @@ router.get('/visual-tests', authenticateToken, async (req, res) => {
 router.put('/visual-tests/:id', authenticateToken, async (req, res) => {
   try {
       const { id } = req.params;
-      const { title, figmaUrl, productUrl, stringArray1, stringArray2, jsonArray } = req.body;
+      const { title, figmaUrl, productUrl, stringArray1, stringArray2, jsonArray, percent } = req.body;
 
       // Recherche du visual test par son ID et l'utilisateur connecté
       const visualTest = await VisualTest.findOne({
@@ -147,6 +147,7 @@ router.put('/visual-tests/:id', authenticateToken, async (req, res) => {
       if (stringArray1 !== undefined) visualTest.stringArray1 = stringArray1;
       if (stringArray2 !== undefined) visualTest.stringArray2 = stringArray2;
       if (jsonArray !== undefined) visualTest.jsonArray = jsonArray;
+      if (percent !== undefined) visualTest.percent = percent;
 
       await visualTest.save(); 
       
