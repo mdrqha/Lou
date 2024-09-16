@@ -12,9 +12,6 @@ import { useAuth } from '../../Context/AuthContext';
 import { format, formatDistanceToNowStrict, differenceInMinutes, differenceInHours, differenceInDays, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import "../../App.scss";
-import { FiFilter, FiSearch } from 'react-icons/fi';
-import moreButton from '../../Components/Buttons/More-button/More-button';
-import MoreButton from '../../Components/Buttons/More-button/More-button';
 
 
 const VisualTestingPage = () => {
@@ -130,21 +127,7 @@ const VisualTestingPage = () => {
                 text="Créer un test"
                 onClick={handleCreateTest}
             />
-            <div className='lou-flex'>
-                <Button 
-                    iconOnly={true}
-                    icon={<FiSearch />}
-                    variant='white'
-                />
-                <Button 
-                    iconOnly={true}
-                    icon={<FiFilter />}
-                    variant='white'
-                />
-                <MoreButton
-                    subItem={[{text: 'bouton 1'},{text: 'Bouton 2'}]}
-                />
-            </div>
+            <p>Boutons</p>
         </section>
         
         <section className='lou-overflow-auto'>
