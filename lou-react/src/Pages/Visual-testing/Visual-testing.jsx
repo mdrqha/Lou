@@ -13,7 +13,6 @@ import { format, formatDistanceToNowStrict, differenceInMinutes, differenceInHou
 import { fr } from 'date-fns/locale';
 import "../../App.scss";
 import { FiFilter, FiSearch } from 'react-icons/fi';
-import moreButton from '../../Components/Buttons/More-button/More-button';
 import MoreButton from '../../Components/Buttons/More-button/More-button';
 
 
@@ -142,7 +141,18 @@ const VisualTestingPage = () => {
                     variant='white'
                 />
                 <MoreButton
-                    subItem={[{text: 'bouton 1'},{text: 'Bouton 2'}]}
+                    subItem={[
+                        {
+                        text: 'Bouton 1',
+                        click: () => console.log('Bouton 1 cliqué'),
+                        icon: <FiFilter/>
+                        },
+                        {
+                        text: 'Bouton 2',
+                        click: () => console.log('Bouton 2 cliqué'),
+                        icon: <FiSearch/>,
+                        }
+                    ]}
                 />
             </div>
         </section>

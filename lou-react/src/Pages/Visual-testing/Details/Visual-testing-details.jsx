@@ -6,12 +6,13 @@ import Button from '../../../Components/Buttons/Button/Button';
 import { compareData } from '../Compare-jsons';
 import { useParams } from 'react-router-dom';
 import UserDropdown from '../../../Components/User-dropdown/User-dropdown';
-import { FiArrowLeft, FiFigma, FiFilter, FiLink, FiMonitor, FiMoreVertical, FiSearch, FiTrash } from 'react-icons/fi';
+import { FiArrowLeft, FiFigma, FiFilter, FiLink, FiMonitor, FiMoreVertical, FiSearch, FiTrash, FiTrash2 } from 'react-icons/fi';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { useDebouncedCallback } from 'use-debounce';
 import { format, formatDistanceToNowStrict, differenceInMinutes, differenceInHours, differenceInDays, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import MoreButton from '../../../Components/Buttons/More-button/More-button';
 
 
 
@@ -229,6 +230,29 @@ const VisualTestingDetailPage = () => {
         }
     };
 
+    const handleDeleteTest = async () => {
+        try {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                console.error("Token JWT manquant.");
+                return;
+            }
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+
+            await axios.delete(`http://localhost:50005/api/auth/visual-tests/${projectId}`, config);
+
+            navigate('/visual-testing');
+        } catch (error) {
+            console.error('Erreur lors de la suppression du test:', error);
+        }
+    };
+
     const { t } = useTranslation();
 
     if (!test) {
@@ -307,10 +331,15 @@ const VisualTestingDetailPage = () => {
                         icon={<FiFilter />}
                         variant='white'
                     />
-                    <Button 
-                        iconOnly={true}
-                        icon={<FiMoreVertical />}
-                        variant='white'
+                    <MoreButton
+                        subItem={[
+                            {
+                            text: 'Supprimer',
+                            click: handleDeleteTest,
+                            icon: <FiTrash2/>,
+                            variant:'danger'
+                            }
+                        ]}
                     />
                 </div>
             </section>

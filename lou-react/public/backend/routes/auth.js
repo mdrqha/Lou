@@ -132,7 +132,6 @@ router.put('/visual-tests/:id', authenticateToken, async (req, res) => {
       const { id } = req.params;
       const { title, figmaUrl, productUrl, stringArray1, stringArray2, jsonArray, percent } = req.body;
 
-      // Recherche du visual test par son ID et l'utilisateur connecté
       const visualTest = await VisualTest.findOne({
           where: { id, userId: req.user.id }
       });
@@ -157,5 +156,27 @@ router.put('/visual-tests/:id', authenticateToken, async (req, res) => {
       res.status(500).json({ error: 'Erreur lors de la mise à jour du visual test' });
   }
 });
+
+router.delete('/visual-tests/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const visualTest = await VisualTest.findOne({
+      where: { id, userId: req.user.id }
+    });
+
+    if (!visualTest) {
+      return res.status(404).json({ message: 'Visual test non trouvé' });
+    }
+
+    await visualTest.destroy(); // Delete the visual test
+
+    res.status(200).json({ message: 'Visual test supprimé avec succès' });
+  } catch (error) {
+    console.error('Erreur lors de la suppression du visual test:', error);
+    res.status(500).json({ error: 'Erreur lors de la suppression du visual test' });
+  }
+});
+
 
 module.exports = router;
