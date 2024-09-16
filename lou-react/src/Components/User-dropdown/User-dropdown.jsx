@@ -40,8 +40,6 @@ const UserDropdown = () => {
     fetchUser();
   }, []);
 
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Erreur: {error.message}</p>;
 
   return (
     <section className='lou-relative'>
@@ -58,7 +56,7 @@ const UserDropdown = () => {
           <FiChevronDown className='lou-text-dark-400'/>
         </div>
       </button>
-      <div className={`lou-bg-white lou-p-xs lou-border lou-border-dark-50 lou-absolute lou-right-0 lou-top-[2.8rem] lou-rounded-lg lou-w-[12rem] lou-transition-all lou-duration-300 lou-shadow-lg ${isOpen ? 'lou-translate-y-0 lou-opacity-1000' : 'lou--translate-y-2.5 lou-opacity-0 lou-pointer-events-none'}`}>
+      <div className={`lou-bg-white lou-z-10 lou-p-xs lou-border lou-border-dark-50 lou-absolute lou-right-0 lou-top-[2.8rem] lou-rounded-lg lou-w-[12rem] lou-transition-all lou-duration-300 lou-shadow-lg ${isOpen ? 'lou-translate-y-0 lou-opacity-1000' : 'lou--translate-y-2.5 lou-opacity-0 lou-pointer-events-none'}`}>
         <button onClick={() => navigate('/profile')} className='lou-grid lou-gap-xs lou-grid-cols-[auto_1fr] lou-items-center lou-p-xs lou-w-full hover:lou-bg-dark-30 lou-rounded lou-transition-all lou-duration-300'> 
           <FiUser className='lou-text-dark-500'/>
           <span className='lou-text-left'>Profile</span>
