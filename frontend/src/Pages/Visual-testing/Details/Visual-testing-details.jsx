@@ -6,15 +6,14 @@ import Button from '../../../Components/Buttons/Button/Button';
 import { compareData } from '../Compare-jsons';
 import { useParams } from 'react-router-dom';
 import UserDropdown from '../../../Components/User-dropdown/User-dropdown';
-import { FiArrowLeft, FiFigma, FiFilter, FiLink, FiMonitor, FiMoreVertical, FiSearch, FiTrash, FiTrash2 } from 'react-icons/fi';
+import { FiArrowLeft, FiBookmark, FiFigma, FiFilter, FiLink, FiMonitor, FiMoreVertical, FiSearch, FiTrash, FiTrash2 } from 'react-icons/fi';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { useDebouncedCallback } from 'use-debounce';
 import { format, formatDistanceToNowStrict, differenceInMinutes, differenceInHours, differenceInDays, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import MoreButton from '../../../Components/Buttons/More-button/More-button';
-
-
+import CardCompareVisuaTesting from '../../../Components/Cards/Compare-visual-testing/Compare-visual-testing';
 
 const VisualTestingDetailPage = () => {
     const [figmaUrl, setFigmaUrl] = useState('');
@@ -292,16 +291,15 @@ const VisualTestingDetailPage = () => {
                     </div>
                     <div className='lou-pt-xs'>
                         <p className={`lou-px-xs lou-py-2xs lou-rounded-sm lou-text-sm lou-border-2 lou-border-white ${getComparePercentSessionStorage === 100 ? 'lou-text-success lou-bg-success-100' : ''} ${getComparePercentSessionStorage < 100 && getComparePercentSessionStorage > 50 ? 'lou-text-warning lou-bg-warning-100' : ''} ${getComparePercentSessionStorage < 51 && getComparePercentSessionStorage !== null ? 'lou-text-danger lou-bg-danger-100' : ''} ${getComparePercentSessionStorage === null ? 'lou-text-dark-500 lou-bg-dark-50' : ''}`}>
-                        {getComparePercentSessionStorage ? getComparePercentSessionStorage + '%' : 'Vide'}
-                        </p>
+                        {getComparePercentSessionStorage !== null ? getComparePercentSessionStorage + '%' : 'Vide'}                        </p>
                     </div>
                 </div>
             </div>
             <UserDropdown />
         </section>
 
-        <main className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-grid lou-grid-rows-[auto_1fr] lou-overflow-auto'>
-            <section className='lou-grid lou-grid-cols-[auto_1fr_1fr_auto] lou-gap-sm lou-border-b lou-border-dark-50 lou-p-sm'>
+        <main className='lou-grid lou-grid-rows-[auto_1fr] lou-gap-md lou-overflow-auto'>
+            <section className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-grid lou-grid-cols-[auto_1fr_1fr_auto] lou-gap-sm lou-border-b lou-border-dark-50 lou-p-sm'>
                 <Button
                     text='Compare'
                     onClick={() => {handleCompareClick();}}
@@ -343,114 +341,159 @@ const VisualTestingDetailPage = () => {
                     />
                 </div>
             </section>
-            <section className='lou-p-sm lou-overflow-auto'>
-            <h3 className='lou-text-2xl lou-font-bold'>
+            <section className='lou-overflow-auto'>
+            {/* <h3 className='lou-text-2xl lou-font-bold'>
                 {t('visual-design.results-tilte')} 
                 {Array.isArray(getCompareSessionStorage) && (
                     <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>{getCompareSessionStorage.length} {t('visual-design.results-errors')}</span>
                 )}
-            </h3>
+            </h3> */}
 
             {loading ? (
                 <div className="spinner">Loading...</div>
             ) : (
                 <>
                 {/* {error && <p className="text-red-500">{error}</p>} */}
-                <div className='lou-grid lou-gap-md'>
+                <div className='lou-grid lou-gap-xl'>
                 {Array.isArray(getCompareSessionStorage) && getCompareSessionStorage.length > 0 ? (
                         getCompareSessionStorage.map((item, index) => (
-                        <div key={index} className="lou-border lou-border-dark-50 lou-rounded lou-overflow-hidden">
-                            <h3 className='lou-bg-dark-50 lou-p-xs' >Calque: {item.name}</h3>
-                            <div className="lou-p-sm lou-grid lou-gap-md">
+                        <div key={index} className="lou-overflow-hidden">
+                            {/* <h3 className='lou-bg-dark-50 lou-p-xs' >Calque: {item.name}</h3> */}
+                            <div className='lou-flex lou-gap-2xs lou-mb-sm lou-items-center'>
+                                <FiBookmark className='lou-text-dark-300'/>
+                                <h3 className='lou-text-xl lou-font-bold lou-capitalize'>{item.name}</h3>
+                            </div>
+                            <div className="lou-grid lou-gap-md lou-grid-cols-[1fr_1fr_1fr]">
                             {Object.keys(item).map((key, subIndex) => (
-                                <div key={subIndex}>
-                                    <div className='lou-text-center lou-grid lou-gap-xs'>
-                                        {key !== 'name' && (
-                                            <strong>{key}</strong>
-                                        )}
-                                        {/* If key is background */}
-                                        {key === 'background' &&(
-                                            <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
-                                            <div className='lou-flex lou-gap-sm lou-justify-end'>
-                                            <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p>
-                                            <div 
-                                                className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs' 
-                                                style={{backgroundColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}}
-                                            ></div>
-                                                
-                                            </div>
-                                            <div className='lou-flex lou-gap-sm'>
-                                                <div 
-                                                    className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs'
-                                                    style={{backgroundColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}}
-                                                ></div>
-                                                <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p>
-                                            </div>
-                                        </div>
-                                        )}
-                                        {/* If key is border color */}
-                                        {key === 'borderColor' &&(
-                                            <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
-                                            <div className='lou-flex lou-gap-sm lou-justify-end'>
-                                                {item[key].figma !== null ? (
-                                                    <div className='lou-flex lou-gap-sm'>
-                                                        <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p>
-                                                        <div 
-                                                            className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2' 
-                                                            style={{borderColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}}
-                                                        ></div>
-                                                    </div>
-                                                    ) : (
-                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
-                                                )} 
-                                            </div>
-                                            <div className='lou-flex lou-gap-sm'>
-                                                {item[key].figma !== null ? (
-                                                    <div className='lou-flex lou-gap-sm'>
-                                                        <div 
-                                                            className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2' 
-                                                            style={{borderColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}}
-                                                        ></div>
-                                                        <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p>
-                                                    </div>
-                                                    ) : (
-                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
-                                                )} 
-                                            </div>
-                                        </div>
-                                        )}
-                                        {/* If key is borderStyle */}
-                                        {key === 'borderStyle' &&(
-                                            <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
-                                            <div className='lou-flex lou-gap-sm lou-justify-end'>
-                                                {item[key].figma !== null ? (
-                                                    <div className='lou-flex lou-gap-sm'>
-                                                       <p className='lou-capitalize'>{item[key].figma}</p> 
+                                typeof key === 'string' && key !== 'name' && (
+                                    typeof key === 'string' && key === 'background' && (
+                                        <CardCompareVisuaTesting
+                                            key={subIndex}
+                                            figmaData={`rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}
+                                            figmaStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}}
+                                            productData={`rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}
+                                            productStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}}
+                                            title={key}
+                                        />
+                                    //     <div 
+                                    //     key={subIndex} 
+                                    //     className='lou-bg-white lou-border lou-border-dark-50 lou-p-md lou-rounded lou-grid lou-grid-cols-[auto_1fr] lou-gap-md'
+                                    //     >
+                                    //     <div className='lou-bg-primary-100 lou-rounded lou-w-[80px] lou-h-[80px] lou-grid lou-grid-cols-[1fr_1fr]'>
 
-                                                        <div 
-                                                            className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].figma === 'SOLID' ? 'lou-border-solid`': 'lou-border-dashed'}`} 
-                                                        ></div>
-                                                    </div>
-                                                    ) : (
-                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
-                                                )} 
-                                            </div>
-                                            <div className='lou-flex lou-gap-sm'>
-                                                {item[key].figma !== null ? (
-                                                    <div className='lou-flex lou-gap-sm'>
-                                                        <div 
-                                                            className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].product === 'solid' ? 'lou-border-solid`': 'lou-border-dashed'}`} 
-                                                        ></div>
-                                                        <p className='lou-capitalize'>{item[key].product}</p> 
-                                                    </div>
-                                                    ) : (
-                                                    <p className='lou-text-dark-300 lou-italic'>Undefined</p>
-                                                )} 
-                                            </div>
-                                        </div>
-                                        )}
-                                    </div>
-                                </div>
+                                    //         <div className='lou-flex lou-items-center lou-justify-end'>
+                                    //             <div className='lou-w-[15px] lou-h-[30px] lou-bg-dark lou-rounded-l-xs'></div>
+                                    //         </div>
+                                    //         <div className='lou-flex lou-items-center lou-rounded-r-lg'>
+                                    //             <div className='lou-w-[15px] lou-h-[30px] lou-bg-dark-500 lou-rounded-r-xs'></div>
+                                    //         </div>
+                                    //     </div>
+
+                                    //     <div>
+                                    //         <h4 className='lou-font-bold lou-text-lg lou-capitalize lou-mb-2xs'>{key}</h4>
+                                    //         <div className='lou-flex lou-gap-xs lou-items-center'>
+                                    //             <FiFigma className='lou-text-dark-300'/>
+                                    //             <p className='lou-text-dark-500'>rgba(X,X,X,X)</p>
+                                    //         </div>
+                                    //         <div className='lou-flex lou-gap-xs lou-items-center'>
+                                    //             <FiMonitor className='lou-text-dark-300'/>
+                                    //             <p className='lou-text-dark-500'>{`rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}</p>
+                                    //         </div>
+                                    //     </div>
+                                    // </div>
+                                    )
+                                )
+                                // ))}
+
+                                
+                                // <div key={subIndex}>
+                                //     <div className='lou-text-center lou-grid lou-gap-xs'>
+                                //         {key !== 'name' && (
+                                //             <strong>{key}</strong>
+                                //         )}
+                                //         {/* If key is background */}
+                                //         {key === 'background' &&(
+                                //             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
+                                //             <div className='lou-flex lou-gap-sm lou-justify-end'>
+                                //             <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p>
+                                //             <div 
+                                //                 className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs' 
+                                //                 style={{backgroundColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}}
+                                //             ></div>
+                                                
+                                //             </div>
+                                //             <div className='lou-flex lou-gap-sm'>
+                                //                 <div 
+                                //                     className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs'
+                                //                     style={{backgroundColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}}
+                                //                 ></div>
+                                //                 <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p>
+                                //             </div>
+                                //         </div>
+                                //         )}
+                                //         {/* If key is border color */}
+                                //         {key === 'borderColor' &&(
+                                //             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
+                                //             <div className='lou-flex lou-gap-sm lou-justify-end'>
+                                //                 {item[key].figma !== null ? (
+                                //                     <div className='lou-flex lou-gap-sm'>
+                                //                         <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p>
+                                //                         <div 
+                                //                             className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2' 
+                                //                             style={{borderColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}}
+                                //                         ></div>
+                                //                     </div>
+                                //                     ) : (
+                                //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                //                 )} 
+                                //             </div>
+                                //             <div className='lou-flex lou-gap-sm'>
+                                //                 {item[key].figma !== null ? (
+                                //                     <div className='lou-flex lou-gap-sm'>
+                                //                         <div 
+                                //                             className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2' 
+                                //                             style={{borderColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}}
+                                //                         ></div>
+                                //                         <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p>
+                                //                     </div>
+                                //                     ) : (
+                                //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                //                 )} 
+                                //             </div>
+                                //         </div>
+                                //         )}
+                                //         {/* If key is borderStyle */}
+                                //         {key === 'borderStyle' &&(
+                                //             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'>
+                                //             <div className='lou-flex lou-gap-sm lou-justify-end'>
+                                //                 {item[key].figma !== null ? (
+                                //                     <div className='lou-flex lou-gap-sm'>
+                                //                        <p className='lou-capitalize'>{item[key].figma}</p> 
+
+                                //                         <div 
+                                //                             className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].figma === 'SOLID' ? 'lou-border-solid`': 'lou-border-dashed'}`} 
+                                //                         ></div>
+                                //                     </div>
+                                //                     ) : (
+                                //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                //                 )} 
+                                //             </div>
+                                //             <div className='lou-flex lou-gap-sm'>
+                                //                 {item[key].figma !== null ? (
+                                //                     <div className='lou-flex lou-gap-sm'>
+                                //                         <div 
+                                //                             className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].product === 'solid' ? 'lou-border-solid`': 'lou-border-dashed'}`} 
+                                //                         ></div>
+                                //                         <p className='lou-capitalize'>{item[key].product}</p> 
+                                //                     </div>
+                                //                     ) : (
+                                //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p>
+                                //                 )} 
+                                //             </div>
+                                //         </div>
+                                //         )}
+                                //     </div>
+                                // </div>
                             ))}
                             </div>
                         </div>
