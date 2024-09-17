@@ -14,6 +14,7 @@ import { fr } from 'date-fns/locale';
 import "../../App.scss";
 import { FiFilter, FiSearch } from 'react-icons/fi';
 import MoreButton from '../../Components/Buttons/More-button/More-button';
+import CardProject from '../../Components/Cards/Project/Projetct';
 
 
 const VisualTestingPage = () => {
@@ -162,21 +163,13 @@ const VisualTestingPage = () => {
                 {visualTestsData
                 .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
                 .map((visualTest) => (
-                    <div 
-                        key={visualTest.id} 
-                        className={`lou-grid lou-grid-cols-[1fr_auto] lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-p-md lou-select-none hover:lou-shadow-lg hover:lou-cursor-pointer lou-transition-all lou-duration-300 ${visualTest.percent < 51 ? 'lou-border-2 lou-border-danger' : ''}`}
+                    <CardProject 
+                        key={visualTest.id}
+                        title={visualTest.title}
                         onClick={() => navigate(`/visual-testing/${visualTest.id}`)}
-                        >
-                        <div>
-                            <h4 className={`lou-text-lg lou-font-bold lou-line-clamp-1 lou-leading-5 ${visualTest.percent < 51 ? 'lou-text-danger' : ''}`}>{visualTest.title}</h4>
-                            <p className='lou-text-dark-400 lou-text-sm lou-leading-5'>{formatRelativeDate(visualTest.updatedAt)}</p>
-                        </div>
-                        <div>
-                            <p className={`lou-rounded-sm lou-px-xs lou-py-2xs ${visualTest.percent === 100 ? 'lou-text-success lou-bg-success-100' : ''} ${visualTest.percent < 100 && visualTest.percent > 50 ? 'lou-text-warning lou-bg-warning-100' : ''} ${visualTest.percent < 51 && visualTest.percent !== null ? 'lou-text-danger lou-bg-danger-100' : ''} ${visualTest.percent === null ? 'lou-text-dark-500 lou-bg-dark-30' : ''}`}>
-                            {visualTest.percent === null ? 'Vide' : (visualTest.percent === 100 ? 'Perfect!' : visualTest.percent + '%')}
-                            </p>
-                        </div>
-                    </div>
+                        date={formatRelativeDate(visualTest.updatedAt)}
+                        percent={visualTest.percent}
+                    />
                 ))}
             </div>
         </section>
