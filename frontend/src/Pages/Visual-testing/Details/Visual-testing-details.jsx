@@ -252,6 +252,15 @@ const VisualTestingDetailPage = () => {
         }
     };
 
+    const getBoxShadowValue = (shadowList) => {
+        return shadowList
+            .map(currentShadow => 
+                `${currentShadow.x}px ${currentShadow.y}px ${currentShadow.blur}px rgba(${currentShadow.color.r}, ${currentShadow.color.g}, ${currentShadow.color.b}, ${currentShadow.color.a})`
+            )
+            .join(', ');
+    };
+    
+
     const { t } = useTranslation();
 
     if (!test) {
@@ -371,105 +380,94 @@ const VisualTestingDetailPage = () => {
                                         case 'background':
                                             return (
                                                 <CardCompareVisuaTesting
-                                                key={subIndex}
-                                                figmaData={`rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}
-                                                figmaStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}}
-                                                productData={`rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}
-                                                productStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}}
-                                                title={key}
+                                                    key={subIndex}
+                                                    title={key}
+                                                    figmaData={`rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}
+                                                    figmaStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}}
+                                                    figmaStyleClassName='lou-border-y-2 lou-border-l-2 lou-border-white'
+                                                    productData={`rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}
+                                                    productStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}}
+                                                    productStyleClassName='lou-border-y-2 lou-border-r-2 lou-border-white'
                                                 />
                                             );
                                         case 'borderColor':
                                             return (
                                                 <CardCompareVisuaTesting
-                                                key={subIndex}
-                                                figmaData={item[key].figma !== null ? `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})` : 'Undefined'}
-                                                figmaStyle={item[key].figma !== null ? {backgroundColor: 'white',borderWidth: '2px 0 2px 2px', borderColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`} : undefined}
-                                                productData={item[key].product !== null ? `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})` : 'Undefined'}
-                                                productStyle={item[key].product !== null ? {backgroundColor: 'white',borderWidth: '2px 2px 2px 0', borderColor: `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`} : undefined}
-                                                title={key}
+                                                    key={subIndex}
+                                                    title={key}
+                                                    figmaData={item[key].figma !== null ? `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? {borderColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`} : undefined}
+                                                    figmaStyleClassName='lou-bg-white lou-border-y-2 lou-border-l-2'
+                                                    productData={item[key].product !== null ? `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? {borderColor: `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`} : undefined}
+                                                    productStyleClassName='lou-bg-white lou-border-y-2 lou-border-r-2'
                                                 />
                                             );
+
+                                        case 'borderSize':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={key}
+                                                    figmaData={item[key].figma !== null ? (item[key].figma.top === item[key].figma.bottom && item[key].figma.top === item[key].figma.right && item[key].figma.top == item[key].figma.left ? `${item[key].figma.top}px` : `${item[key].figma.top}px ${item[key].figma.right}px ${item[key].figma.bottom}px ${item[key].figma.left}px`) : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? {borderWidth:`${item[key].figma.top}px ${item[key].figma.right}px ${item[key].figma.bottom}px ${item[key].figma.left}px`} : undefined}
+                                                    figmaStyleClassName='lou-bg-white lou-border-dark'
+                                                    productData={item[key].product !== null ? (item[key].product.top === item[key].product.bottom && item[key].product.top === item[key].product.right && item[key].product.top == item[key].product.left ? `${item[key].product.top}px` : `${item[key].product.top}px ${item[key].product.right}px ${item[key].product.bottom}px ${item[key].product.left}px`) : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? {borderWidth:`${item[key].product.top}px ${item[key].product.right}px ${item[key].product.bottom}px ${item[key].product.left}px`} : undefined}
+                                                    productStyleClassName='lou-bg-white lou-border-dark'
+                                                />
+                                            );
+                                        
+                                            case 'borderStyle':
+                                                return (
+                                                    <CardCompareVisuaTesting
+                                                        key={subIndex}
+                                                        title={key}
+                                                        figmaData={item[key].figma !== null ? item[key].figma : 'Undefined'}
+                                                        figmaStyle={item[key].figma !== null ? {borderStyle : `${item[key].figma}`} : undefined}
+                                                        figmaStyleClassName='lou-bg-white lou-border-y-2 lou-border-l-2 lou-border-dark'
+                                                        productData={item[key].product !== null ? item[key].product : 'Undefined'}
+                                                        productStyle={item[key].product !== null ? { borderStyle : `${item[key].product}`} : undefined}
+                                                        productStyleClassName='lou-bg-white lou-border-dark lou-border-y-2 lou-border-r-2'
+                                                    />
+                                                );
                                             
+                                            case 'blur':
+                                                return (
+                                                    <CardCompareVisuaTesting
+                                                        key={subIndex}
+                                                        title={key}
+                                                        figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                        figmaStyle={item[key].figma !== null ? { filter: `blur(${item[key].figma}px)` } : undefined}
+                                                        figmaStyleClassName='lou-bg-white lou-border-y-2 lou-border-l-2 lou-border-dark'
+                                                        productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                        productStyle={item[key].product !== null ? { filter: `blur(${item[key].product}px)`} : undefined}
+                                                        productStyleClassName='lou-bg-white lou-border-dark lou-border-y-2 lou-border-r-2'
+                                                    />
+                                                );
+                                            
+                                                case 'BoxShadow':
+                                                    return (
+                                                        <CardCompareVisuaTesting
+                                                            key={subIndex}
+                                                            title={key}
+                                                            figmaData={item[key].figma !== null ? getBoxShadowValue(item[key].figma) : 'Undefined'}
+                                                            figmaStyle={item[key].figma !== null ? { boxShadow: `${getBoxShadowValue(item[key].figma)}` } : undefined}
+                                                            figmaStyleClassName='lou-bg-white'
+                                                            productData={item[key].product !== null ? getBoxShadowValue(item[key].product) : 'Undefined'}
+                                                            productStyle={item[key].product !== null ? { boxShadow: `${getBoxShadowValue(item[key].product)}`} : undefined}
+                                                            productStyleClassName='lou-bg-white'
+                                                        />
+                                                    );
+
                                         default:
                                         return null;
                                     }
                                     })()
                                 )
                                 ))}
-                            {/* {Object.keys(item).map((key, subIndex) => (
-                                typeof key === 'string' && key !== 'name' && (
-                                    typeof key === 'string' && key === 'background' && (
-                                        <CardCompareVisuaTesting
-                                            key={subIndex}
-                                            figmaData={`rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}
-                                            figmaStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}}
-                                            productData={`rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}
-                                            productStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].product.r)}, ${JSON.stringify(item[key].product.g)}, ${JSON.stringify(item[key].product.b)}, ${JSON.stringify(item[key].product.a)})`}}
-                                            title={key}
-                                        />
-                                    
-                                    )
-                                )
-                                ))} */}
+            
 
-                                
-                                {/* // <div key={subIndex}> */}
-                                {/* //     <div className='lou-text-center lou-grid lou-gap-xs'> */}
-                                {/* //         {key !== 'name' && ( */}
-                                {/* //             <strong>{key}</strong> */}
-                                {/* //         )} */}
-                                {/* //         If key is background */}
-                                {/* //         {key === 'background' &&( */}
-                                {/* //             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'> */}
-                                {/* //             <div className='lou-flex lou-gap-sm lou-justify-end'> */}
-                                {/* //             <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p> */}
-                                {/* //             <div  */}
-                                {/* //                 className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs'  */}
-                                {/* //                 style={{backgroundColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}} */}
-                                {/* //             ></div> */}
-                                                {/*  */}
-                                {/* //             </div> */}
-                                {/* //             <div className='lou-flex lou-gap-sm'> */}
-                                {/* //                 <div  */}
-                                {/* //                     className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs' */}
-                                {/* //                     style={{backgroundColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}} */}
-                                {/* //                 ></div> */}
-                                {/* //                 <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p> */}
-                                {/* //             </div> */}
-                                {/* //         </div> */}
-                                {/* //         )} */}
-                                {/* //         If key is border color */}
-                                {/* //         {key === 'borderColor' &&( */}
-                                {/* //             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'> */}
-                                {/* //             <div className='lou-flex lou-gap-sm lou-justify-end'> */}
-                                {/* //                 {item[key].figma !== null ? ( */}
-                                {/* //                     <div className='lou-flex lou-gap-sm'> */}
-                                {/* //                         <p>rgba({JSON.stringify(item[key].figma.r)}, {JSON.stringify(item[key].figma.g)}, {JSON.stringify(item[key].figma.b)}, {JSON.stringify(item[key].figma.a)})</p> */}
-                                {/* //                         <div  */}
-                                {/* //                             className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2'  */}
-                                {/* //                             style={{borderColor : `rgba(${JSON.stringify(item[key].figma.r)},${JSON.stringify(item[key].figma.g)},${JSON.stringify(item[key].figma.b)},${JSON.stringify(item[key].figma.a)})`}} */}
-                                {/* //                         ></div> */}
-                                {/* //                     </div> */}
-                                {/* //                     ) : ( */}
-                                {/* //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p> */}
-                                {/* //                 )}  */}
-                                {/* //             </div> */}
-                                {/* //             <div className='lou-flex lou-gap-sm'> */}
-                                {/* //                 {item[key].figma !== null ? ( */}
-                                {/* //                     <div className='lou-flex lou-gap-sm'> */}
-                                {/* //                         <div  */}
-                                {/* //                             className='lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2'  */}
-                                {/* //                             style={{borderColor : `rgba(${JSON.stringify(item[key].product.r)},${JSON.stringify(item[key].product.g)},${JSON.stringify(item[key].product.b)},${JSON.stringify(item[key].product.a)})`}} */}
-                                {/* //                         ></div> */}
-                                {/* //                         <p>rgba({JSON.stringify(item[key].product.r)}, {JSON.stringify(item[key].product.g)}, {JSON.stringify(item[key].product.b)}, {JSON.stringify(item[key].product.a)})</p> */}
-                                {/* //                     </div> */}
-                                {/* //                     ) : ( */}
-                                {/* //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p> */}
-                                {/* //                 )}  */}
-                                {/* //             </div> */}
-                                {/* //         </div> */}
-                                {/* //         )} */}
                                 {/* //         If key is borderStyle */}
                                 {/* //         {key === 'borderStyle' &&( */}
                                 {/* //             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'> */}
