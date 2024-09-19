@@ -132,6 +132,7 @@ module.exports = {
       'xl' : '2rem',
       '2xl' : '4rem',
       '3xl' : '8rem',
+      'none': '0',
     },
     gridTemplateColumns: {
       'layout-main': '250px 1fr',

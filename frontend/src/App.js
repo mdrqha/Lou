@@ -83,11 +83,9 @@ const LouAppContent = () => {
     <div className={`lou-text-dark lou-w-screen lou-h-screen lou-gap-md lou-grid ${withMenuClass} lou-p-sm`} lou-component="page">
       {!hideMenu && <Menu />}
       <Routes>
-        {/* Utiliser RedirectIfAuthenticated pour rediriger les utilisateurs authentifiés depuis /login et /register */}
         <Route path="/login" element={<RedirectIfAuthenticated><Login /></RedirectIfAuthenticated>} />
         <Route path="/register" element={<RedirectIfAuthenticated><Register /></RedirectIfAuthenticated>} />
 
-        {/* Routes Protégées */}
         <Route path="/visual-testing" element={<ProtectedRoute><VisualTestingPage /></ProtectedRoute>} />
         <Route path="/visual-testing/:projectId" element={<ProtectedRoute><VisualTestingDetailPage /></ProtectedRoute>} />
         <Route path="/design-system" element={<ProtectedRoute><DesignSystemPage /></ProtectedRoute>} />

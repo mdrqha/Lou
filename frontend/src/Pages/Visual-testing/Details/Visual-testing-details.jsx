@@ -375,7 +375,7 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Background color'}
                                                     figmaData={`rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}
                                                     figmaStyle={{backgroundColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`}}
                                                     figmaStyleClassName='lou-border-y-2 lou-border-l-2 lou-border-white'
@@ -388,7 +388,7 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Border color'}
                                                     figmaData={item[key].figma !== null ? `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})` : 'Undefined'}
                                                     figmaStyle={item[key].figma !== null ? {borderColor: `rgba(${JSON.stringify(item[key].figma.r)}, ${JSON.stringify(item[key].figma.g)}, ${JSON.stringify(item[key].figma.b)}, ${JSON.stringify(item[key].figma.a)})`} : undefined}
                                                     figmaStyleClassName='lou-bg-white lou-border-y-2 lou-border-l-2'
@@ -402,7 +402,7 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Border size'}
                                                     figmaData={item[key].figma !== null ? (item[key].figma.top === item[key].figma.bottom && item[key].figma.top === item[key].figma.right && item[key].figma.top == item[key].figma.left ? `${item[key].figma.top}px` : `${item[key].figma.top}px ${item[key].figma.right}px ${item[key].figma.bottom}px ${item[key].figma.left}px`) : 'Undefined'}
                                                     figmaStyle={item[key].figma !== null ? {borderWidth:`${item[key].figma.top}px ${item[key].figma.right}px ${item[key].figma.bottom}px ${item[key].figma.left}px`} : undefined}
                                                     figmaStyleClassName='lou-bg-white lou-border-blue-dark'
@@ -416,7 +416,7 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Border style'}
                                                     figmaData={item[key].figma !== null ? item[key].figma : 'Undefined'}
                                                     figmaStyle={item[key].figma !== null ? {borderStyle : `${item[key].figma}`} : undefined}
                                                     figmaStyleClassName='lou-bg-white lou-border-y-2 lou-border-l-2 lou-border-blue-dark'
@@ -430,7 +430,7 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Blur'}
                                                     figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
                                                     figmaStyle={item[key].figma !== null ? { filter: `blur(${item[key].figma}px)` } : undefined}
                                                     figmaStyleClassName='lou-bg-white lou-border-y-2 lou-border-l-2 lou-border-blue-dark'
@@ -444,7 +444,7 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Box shadow'}
                                                     figmaData={item[key].figma !== null ? getBoxShadowValue(item[key].figma) : 'Undefined'}
                                                     figmaStyle={item[key].figma !== null ? { boxShadow: `${getBoxShadowValue(item[key].figma)}` } : undefined}
                                                     figmaStyleClassName='lou-bg-white'
@@ -458,7 +458,7 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Border radius'}
                                                     figmaData={item[key].figma !== null ? (item[key].figma.topRight === item[key].figma.bottomRight && item[key].figma.topRight === item[key].figma.bottomLeft && item[key].figma.topRight == item[key].figma.topLeft ? `${item[key].figma.topRight}px` : `${item[key].figma.topLeft}px ${item[key].figma.topRight}px ${item[key].figma.bottomRight}px ${item[key].figma.bottomLeft}px`) : 'Undefined'}
                                                     figmaStyle={item[key].figma !== null ? {width: '30px',transform: 'translateX(-3px)',borderRadius:`${(item[key].figma.topLeft)/2}px ${(item[key].figma.topRight)/2}px ${(item[key].figma.bottomRight)/2}px ${(item[key].figma.bottomLeft)/2}px`} : undefined}
                                                     figmaStyleClassName='lou-bg-blue-dark'
@@ -472,15 +472,114 @@ const VisualTestingDetailPage = () => {
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={key}
+                                                    title={'Width'}
                                                     figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
                                                     figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
                                                     figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
                                                     figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
                                                     productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
-                                                    productStyle={item[key].figma !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
                                                     productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
                                                     productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                />
+                                            );
+                                        
+                                        case 'widthMax':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Max width'}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
+                                                    productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                />
+                                            );
+
+                                        case 'widthMin':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Min width'}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
+                                                    productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                />
+                                            );
+
+                                        case 'height':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Height'}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
+                                                    productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    iconContainerClass='lou-rotate-90'
+                                                />
+                                            );
+                                            
+                                        case 'heightMax':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Max height'}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
+                                                    productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    iconContainerClass='lou-rotate-90'
+                                                />
+                                            );
+
+                                        case 'heightMin':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Min height'}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
+                                                    productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    iconContainerClass='lou-rotate-90'
+                                                />
+                                            );
+
+                                            case 'gap':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'gap'}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {width: '16px', transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyleClassName='lou-border-r-2 lou-border-l-2 lou-rounded-l-none lou-border-danger lou-flex lou-items-center lou-justify-center'
+                                                    figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45'/>}
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {width: '16px', transform: 'translate(12px)'}) : undefined}
+                                                    productStyleClassName='lou-border-r-2 lou-border-l-2 lou-border-danger lou-rounded-r-none lou-flex lou-items-center lou-justify-center'
+                                                    productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-text-2xs'/>}
                                                 />
                                             );
 
