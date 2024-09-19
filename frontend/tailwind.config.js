@@ -134,7 +134,8 @@ module.exports = {
       '3xl' : '8rem',
     },
     gridTemplateColumns: {
-      'layout-main': '250px 1fr',
+      'layout-main': '250px 1fr', 
+      'layout-close': '60px 1fr', 
     },
     opacity: {
       '0': '0',

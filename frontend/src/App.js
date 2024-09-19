@@ -25,7 +25,7 @@ const LouAppContent = () => {
   const [userLang, setUserLang] = useState(null);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-
+  const [isMenuClosed, setIsMenuClosed] = useState(false);
 
 
   useEffect(() => {
@@ -71,7 +71,15 @@ const LouAppContent = () => {
 
   const hideMenuPaths = ['/login', '/register', '/profile'];
   const hideMenu = hideMenuPaths.includes(location.pathname);
-  const withMenuClass = hideMenu ? '' : 'lou-grid-cols-layout-main lou-bg-dark-30';
+  const withMenuClass = hideMenu
+  ? ''
+  : isMenuClosed
+  ? 'lou-grid-cols-layout-close lou-bg-dark-30 lou-duration-200' // Menu fermé
+  : 'lou-grid-cols-layout-main lou-bg-dark-30 lou-duration-200'; 
+
+  const toggleMenuLayout = () => {
+    setIsMenuClosed(!isMenuClosed);
+  };
 
   const { t } = useTranslation();
 
@@ -81,7 +89,7 @@ const LouAppContent = () => {
 
   return (
     <div className={`lou-text-dark lou-w-screen lou-h-screen lou-gap-md lou-grid ${withMenuClass} lou-p-sm`} lou-component="page">
-      {!hideMenu && <Menu />}
+      {!hideMenu && <Menu onToggleMenu={toggleMenuLayout} isMenuClosed={isMenuClosed} />}
       <Routes>
         {/* Utiliser RedirectIfAuthenticated pour rediriger les utilisateurs authentifiés depuis /login et /register */}
         <Route path="/login" element={<RedirectIfAuthenticated><Login /></RedirectIfAuthenticated>} />
