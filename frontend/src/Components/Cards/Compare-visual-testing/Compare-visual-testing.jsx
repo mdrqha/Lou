@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiFigma, FiHelpCircle, FiMonitor } from 'react-icons/fi';
 
-const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, productData , figmaStyleClassName = '', productStyleClassName = ''}) => {
+const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, productData , figmaStyleClassName = '', productStyleClassName = '', figmaIcon, productIcon}) => {
 
     const handleCopyToClipboard = (text) => {
         navigator.clipboard.writeText(text)
@@ -23,7 +23,9 @@ const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, p
                 <div 
                     className={`lou-w-[15px] lou-h-[30px] lou-rounded-l-xs ${figmaStyleClassName}`}
                     style={figmaStyle}
-                ></div>
+                >
+                    {figmaIcon}
+                </div>
             )}
                 
             </div>
@@ -34,7 +36,9 @@ const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, p
                     <div 
                         className={`lou-w-[15px] lou-h-[30px] lou-rounded-r-xs ${productStyleClassName}`}
                         style={productStyle}
-                    ></div>
+                    >
+                        {productIcon}
+                    </div>
                 )}
                 
             </div>
@@ -42,7 +46,7 @@ const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, p
         <div>
             <h4 className='lou-font-bold lou-text-lg lou-capitalize lou-mb-2xs'>{title}</h4>
             <div 
-                className='lou-flex lou-gap-xs lou-items-center'
+                className='lou-flex lou-gap-xs lou-items-center lou-cursor-pointer'
                 onClick={() => handleCopyToClipboard(figmaData)}
                 title='Copy value'>
                 <FiFigma className='lou-text-dark-300'/>

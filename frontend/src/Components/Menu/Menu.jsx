@@ -27,7 +27,7 @@ const Menu = () => {
   const { t } = useTranslation();
 
   return (
-    <nav className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-shadow-xl lou-text-dark lou-grid lou-grid-rows-[1fr_auto]' lou-component='menu'>
+    <nav className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-text-dark lou-grid lou-grid-rows-[1fr_auto]' lou-component='menu'>
       <section>
         <div className='menu--header lou-grid lou-grid-cols-[1fr_auto] lou-items-center lou-border-b lou-border-dark-50 lou-p-2xs lou-pl-sm'>
           <svg width='100' height='24' viewBox='0 0 100 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
