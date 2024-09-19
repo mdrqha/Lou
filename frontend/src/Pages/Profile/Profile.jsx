@@ -34,7 +34,6 @@ const ProfilePage = () => {
     fetchUser();
   }, [i18n]);
 
-  // Fonction pour gérer le changement de langue
   const handleLanguageChange = async (e) => {
     const selectedLanguage = e.target.value;
     setLang(selectedLanguage);
@@ -76,7 +75,6 @@ const ProfilePage = () => {
           </div>
           <div>
             <p>Langue</p>
-            {/* Sélection de la langue */}
             <select 
               value={lang}
               onChange={handleLanguageChange}

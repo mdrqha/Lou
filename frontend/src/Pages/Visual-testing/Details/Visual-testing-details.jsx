@@ -351,12 +351,6 @@ const VisualTestingDetailPage = () => {
                 </div>
             </section>
             <section className='lou-overflow-auto'>
-            {/* <h3 className='lou-text-2xl lou-font-bold'>
-                {t('visual-design.results-tilte')} 
-                {Array.isArray(getCompareSessionStorage) && (
-                    <span className='lou-text-base lou-font-medium lou-pl-xs lou-text-danger'>{getCompareSessionStorage.length} {t('visual-design.results-errors')}</span>
-                )}
-            </h3> */}
 
             {loading ? (
                 <div className="spinner">Loading...</div>
@@ -474,21 +468,21 @@ const VisualTestingDetailPage = () => {
                                                 />
                                             );
                                         
-                                            case 'width':
-                                                return (
-                                                    <CardCompareVisuaTesting
-                                                        key={subIndex}
-                                                        title={key}
-                                                        figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
-                                                        figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
-                                                        figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
-                                                        figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
-                                                        productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
-                                                        productStyle={item[key].figma !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
-                                                        productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
-                                                        productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
-                                                    />
-                                                );
+                                        case 'width':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={key}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].figma !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {transform: 'translate(12px)'}) : undefined}
+                                                    productStyleClassName='lou-bg-blue-dark lou-rounded-xs lou-flex lou-items-center lou-justify-center'
+                                                    productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-translate-y-6'/>}
+                                                />
+                                            );
 
                                         default:
                                         return null;
@@ -496,41 +490,6 @@ const VisualTestingDetailPage = () => {
                                     })()
                                 )
                                 ))}
-            
-
-                                {/* //         If key is borderStyle */}
-                                {/* //         {key === 'borderStyle' &&( */}
-                                {/* //             <div className='lou-grid lou-grid-cols-[1fr_1fr] lou-gap-md'> */}
-                                {/* //             <div className='lou-flex lou-gap-sm lou-justify-end'> */}
-                                {/* //                 {item[key].figma !== null ? ( */}
-                                {/* //                     <div className='lou-flex lou-gap-sm'> */}
-                                {/* //                        <p className='lou-capitalize'>{item[key].figma}</p>  */}
-
-                                {/* //                         <div  */}
-                                {/* //                             className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].figma === 'SOLID' ? 'lou-border-solid`': 'lou-border-dashed'}`}  */}
-                                {/* //                         ></div> */}
-                                {/* //                     </div> */}
-                                {/* //                     ) : ( */}
-                                {/* //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p> */}
-                                {/* //                 )}  */}
-                                {/* //             </div> */}
-                                {/* //             <div className='lou-flex lou-gap-sm'> */}
-                                {/* //                 {item[key].figma !== null ? ( */}
-                                {/* //                     <div className='lou-flex lou-gap-sm'> */}
-                                {/* //                         <div  */}
-                                {/* //                             className={`lou-w-[1.5rem] lou-h-[1.5rem] lou-rounded-xs lou-border-2 lou-border-dark ${item[key].product === 'solid' ? 'lou-border-solid`': 'lou-border-dashed'}`}  */}
-                                {/* //                         ></div> */}
-                                {/* //                         <p className='lou-capitalize'>{item[key].product}</p>  */}
-                                {/* //                     </div> */}
-                                {/* //                     ) : ( */}
-                                {/* //                     <p className='lou-text-dark-300 lou-italic'>Undefined</p> */}
-                                {/* //                 )}  */}
-                                {/* //             </div> */}
-                                {/* //         </div> */}
-                                {/* //         )} */}
-                                {/* //     </div> */}
-                                {/* // </div> */}
-                            {/* ))} */}
                             </div>
                         </div>
                         ))

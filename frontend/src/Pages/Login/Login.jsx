@@ -11,10 +11,10 @@ import { useTranslation } from 'react-i18next';
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);  // Ajout d'un état pour gérer les erreurs
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { login } = useAuth();  // Utiliser la fonction login du contexte
-  const { i18n, t } = useTranslation(); // Accès à i18n et t pour la traduction
+  const { login } = useAuth();
+  const { i18n, t } = useTranslation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,26 +22,22 @@ const Login = () => {
       const response = await axios.post("http://localhost:50005/api/auth/login", { email, password });
       
       if (response.data.token) {
-        // Stocker le token et authentifier l'utilisateur
         login(response.data.token);
 
-        // Récupérer les informations utilisateur (y compris la langue)
         const userResponse = await axios.get('http://localhost:50005/api/auth/me', {
           headers: { Authorization: `Bearer ${response.data.token}` },
         });
         
-        // Récupérer la langue de l'utilisateur
-        const userLanguage = userResponse.data.lang || 'en';  // Utiliser 'en' par défaut si pas de langue
-        i18n.changeLanguage(userLanguage); // Appliquer la langue
+        const userLanguage = userResponse.data.lang || 'en';
+        i18n.changeLanguage(userLanguage);
 
-        // Rediriger après connexion réussie
         navigate("/visual-testing");  
       } else {
         setError("Authentication failed. Please check your credentials.");
       }
     } catch (error) {
       console.error("Erreur de connexion", error);
-      setError("Erreur de connexion. Veuillez réessayer.");  // Afficher un message d'erreur
+      setError("Erreur de connexion. Veuillez réessayer.");
     }
   };
 
@@ -81,7 +77,7 @@ const Login = () => {
                   required
               />
             </div>
-            {error && <p className="lou-text-red-500">{error}</p>}  {/* Afficher le message d'erreur */}
+            {error && <p className="lou-text-red-500">{error}</p>}
             <Button
               text={t('login.button')}
               type="submit"
