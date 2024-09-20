@@ -35,7 +35,7 @@ const Menu = ({ onToggleMenu, isMenuClosed }) => {
   };
 
   return (
-    <nav className='lou-bg-white lou-roundedo lou-border lou-border-dark-50 lou-text-dark lou-grid lou-grid-rows-[1fr_auto] items-center' lou-component='menu'>
+    <nav className='lou-bg-white lou-rounded lou-border lou-border-dark-50 lou-text-dark lou-grid lou-grid-rows-[1fr_auto] items-center' lou-component='menu'>
       <section>
         <div className={`menu--header lou-items-center lou-border-b lou-border-dark-50 lou-p-2xs lou-pl-sm lou-p-xs ${isMenuClosed? `lou-w-full lou-justify-center lou-grid lou-p-xs ` : `lou-p-xs lou-grid lou-grid-cols-[1fr_auto]`}`}>
           {isMenuClosed ?
@@ -84,7 +84,7 @@ const Menu = ({ onToggleMenu, isMenuClosed }) => {
           />
         </div>
       </section>
-      <section className='lou-border-t lou-border-dark-50 lou-p-xs'>
+      <section className={isMenuClosed?`lou-border-t lou-border-dark-50 lou-w-full lou-justify-center lou-grid lou-p-xs `:`lou-border-t lou-border-dark-50 lou-p-xs`}>
         <MenuButton
           text={t('menu.actions.settings')}
           icon={<FiSettings />}
