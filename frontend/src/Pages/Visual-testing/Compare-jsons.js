@@ -63,7 +63,7 @@ function compareJSON(figmaObj, productObj) {
                         }
 
                         // Border size
-                        const figmaBorderSize = figmaObjCurrent.style.border.size !== null ? figmaObjCurrent.style.border.size.strokeWeightCurrent : null;
+                        const figmaBorderSize = figmaObjCurrent.style.border.size !== null ? figmaObjCurrent.style.border.size : null;
                         const productBorderSize = productObjCurrent.style.border.size !== null ? productObjCurrent.style.border.size : null;
 
                         if(JSON.stringify(figmaBorderSize) !== JSON.stringify(productBorderSize)) {
@@ -709,24 +709,19 @@ function compareJSON(figmaObj, productObj) {
     figmaNameNoMatch = figmaAllName.filter(name => !productAllName.includes(name));
     productNameNoMatch = productAllName.filter(name => !figmaAllName.includes(name));
 
-    const comparePercent = parseFloat( 100 - ((compareDataStockage.length/compareCounter) * 100));
+    const comparePercent = parseInt( 100 - ((compareDataStockage.length/compareCounter) * 100));
     sessionStorage.setItem(`comparePercent`, comparePercent)
     const storedComparePercentage = JSON.parse((sessionStorage.getItem('comparePercent')));
 
     console.log(`Resultat de la comparaison`,compareDataStockage)
     sessionStorage.setItem('CompareResult', JSON.stringify(compareDataStockage));
     const storedCompareResult = JSON.parse(sessionStorage.getItem('CompareResult'));
-    // console.log(`sessionStorageCompare`, storedCompareResult);
 
-    // console.log(`figmaNoMatch`, figmaNameNoMatch)
     sessionStorage.setItem('figmaNoMatch', JSON.stringify(figmaNameNoMatch));
     const storedFigmaNoMatch = JSON.parse(sessionStorage.getItem('figmaNoMatch'));
-    // console.log(`sessionStorageCompare`, storedFigmaNoMatch);
 
-    // console.log(`productNoMatch`, productNameNoMatch)
     sessionStorage.setItem('productNoMatch', JSON.stringify(productNameNoMatch));
     const storedProductaNoMatch = JSON.parse(sessionStorage.getItem('productNoMatch'));
-    // console.log(`storedProductaNoMatch`, storedProductaNoMatch);
   }
 
 const compareData = async (url, productUrl, setLoading, setError, setAllFigmaComponent, setFrameCount, setFigmaData, setDomJson) => {
