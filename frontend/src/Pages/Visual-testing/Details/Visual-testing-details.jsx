@@ -609,6 +609,19 @@ const VisualTestingDetailPage = () => {
                                                     productStyleClassName='lou-bg-white lou-border-r-2 lou-border-y-2 lou-border-blue-dark'
                                                 />
                                             );
+                                        case 'padding':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Padding'}
+                                                    figmaData={item[key].figma !== null ? (item[key].figma.top === item[key].figma.bottom && item[key].figma.top === item[key].figma.right && item[key].figma.top == item[key].figma.left ? `${item[key].figma.top}px` : `${item[key].figma.top}px ${item[key].figma.right}px ${item[key].figma.bottom}px ${item[key].figma.left}px`) : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? {borderWidth:`${(item[key].figma.top)/2}px 0px ${(item[key].figma.bottom)/2}px ${(item[key].figma.left)/2}px`} : undefined}
+                                                    figmaStyleClassName='lou-bg-white lou-border-info-500'
+                                                    productData={item[key].product !== null ? (item[key].product.top === item[key].product.bottom && item[key].product.top === item[key].product.right && item[key].product.top == item[key].product.left ? `${item[key].product.top}px` : `${item[key].product.top}px ${item[key].product.right}px ${item[key].product.bottom}px ${item[key].product.left}px`) : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? {borderWidth:`${(item[key].product.top)/2}px ${(item[key].product.right)/2}px ${(item[key].product.bottom)/2}px 0px`} : undefined}
+                                                    productStyleClassName='lou-bg-white lou-border-info-300'
+                                                />
+                                            );
 
                                         default:
                                         return null;
