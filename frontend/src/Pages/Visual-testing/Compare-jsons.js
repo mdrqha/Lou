@@ -52,42 +52,72 @@ function compareJSON(figmaObj, productObj) {
                     //     console.log(productObjCurrent.style.border.size)
 
                     if(productObjCurrent.style.border.size !== null) {
-                        console.log(figmaObjCurrent.style.border.size)
-                        console.log(productObjCurrent.style.border.size)
+                        //Border Color
+                        const figmaBorderColor = figmaObjCurrent.style.border.color !== null ? figmaObjCurrent.style.border.color[0] : null;
+                        const productBorderColor = productObjCurrent.style.border.color !== null ? productObjCurrent.style.border.color : null;
+
+                        if(JSON.stringify(figmaBorderColor) !== JSON.stringify(productBorderColor)) {
+                            finalCompareDataJson.borderColor = {
+                                    figma: figmaBorderColor, 
+                                    product: productBorderColor
+                                };
+                        }
+
+                        // Border size
+                        const figmaBorderSize = figmaObjCurrent.style.border.size !== null ? figmaObjCurrent.style.border.size : null;
+                        const productBorderSize = productObjCurrent.style.border.size !== null ? productObjCurrent.style.border.size : null;
+
+                        if(JSON.stringify(figmaBorderSize) !== JSON.stringify(productBorderSize)) {
+                            finalCompareDataJson.borderSize = {
+                                figma: figmaBorderSize,
+                                product: productBorderSize
+                            };
+                        }
+
+                        // Border Style
+                        const figmaBorderStyle = figmaObjCurrent.style.border.style ? figmaObjCurrent.style.border.style.style : "SOLID";
+                        const productBorderStyle = productObjCurrent.style.border.style ? productObjCurrent.style.border.style : null;
+
+                        if(stringifyToLowoerCase(figmaBorderStyle) !== JSON.stringify(productBorderStyle)) {
+                            finalCompareDataJson.borderStyle = {
+                                figma: figmaBorderStyle, 
+                                product: productBorderStyle
+                            };
+                        }
                     }
 
                     // SI BORDER SIZE EST DIFFERENT ET QUE PRODUCT BORDER SIZE EST DIFF2RENT DE NULL ON METS LA COULEURS DE BORDERCOLOR AU PRODUCT SINON BORDER COLOR EST NULL, PAREIL POUR LE STYLE
-                    const figmaBorderColor = figmaObjCurrent.style.border.color !== null ? figmaObjCurrent.style.border.color[0] : null;
-                    const productBorderColor = productObjCurrent.style.border.color !== null ? productObjCurrent.style.border.color : null;
+                    // const figmaBorderColor = figmaObjCurrent.style.border.color !== null ? figmaObjCurrent.style.border.color[0] : null;
+                    // const productBorderColor = productObjCurrent.style.border.color !== null ? productObjCurrent.style.border.color : null;
 
-                    if(JSON.stringify(figmaBorderColor) !== JSON.stringify(productBorderColor)) {
-                        finalCompareDataJson.borderColor = {
-                                figma: figmaBorderColor, 
-                                product: productBorderColor
-                            };
-                    }
+                    // if(JSON.stringify(figmaBorderColor) !== JSON.stringify(productBorderColor)) {
+                    //     finalCompareDataJson.borderColor = {
+                    //             figma: figmaBorderColor, 
+                    //             product: productBorderColor
+                    //         };
+                    // }
 
-                    // Border size
-                    const figmaBorderSize = figmaObjCurrent.style.border.size !== null ? figmaObjCurrent.style.border.size : null;
-                    const productBorderSize = productObjCurrent.style.border.size !== null ? productObjCurrent.style.border.size : null;
+                    // // Border size
+                    // const figmaBorderSize = figmaObjCurrent.style.border.size !== null ? figmaObjCurrent.style.border.size : null;
+                    // const productBorderSize = productObjCurrent.style.border.size !== null ? productObjCurrent.style.border.size : null;
 
-                    if(JSON.stringify(figmaBorderSize) !== JSON.stringify(productBorderSize)) {
-                        finalCompareDataJson.borderSize = {
-                            figma: figmaBorderSize,
-                            product: productBorderSize
-                        };
+                    // if(JSON.stringify(figmaBorderSize) !== JSON.stringify(productBorderSize)) {
+                    //     finalCompareDataJson.borderSize = {
+                    //         figma: figmaBorderSize,
+                    //         product: productBorderSize
+                    //     };
                         
-                    }
+                    // }
 
-                    const figmaBorderStyle = figmaObjCurrent.style.border.style ? figmaObjCurrent.style.border.style.style : "SOLID";
-                    const productBorderStyle = productObjCurrent.style.border.style ? productObjCurrent.style.border.style : null;
+                    // const figmaBorderStyle = figmaObjCurrent.style.border.style ? figmaObjCurrent.style.border.style.style : "SOLID";
+                    // const productBorderStyle = productObjCurrent.style.border.style ? productObjCurrent.style.border.style : null;
 
-                    if(stringifyToLowoerCase(figmaBorderStyle) !== JSON.stringify(productBorderStyle)) {
-                        finalCompareDataJson.borderStyle = {
-                            figma: figmaBorderStyle, 
-                            product: productBorderStyle
-                        };
-                    }
+                    // if(stringifyToLowoerCase(figmaBorderStyle) !== JSON.stringify(productBorderStyle)) {
+                    //     finalCompareDataJson.borderStyle = {
+                    //         figma: figmaBorderStyle, 
+                    //         product: productBorderStyle
+                    //     };
+                    // }
 
                     // Comparaison border radius
                     const figmaBorderRadius = figmaObjCurrent.style.borderRadius !== null ? figmaObjCurrent.style.borderRadius : null;
@@ -224,7 +254,7 @@ function compareJSON(figmaObj, productObj) {
                     }
 
                     // Comparaison gap
-                    if(figmaObjCurrent.style.gap !== productObjCurrent.style.gap) {
+                    if(figmaObjCurrent.style.gapAuto !== true && figmaObjCurrent.style.gap !== productObjCurrent.style.gap) {
                         finalCompareDataJson.gap = {figma: figmaObjCurrent.style.gap, product: productObjCurrent.style.gap};
                     }
 
@@ -257,7 +287,7 @@ function compareJSON(figmaObj, productObj) {
                             figma: figmaWidth, 
                             product: productWidth
                         };
-                    } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX
+                    } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX dépend de la taille de l'écran du user
 
                     // Max width
                     const figmaMaxWidth = figmaObjCurrent.style.size.width.max !== null ? figmaObjCurrent.style.size.width.max : null;
@@ -290,7 +320,7 @@ function compareJSON(figmaObj, productObj) {
                             figma: figmaHeight, 
                             product: productHeight
                         };
-                    } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX
+                    } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX, dépend de la taille de l'écran du user
 
                     // Max width
                     const figmaMaxHeight = figmaObjCurrent.style.size.height.max !== null ? figmaObjCurrent.style.size.height.max : null;

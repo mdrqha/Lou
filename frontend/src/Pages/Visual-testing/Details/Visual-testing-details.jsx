@@ -366,7 +366,7 @@ const VisualTestingDetailPage = () => {
                                 <FiBookmark className='lou-text-dark-300'/>
                                 <h3 className='lou-text-xl lou-font-bold lou-capitalize'>{item.name}</h3>
                             </div>
-                            <div className="lou-grid lou-gap-md lou-grid-cols-[1fr_1fr_1fr]">
+                            <div className="lou-grid lou-gap-md lou-grid-cols-card-list">
                             {Object.keys(item).map((key, subIndex) => (
                                 typeof key === 'string' && key !== 'name' && (
                                     (() => {
@@ -567,19 +567,46 @@ const VisualTestingDetailPage = () => {
                                                 />
                                             );
 
-                                            case 'gap':
+                                        case 'gap':
                                             return (
                                                 <CardCompareVisuaTesting
                                                     key={subIndex}
-                                                    title={'gap'}
+                                                    title={'Gap'}
                                                     figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
-                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {width: '30px'} : {width: '16px', transform: 'translate(-12px)'}) : undefined}
+                                                    figmaStyle={item[key].figma !== null ? (item[key].figma > item[key].product ? {borderRadius: '0', width: '30px'} : {borderRadius: '0', padding:'2px', width: '16px', transform: 'translate(-12px)'}) : undefined}
                                                     figmaStyleClassName='lou-border-r-2 lou-border-l-2 lou-rounded-l-none lou-border-danger lou-flex lou-items-center lou-justify-center'
                                                     figmaIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45'/>}
                                                     productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
-                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {width: '30px'} : {width: '16px', transform: 'translate(12px)'}) : undefined}
+                                                    productStyle={item[key].product !== null ? (item[key].figma < item[key].product ? {borderRadius: '0', width: '30px'} : {borderRadius: '0', padding:'2px', width: '16px', transform: 'translate(12px)'}) : undefined}
                                                     productStyleClassName='lou-border-r-2 lou-border-l-2 lou-border-danger lou-rounded-r-none lou-flex lou-items-center lou-justify-center'
                                                     productIcon={<FiMaximize2 className='lou-text-danger lou-rotate-45 lou-text-2xs'/>}
+                                                />
+                                            );
+
+                                        case 'Opacity':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Opacity'}
+                                                    figmaData={item[key].figma !== null ? `${(item[key].figma)*100}%` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? {opacity: `${item[key].figma}`} : undefined}
+                                                    figmaStyleClassName='lou-bg-blue-dark'
+                                                    productData={item[key].product !== null ? `${(item[key].product)*100}%` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? {opacity: `${item[key].product}`} : undefined}
+                                                    productStyleClassName='lou-bg-blue-dark'
+                                                />
+                                            );
+                                        case 'backgroundBlur':
+                                            return (
+                                                <CardCompareVisuaTesting
+                                                    key={subIndex}
+                                                    title={'Background blur'}
+                                                    figmaData={item[key].figma !== null ? `${item[key].figma}px` : 'Undefined'}
+                                                    figmaStyle={item[key].figma !== null ? {backdropFilter: `blur(${item[key].figma}px)`} : undefined}
+                                                    figmaStyleClassName='lou-bg-white lou-border-l-2 lou-border-y-2 lou-border-blue-dark'
+                                                    productData={item[key].product !== null ? `${item[key].product}px` : 'Undefined'}
+                                                    productStyle={item[key].product !== null ? {backdropFilter: `blur(${item[key].product})px`} : undefined}
+                                                    productStyleClassName='lou-bg-white lou-border-r-2 lou-border-y-2 lou-border-blue-dark'
                                                 />
                                             );
 

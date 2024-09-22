@@ -136,6 +136,7 @@ module.exports = {
     },
     gridTemplateColumns: {
       'layout-main': '250px 1fr',
+      'card-list': 'repeat(auto-fill, minmax(20rem, 1fr))',
     },
     opacity: {
       '0': '0',

@@ -452,6 +452,7 @@ const validateUrl = (url) => {
             backgroundBlur : figmaToCssBackgroundBlur ? figmaToCssBackgroundBlur : null,
             blur : figmaToCssBackgroundFilterBlur ? figmaToCssBackgroundFilterBlur : null,
             gap: node.itemSpacing ? node.itemSpacing : null,
+            gapAuto: node.primaryAxisAlignItems === "SPACE_BETWEEN" ? true : false,
             padding: {
               top: node.paddingTop ? node.paddingTop : null,
               left: node.paddingLeft ? node.paddingLeft : null,
