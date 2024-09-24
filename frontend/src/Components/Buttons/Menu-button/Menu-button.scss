@@ -1,10 +1,10 @@
 @import '../../../Styles/Colors';
 
 .menu--item-active {
-    background-color: $primary;
-    margin-bottom: 4px;
+  background-color: $primary;
+  // margin-bottom: 4px;
 
-    &:hover {
-        background-color: $primary-hover;
-    }
+  &:hover {
+    background-color: $primary-hover;
+  }
 }
