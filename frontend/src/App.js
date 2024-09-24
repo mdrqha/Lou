@@ -25,7 +25,16 @@ const LouAppContent = () => {
   const [userLang, setUserLang] = useState(null);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [isMenuClosed, setIsMenuClosed] = useState(false);
+  const [isMenuClosed, setIsMenuClosed] = useState(() => {
+    // Récupérer l'état de isMenuClosed à partir du localStorage, sinon retourner false par défaut
+    const savedState = localStorage.getItem('isMenuClosed');
+    return savedState ? JSON.parse(savedState) : false;
+  });
+
+  // Utiliser useEffect pour mettre à jour le localStorage chaque fois que isMenuClosed change
+  useEffect(() => {
+    localStorage.setItem('isMenuClosed', JSON.stringify(isMenuClosed));
+  }, [isMenuClosed]);
 
 
   useEffect(() => {

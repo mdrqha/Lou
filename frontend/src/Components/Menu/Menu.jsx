@@ -10,6 +10,11 @@ const Menu = ({ onToggleMenu, isMenuClosed }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  //ajouter l'état de isMenuClosed dans le localsotrage
+  localStorage.setItem('isMenuClosed', isMenuClosed);
+
+  const getMenuPreferences = localStorage.getItem('isMenuClosed');
+
   const goToVisualDesign = () => {
     navigate('/visual-testing');
   };
