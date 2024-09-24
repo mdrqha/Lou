@@ -278,15 +278,15 @@ function compareJSON(figmaObj, productObj) {
 
                     // Comparaison size
                     // Width
-                    const figmaWidth = figmaObjCurrent.style.size.width.boundingBox !== null ? figmaObjCurrent.style.size.width.boundingBox : null;
-                    const productWidth = productObjCurrent.style.size.width.boundingBox ? productObjCurrent.style.size.width.boundingBox : null;
+                    // const figmaWidth = figmaObjCurrent.style.size.width.boundingBox !== null ? figmaObjCurrent.style.size.width.boundingBox : null;
+                    // const productWidth = productObjCurrent.style.size.width.boundingBox ? productObjCurrent.style.size.width.boundingBox : null;
 
-                    if(JSON.stringify(figmaWidth) !== JSON.stringify(productWidth)) {
-                        finalCompareDataJson.width = {
-                            figma: figmaWidth, 
-                            product: productWidth
-                        };
-                    } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX dépend de la taille de l'écran du user
+                    // if(JSON.stringify(figmaWidth) !== JSON.stringify(productWidth)) {
+                    //     finalCompareDataJson.width = {
+                    //         figma: figmaWidth, 
+                    //         product: productWidth
+                    //     };
+                    // } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX dépend de la taille de l'écran du user
 
                     // Max width
                     const figmaMaxWidth = figmaObjCurrent.style.size.width.max !== null ? figmaObjCurrent.style.size.width.max : null;
@@ -311,15 +311,15 @@ function compareJSON(figmaObj, productObj) {
                     }
 
                     // Height
-                    const figmaHeight = figmaObjCurrent.style.size.height.boundingBox !== null ? figmaObjCurrent.style.size.height.boundingBox : null;
-                    const productHeight = productObjCurrent.style.size.height.boundingBox ? productObjCurrent.style.size.height.boundingBox : null;
+                    // const figmaHeight = figmaObjCurrent.style.size.height.boundingBox !== null ? figmaObjCurrent.style.size.height.boundingBox : null;
+                    // const productHeight = productObjCurrent.style.size.height.boundingBox ? productObjCurrent.style.size.height.boundingBox : null;
 
-                    if(JSON.stringify(figmaHeight) !== JSON.stringify(productHeight)) {
-                        finalCompareDataJson.height = {
-                            figma: figmaHeight, 
-                            product: productHeight
-                        };
-                    } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX, dépend de la taille de l'écran du user
+                    // if(JSON.stringify(figmaHeight) !== JSON.stringify(productHeight)) {
+                    //     finalCompareDataJson.height = {
+                    //         figma: figmaHeight, 
+                    //         product: productHeight
+                    //     };
+                    // } // ATTENTION RECUPPERATUION DE LA WIDTH DANS LE PRODUIT TJRS A 996PX, dépend de la taille de l'écran du user
 
                     // Max height
                     const figmaMaxHeight = figmaObjCurrent.style.size.height.max !== null ? figmaObjCurrent.style.size.height.max : null;
