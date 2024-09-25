@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiFigma, FiHelpCircle, FiMonitor } from 'react-icons/fi';
 
-const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, productData , figmaStyleClassName = '', productStyleClassName = '', figmaIcon, productIcon}) => {
+const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, productData , figmaStyleClassName = '', productStyleClassName = '', figmaIcon, productIcon, iconContainerClass}) => {
 
     const handleCopyToClipboard = (text) => {
         navigator.clipboard.writeText(text)
@@ -15,7 +15,7 @@ const CardCompareVisuaTesting = ({ title, figmaStyle, productStyle, figmaData, p
 
   return (
     <div className='lou-bg-white lou-border lou-border-dark-50 lou-p-md lou-rounded lou-grid lou-grid-cols-[auto_1fr] lou-gap-md'>
-        <div className='lou-bg-primary-100 lou-rounded lou-w-[80px] lou-h-[80px] lou-grid lou-grid-cols-[1fr_1fr]'>
+        <div className={`lou-bg-primary-100 lou-rounded lou-w-[80px] lou-h-[80px] lou-grid lou-grid-cols-[1fr_1fr] ${iconContainerClass}`}>
             <div className={`lou-flex lou-items-center lou-overflow-hidden  ${figmaStyle === undefined ? 'lou-justify-center' : 'lou-justify-end'}`}>
             {figmaStyle === undefined ? (
                 <FiHelpCircle className='lou-text-danger lou-text-lg'/>

@@ -132,9 +132,11 @@ module.exports = {
       'xl' : '2rem',
       '2xl' : '4rem',
       '3xl' : '8rem',
+      'none': '0',
     },
     gridTemplateColumns: {
-      'layout-main': '250px 1fr', 
+      'layout-main': '250px 1fr',
+      'card-list': 'repeat(auto-fill, minmax(20rem, 1fr))',
       'layout-close': '60px 1fr', 
     },
     opacity: {
