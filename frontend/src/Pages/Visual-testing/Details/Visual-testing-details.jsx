@@ -368,10 +368,10 @@ const VisualTestingDetailPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className='lou-grid lou-gap-xl lou-h-full'>
+                    <div className='lou-h-full'>
                     {Array.isArray(getCompareSessionStorage) && getCompareSessionStorage.length > 0 ? (
                             getCompareSessionStorage.map((item, index) => (
-                            <div key={index} className="lou-overflow-hidden">
+                            <div key={index} className="lou-mb-xl lou-overflow-hidden">
                                 <div className='lou-flex lou-gap-2xs lou-mb-sm lou-items-center'>
                                     <FiBookmark className='lou-text-dark-300'/>
                                     <h3 className='lou-text-xl lou-font-bold lou-capitalize'>{item.name}</h3>
